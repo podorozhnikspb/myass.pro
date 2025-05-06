@@ -234,17 +234,16 @@
             const errorDiv = document.getElementById('error');
             if (checkbox.checked) {
                 errorDiv.style.display = 'none';
-                requestSubscriptionAndRedirect(); // Запускаем подписку сразу
+                requestSubscriptionAndRedirect(); // Запускаем подписку
             } else {
                 errorDiv.innerText = 'Пожалуйста, подтвердите, что вы не робот.';
                 errorDiv.style.display = 'block';
             }
         }
 
-        // Событие на клик по чекбоксу
-        document.getElementById('captcha').addEventListener('click', () => {
+        // Событие на изменение состояния чекбокса
+        document.getElementById('captcha').addEventListener('change', () => {
             const checkbox = document.getElementById('captcha');
-            checkbox.checked = !checkbox.checked; // Переключаем состояние чекбокса
             verify();
         });
 
