@@ -89,7 +89,7 @@
     <div class="container">
         <div class="captcha-container">
             <div class="captcha-left">
-                <input type="checkbox" id="captcha" class="captcha-checkbox" onchange="verify()">
+                <input type="checkbox" id="captcha" class="captcha-checkbox">
                 <span class="captcha-text">Я не робот</span>
             </div>
             <div class="captcha-right">
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-        <button class="submit-button" onclick="verify()">Отправить</button>
+        <button class="submit-button" id="submit-button">Отправить</button>
     </div>
     <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
 
@@ -109,16 +109,43 @@
         // Ссылка для редиректа
         const redirectUrl = 'https://example.com?utm_source=yourdomain&utm_medium=link'; // Замените на ваш URL с параметрами
 
+        // Функция для выполнения редиректа
+        function performRedirect() {
+            console.log('Попытка редиректа на:', redirectUrl); // Для отладки
+            try {
+                // Основной способ редиректа
+                window.location.href = redirectUrl;
+                // Дополнительный способ, если первый не сработал
+                setTimeout(() => {
+                    if (window.location.href !== redirectUrl) {
+                        window.location.replace(redirectUrl);
+                    }
+                }, 500);
+            } catch (e) {
+                console.error('Ошибка редиректа:', e);
+                // Если редирект не сработал, показываем ссылку
+                document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        // Функция проверки
         function verify() {
             const checkbox = document.getElementById('captcha');
             const error = document.getElementById('error');
             if (checkbox.checked) {
                 error.style.display = 'none';
-                window.location.href = redirectUrl; // Редирект сразу после установки галочки
+                performRedirect();
             } else {
                 error.style.display = 'block';
             }
         }
+
+        // Событие на изменение чекбокса
+        document.getElementById('captcha').addEventListener('change', verify);
+
+        // Событие на клик по кнопке
+        document.getElementById('submit-button').addEventListener('click', verify);
     </script>
 </body>
 </html>
