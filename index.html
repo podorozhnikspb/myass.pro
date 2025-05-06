@@ -39,6 +39,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            border: 2px solid #5f6368; /* Для видимости чекбокса */
         }
         .captcha-checkbox:checked {
             accent-color: #1a73e8; /* Синий цвет для стандартной галочки */
@@ -150,50 +151,57 @@
         // Функция для выполнения редиректа
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl);
-            try {
-                window.location.href = redirectUrl;
-                setTimeout(() => {
-                    if (window.location.href !== redirectUrl) {
-                        console.log('window.location.href не сработал, пробуем replace');
-                        window.location.replace(redirectUrl);
-                        setTimeout(() => {
-                            if (window.location.href !== redirectUrl) {
-                                console.log('replace не сработал, пробуем window.open');
-                                window.open(redirectUrl, '_self');
-                                setTimeout(() => {
-                                    if (window.location.href !== redirectUrl) {
-                                        console.log('window.open не сработал, пробуем клик');
-                                        const link = document.createElement('a');
-                                        link.href = redirectUrl;
-                                        link.style.display = 'none';
-                                        document.body.appendChild(link);
-                                        link.click();
-                                        document.body.removeChild(link);
-                                    }
-                                }, 500);
-                            }
-                        }, 500);
+            let attempts = 0;
+            const maxAttempts = 4;
+
+            const tryRedirect = () => {
+                if (window.location.href !== redirectUrl && attempts < maxAttempts) {
+                    attempts++;
+                    try {
+                        if (attempts === 1) {
+                            console.log('Попытка 1: window.location.href');
+                            window.location.href = redirectUrl;
+                        } else if (attempts === 2) {
+                            console.log('Попытка 2: window.location.replace');
+                            window.location.replace(redirectUrl);
+                        } else if (attempts === 3) {
+                            console.log('Попытка 3: window.open');
+                            window.open(redirectUrl, '_self');
+                        } else {
+                            console.log('Попытка 4: программный клик');
+                            const link = document.createElement('a');
+                            link.href = redirectUrl;
+                            link.style.display = 'none';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                        setTimeout(tryRedirect, 500);
+                    } catch (e) {
+                        console.error('Ошибка редиректа, попытка', attempts, ':', e);
+                        setTimeout(tryRedirect, 500);
                     }
-                }, 500);
-            } catch (e) {
-                console.error('Ошибка редиректа:', e);
-                document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
-                document.getElementById('error').style.display = 'block';
-            }
+                } else if (attempts >= maxAttempts) {
+                    console.error('Все попытки редиректа не удались');
+                    document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
+                    document.getElementById('error').style.display = 'block';
+                }
+            };
+
+            tryRedirect();
         }
 
         // Функция для запроса подписки
         function requestSubscription() {
             console.log('Запуск requestSubscription');
-            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-                console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
-                logSubscription(Notification.permission);
-                performRedirect();
-                return;
-            }
+            try {
+                if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+                    console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
+                    logSubscription(Notification.permission);
+                    performRedirect();
+                    return;
+                }
 
-            const checkPsReady = () => {
-                console.log('Проверка ps.js');
                 if (window.ps && typeof window.ps.showPrompt === 'function') {
                     console.log('Вызываем подписку через ps.js');
                     window.ps.showPrompt()
@@ -227,9 +235,11 @@
                         performRedirect();
                     }
                 }
-            };
-
-            setTimeout(checkPsReady, 500);
+            } catch (e) {
+                console.error('Общая ошибка в requestSubscription:', e);
+                logSubscription('error');
+                performRedirect();
+            }
         }
 
         // Функция проверки
