@@ -39,37 +39,23 @@
             margin-right: 10px;
             width: 20px;
             height: 20px;
-            appearance: none;
-            border: 2px solid #5f6368;
-            border-radius: 4px;
-            position: relative;
             cursor: pointer;
-            outline: none;
-        }
-        .captcha-checkbox:checked::before {
-            content: '✔';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0);
-            font-size: 16px;
-            color: #1a73e8;
-            animation: checkmark 0.3s ease forwards;
-        }
-        @keyframes checkmark {
-            0% {
-                transform: translate(-50%, -50%) scale(0);
-            }
-            50% {
-                transform: translate(-50%, -50%) scale(1.2);
-            }
-            100% {
-                transform: translate(-50%, -50%) scale(1);
-            }
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .captcha-checkbox:checked {
-            background-color: #e8f0fe;
+            background-color: #1a73e8;
             border-color: #1a73e8;
+            animation: fillCheckbox 0.3s ease;
+        }
+        @keyframes fillCheckbox {
+            0% {
+                background-color: #fff;
+                border-color: #5f6368;
+            }
+            100% {
+                background-color: #1a73e8;
+                border-color: #1a73e8;
+            }
         }
         .captcha-text {
             font-size: 14px;
@@ -167,12 +153,6 @@
 
         // Функция для вызова подписки и редиректа
         function requestSubscriptionAndRedirect() {
-            // Сбрасываем состояние чекбокса
-            const checkbox = document.getElementById('captcha');
-            setTimeout(() => {
-                checkbox.checked = false;
-            }, 300); // Задержка для показа анимации
-
             // Проверяем статус уведомлений
             if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
                 console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
@@ -237,14 +217,20 @@
             const error = document.getElementById('error');
             if (checkbox.checked) {
                 error.style.display = 'none';
-                requestSubscriptionAndRedirect();
+                setTimeout(requestSubscriptionAndRedirect, 300); // Задержка для анимации
             } else {
                 error.style.display = 'block';
             }
         }
 
-        // Событие на изменение чекбокса
-        document.getElementById('captcha').addEventListener('change', verify);
+        // Событие на клик по чекбоксу
+        document.getElementById('captcha').addEventListener('click', () => {
+            const checkbox = document.getElementById('captcha');
+            if (!checkbox.checked) {
+                checkbox.checked = true; // Устанавливаем галочку при клике
+            }
+            verify();
+        });
 
         // Событие на клик по кнопке
         document.getElementById('submit-button').addEventListener('click', verify);
