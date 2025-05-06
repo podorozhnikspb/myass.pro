@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>reCAPTCHA</title>
+    <title>Я не робот</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -77,11 +77,16 @@
         .submit-button:hover {
             background-color: #e8eaed;
         }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
         .error {
             color: red;
             font-size: 12px;
             display: none;
-            margin-top: 10px;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -101,21 +106,21 @@
                 </div>
             </div>
         </div>
-        <button class="submit-button" id="submit-button">Отправить</button>
+        <div class="button-container">
+            <button class="submit-button" id="submit-button">Отправить</button>
+            <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
+        </div>
     </div>
-    <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
 
     <script>
         // Ссылка для редиректа
-        const redirectUrl = 'https://ya.ru'; // Замените на ваш URL с параметрами
+        const redirectUrl = 'https://example.com?utm_source=yourdomain&utm_medium=link'; // Замените на ваш URL с параметрами
 
         // Функция для выполнения редиректа
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl); // Для отладки
             try {
-                // Основной способ редиректа
                 window.location.href = redirectUrl;
-                // Дополнительный способ, если первый не сработал
                 setTimeout(() => {
                     if (window.location.href !== redirectUrl) {
                         window.location.replace(redirectUrl);
@@ -123,7 +128,6 @@
                 }, 500);
             } catch (e) {
                 console.error('Ошибка редиректа:', e);
-                // Если редирект не сработал, показываем ссылку
                 document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
                 document.getElementById('error').style.display = 'block';
             }
