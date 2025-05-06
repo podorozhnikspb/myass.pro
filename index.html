@@ -53,13 +53,16 @@
             animation: fillCheckbox 0.3s ease;
         }
         .captcha-checkbox:checked:not(.loading)::after {
-            content: '✔';
+            content: '☑️';
             color: #fff;
-            font-size: 16px;
+            font-size: 14px;
+            font-family: 'Roboto', Arial, sans-serif;
+            line-height: 20px;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            text-align: center;
         }
         .captcha-checkbox.loading {
             background-color: #fff;
