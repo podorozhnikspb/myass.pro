@@ -373,10 +373,8 @@
                 error.style.display = 'none';
                 checkbox.disabled = true; // Блокируем чекбокс
                 checkbox.classList.add('loading'); // Показываем лоадер
-                setTimeout(() => {
-                    requestSubscription(checkbox);
-                    checkbox.disabled = false; // Разблокируем после обработки
-                }, 300); // Задержка 300 мс для начала анимации
+                requestSubscription(checkbox);
+                checkbox.disabled = false; // Разблокируем после обработки
             } else {
                 error.style.display = 'block';
             }
