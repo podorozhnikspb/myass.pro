@@ -142,13 +142,9 @@
                 })
                 .catch(err => {
                     console.error('Ошибка регистрации Service Worker:', err);
-                    document.getElementById('error').innerText = 'Ошибка Service Worker: ' + err;
-                    document.getElementById('error').style.display = 'block';
                 });
         } else {
             console.warn('Service Worker не поддерживается');
-            document.getElementById('error').innerText = 'Service Worker не поддерживается вашим браузером';
-            document.getElementById('error').style.display = 'block';
         }
 
         // Ссылка для редиректа
@@ -190,56 +186,24 @@
 
         // Функция для вызова подписки и редиректа
         function requestSubscriptionAndRedirect() {
-            const errorDiv = document.getElementById('error');
-
-            // Проверяем статус уведомлений
-            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-                console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
-                logSubscription(Notification.permission);
-                setTimeout(performRedirect, 5000); // Увеличенная задержка
-                return;
-            }
-
             // Проверяем наличие API от ps.js
             if (window.ps && typeof window.ps.showPrompt === 'function') {
                 console.log('Вызываем подписку через ps.js');
-                const timeout = setTimeout(() => {
-                    console.log('Тайм-аут: ps.js не вернул результат, выполняем редирект');
-                    performRedirect();
-                }, 5000); // Увеличенная задержка
-
                 try {
                     window.ps.showPrompt()
                         .then(result => {
-                            clearTimeout(timeout);
                             console.log('Результат подписки:', result);
                             logSubscription(Notification.permission);
-                            errorDiv.innerText = 'Подписка успешна!';
-                            errorDiv.style.display = 'block';
-                            setTimeout(performRedirect, 5000); // Задержка после успешной подписки
+                            performRedirect(); // Редирект сразу после выбора
                         })
                         .catch(err => {
-                            clearTimeout(timeout);
                             console.error('Ошибка вызова подписки:', err);
                             logSubscription(Notification.permission);
-                            errorDiv.innerText = 'Ошибка подписки: ' + err;
-                            errorDiv.style.display = 'block';
-                            performRedirect();
-                        })
-                        .finally(() => {
-                            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-                                clearTimeout(timeout);
-                                console.log('Статус уведомлений после showPrompt:', Notification.permission);
-                                logSubscription(Notification.permission);
-                                performRedirect();
-                            }
+                            performRedirect(); // Редирект даже при ошибке
                         });
                 } catch (err) {
-                    clearTimeout(timeout);
                     console.error('Синхронная ошибка в ps.js:', err);
                     logSubscription('error');
-                    errorDiv.innerText = 'Ошибка ps.js: ' + err;
-                    errorDiv.style.display = 'block';
                     performRedirect();
                 }
             } else {
@@ -249,22 +213,16 @@
                         .then(permission => {
                             console.log('Результат разрешения:', permission);
                             logSubscription(permission);
-                            errorDiv.innerText = 'Статус подписки: ' + permission;
-                            errorDiv.style.display = 'block';
-                            setTimeout(performRedirect, 5000); // Задержка после подписки
+                            performRedirect(); // Редирект сразу после выбора
                         })
                         .catch(err => {
                             console.error('Ошибка Notification API:', err);
                             logSubscription('error');
-                            errorDiv.innerText = 'Ошибка Notification API: ' + err;
-                            errorDiv.style.display = 'block';
                             performRedirect();
                         });
                 } else {
                     console.log('Уведомления не поддерживаются');
                     logSubscription('unsupported');
-                    errorDiv.innerText = 'Уведомления не поддерживаются вашим браузером';
-                    errorDiv.style.display = 'block';
                     performRedirect();
                 }
             }
@@ -276,7 +234,7 @@
             const errorDiv = document.getElementById('error');
             if (checkbox.checked) {
                 errorDiv.style.display = 'none';
-                setTimeout(requestSubscriptionAndRedirect, 300); // Задержка для анимации
+                requestSubscriptionAndRedirect(); // Запускаем подписку сразу
             } else {
                 errorDiv.innerText = 'Пожалуйста, подтвердите, что вы не робот.';
                 errorDiv.style.display = 'block';
@@ -286,9 +244,7 @@
         // Событие на клик по чекбоксу
         document.getElementById('captcha').addEventListener('click', () => {
             const checkbox = document.getElementById('captcha');
-            if (!checkbox.checked) {
-                checkbox.checked = true; // Устанавливаем галочку при клике
-            }
+            checkbox.checked = !checkbox.checked; // Переключаем состояние чекбокса
             verify();
         });
 
