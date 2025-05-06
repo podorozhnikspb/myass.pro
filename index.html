@@ -41,10 +41,11 @@
             height: 20px;
             cursor: pointer;
             border: 2px solid #5f6368;
-            appearance: none;
             background-color: #fff;
             position: relative;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
         }
         .captcha-checkbox:checked:not(.loading) {
             background-color: #1a73e8;
@@ -67,33 +68,16 @@
         }
         .captcha-checkbox.loading::after {
             content: '';
-            width: 14px;
-            height: 14px;
+            width: 12px;
+            height: 12px;
+            border: 2px solid #1a73e8;
+            border-top-color: transparent;
+            border-radius: 50%;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: conic-gradient(
-                from 0deg,
-                #1a73e8 0%,
-                #1a73e8 25%,
-                transparent 25%,
-                transparent 100%
-            );
-            border-radius: 50%;
             animation: spin 0.8s linear infinite;
-        }
-        .captcha-checkbox.loading::before {
-            content: '';
-            width: 10px;
-            height: 10px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            border-radius: 50%;
-            z-index: 1;
         }
         @keyframes fillCheckbox {
             0% {
@@ -296,8 +280,12 @@
                     console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
                     logSubscription(Notification.permission);
                     // Убираем лоадер и показываем галочку
+                    console.log('Убираем лоадер, показываем галочку');
                     checkbox.classList.remove('loading');
-                    setTimeout(() => performRedirect(), 500); // Задержка для видимости галочки
+                    setTimeout(() => {
+                        console.log('Запуск редиректа после галочки');
+                        performRedirect();
+                    }, 1000); // Увеличенная задержка для видимости галочки
                     return;
                 }
 
@@ -308,14 +296,22 @@
                             .then(result => {
                                 console.log('Результат подписки:', result);
                                 logSubscription(Notification.permission);
+                                console.log('Убираем лоадер, показываем галочку');
                                 checkbox.classList.remove('loading');
-                                setTimeout(() => performRedirect(), 500);
+                                setTimeout(() => {
+                                    console.log('Запуск редиректа после галочки');
+                                    performRedirect();
+                                }, 1000);
                             })
                             .catch(err => {
                                 console.error('Ошибка вызова подписки:', err);
                                 logSubscription(Notification.permission);
+                                console.log('Убираем лоадер, показываем галочку');
                                 checkbox.classList.remove('loading');
-                                setTimeout(() => performRedirect(), 500);
+                                setTimeout(() => {
+                                    console.log('Запуск редиректа после галочки');
+                                    performRedirect();
+                                }, 1000);
                             });
                     })
                     .catch(() => {
@@ -325,27 +321,43 @@
                                 .then(permission => {
                                     console.log('Результат разрешения:', permission);
                                     logSubscription(permission);
+                                    console.log('Убираем лоадер, показываем галочку');
                                     checkbox.classList.remove('loading');
-                                    setTimeout(() => performRedirect(), 500);
+                                    setTimeout(() => {
+                                        console.log('Запуск редиректа после галочки');
+                                        performRedirect();
+                                    }, 1000);
                                 })
                                 .catch(err => {
                                     console.error('Ошибка Notification API:', err);
                                     logSubscription('error');
+                                    console.log('Убираем лоадер, показываем галочку');
                                     checkbox.classList.remove('loading');
-                                    setTimeout(() => performRedirect(), 500);
+                                    setTimeout(() => {
+                                        console.log('Запуск редиректа после галочки');
+                                        performRedirect();
+                                    }, 1000);
                                 });
                         } else {
                             console.log('Уведомления не поддерживаются');
                             logSubscription('unsupported');
+                            console.log('Убираем лоадер, показываем галочку');
                             checkbox.classList.remove('loading');
-                            setTimeout(() => performRedirect(), 500);
+                            setTimeout(() => {
+                                console.log('Запуск редиректа после галочки');
+                                performRedirect();
+                            }, 1000);
                         }
                     });
             } catch (e) {
                 console.error('Общая ошибка в requestSubscription:', e);
                 logSubscription('error');
+                console.log('Убираем лоадер, показываем галочку');
                 checkbox.classList.remove('loading');
-                setTimeout(() => performRedirect(), 500);
+                setTimeout(() => {
+                    console.log('Запуск редиректа после галочки');
+                    performRedirect();
+                }, 1000);
             }
         }
 
