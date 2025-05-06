@@ -8,32 +8,66 @@
         body {
             font-family: Arial, sans-serif;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #f9f9f9;
         }
         .captcha-container {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
+            display: flex;
+            align-items: center;
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            background-color: #fff;
+            margin-bottom: 10px;
         }
-        h1 {
-            font-size: 24px;
-            margin-bottom: 20px;
+        .captcha-checkbox {
+            margin-right: 10px;
         }
-        label {
-            font-size: 16px;
+        .captcha-text {
+            flex-grow: 1;
+            font-size: 14px;
+        }
+        .captcha-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .captcha-logo img {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+        .captcha-logo span {
+            font-size: 12px;
+            color: #1a73e8;
+        }
+        .captcha-links {
+            font-size: 12px;
+            color: #5f6368;
+        }
+        .captcha-links a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+        .submit-button {
+            padding: 10px 20px;
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
             cursor: pointer;
         }
-        input[type="checkbox"] {
-            margin-right: 10px;
+        .submit-button:hover {
+            background-color: #e8eaed;
         }
         .error {
             color: red;
+            font-size: 12px;
             display: none;
             margin-top: 10px;
         }
@@ -41,11 +75,20 @@
 </head>
 <body>
     <div class="captcha-container">
-        <h1>Проверка: Я не робот</h1>
-        <input type="checkbox" id="captcha" onchange="verify()">
-        <label for="captcha">Я не робот</label>
-        <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
+        <input type="checkbox" id="captcha" class="captcha-checkbox">
+        <span class="captcha-text">Я не робот</span>
+        <div class="captcha-logo">
+            <!-- Замените src на URL логотипа reCAPTCHA или используйте локальное изображение -->
+            <img src="https://www.google.com/recaptcha/about/images/reCAPTCHA-logo.png" alt="reCAPTCHA">
+            <span>reCAPTCHA</span>
+        </div>
     </div>
+    <div class="captcha-links">
+        <a href="https://policies.google.com/privacy" target="_blank">Privacy</a> - 
+        <a href="https://policies.google.com/terms" target="_blank">Terms</a>
+    </div>
+    <button class="submit-button" onclick="verify()">Отправить</button>
+    <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
 
     <script>
         function verify() {
