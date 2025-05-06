@@ -6,60 +6,72 @@
     <title>Я не робот</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
             background-color: #f9f9f9;
         }
+        .container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
         .captcha-container {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             width: 300px;
             padding: 10px;
-            border: 1px solid #dadce0;
+            border: 1px solid #dfe1e5;
             border-radius: 4px;
             background-color: #fff;
-            margin-bottom: 10px;
+        }
+        .captcha-left {
+            display: flex;
+            align-items: center;
         }
         .captcha-checkbox {
             margin-right: 10px;
+            width: 20px;
+            height: 20px;
         }
         .captcha-text {
-            flex-grow: 1;
             font-size: 14px;
+            color: #202124;
         }
-        .captcha-logo {
+        .captcha-right {
             display: flex;
             flex-direction: column;
             align-items: flex-end;
         }
-        .captcha-logo img {
+        .captcha-logo {
             width: 20px;
             height: 20px;
             margin-bottom: 5px;
+            background-color: #ccc; /* Заглушка для битого изображения */
         }
-        .captcha-logo span {
+        .captcha-brand {
             font-size: 12px;
             color: #1a73e8;
         }
         .captcha-links {
-            font-size: 12px;
+            font-size: 10px;
             color: #5f6368;
         }
         .captcha-links a {
-            color: #1a73e8;
+            color: #5f6368;
             text-decoration: none;
         }
         .submit-button {
-            padding: 10px 20px;
+            padding: 8px 16px;
             background-color: #f1f3f4;
             border: 1px solid #dadce0;
             border-radius: 4px;
             font-size: 14px;
+            color: #202124;
             cursor: pointer;
         }
         .submit-button:hover {
@@ -74,20 +86,23 @@
     </style>
 </head>
 <body>
-    <div class="captcha-container">
-        <input type="checkbox" id="captcha" class="captcha-checkbox">
-        <span class="captcha-text">Я не робот</span>
-        <div class="captcha-logo">
-            <!-- Замените src на URL логотипа reCAPTCHA или используйте локальное изображение -->
-            <img src="https://www.google.com/recaptcha/about/images/reCAPTCHA-logo.png" alt="reCAPTCHA">
-            <span>reCAPTCHA</span>
+    <div class="container">
+        <button class="submit-button" onclick="verify()">Отправить</button>
+        <div class="captcha-container">
+            <div class="captcha-left">
+                <input type="checkbox" id="captcha" class="captcha-checkbox">
+                <span class="captcha-text">Я не робот</span>
+            </div>
+            <div class="captcha-right">
+                <div class="captcha-logo"></div> <!-- Заглушка для логотипа -->
+                <span class="captcha-brand">reCAPTCHA</span>
+                <div class="captcha-links">
+                    <a href="https://policies.google.com/privacy" target="_blank">Privacy</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank">Terms</a>
+                </div>
+            </div>
         </div>
     </div>
-    <div class="captcha-links">
-        <a href="https://policies.google.com/privacy" target="_blank">Privacy</a> - 
-        <a href="https://policies.google.com/terms" target="_blank">Terms</a>
-    </div>
-    <button class="submit-button" onclick="verify()">Отправить</button>
     <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
 
     <script>
@@ -96,7 +111,6 @@
             const error = document.getElementById('error');
             if (checkbox.checked) {
                 error.style.display = 'none';
-                // Укажите ваш целевой URL и параметры
                 const targetUrl = 'https://example.com'; // Замените на ваш URL
                 const utmParams = '?utm_source=yourdomain&utm_medium=link'; // Настройте UTM-метки
                 window.location.href = targetUrl + utmParams;
