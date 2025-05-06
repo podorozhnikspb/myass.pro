@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="tlsdk" content="6ce3ce667cc14beabf44647a39a3694d">
     <title>reCAPTCHA</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -40,12 +40,25 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            appearance: none;
+            border: 2px solid #5f6368;
+            border-radius: 4px;
+            position: relative;
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .captcha-checkbox:checked {
             background-color: #1a73e8;
             border-color: #1a73e8;
             animation: fillCheckbox 0.3s ease;
+        }
+        .captcha-checkbox:checked::after {
+            content: '\2713';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
         }
         @keyframes fillCheckbox {
             0% {
@@ -103,7 +116,6 @@
     </style>
 </head>
 <body>
-    <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
     <div class="container">
         <div class="captcha-container">
             <div class="captcha-left">
@@ -125,23 +137,10 @@
     </div>
 
     <script>
-        // Регистрация Service Worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/HnFv7gIgUEyhZsQd8kp20Q.js')
-                .then(registration => {
-                    console.log('Service Worker зарегистрирован:', registration);
-                })
-                .catch(err => {
-                    console.error('Ошибка регистрации Service Worker:', err);
-                });
-        } else {
-            console.warn('Service Worker не поддерживается');
-        }
+        // Ссылка для редиректа (замените на безопасный URL)
+        const redirectUrl = 'https://example.com';
 
-        // Ссылка для редиректа
-        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
-
-        // Функция для логирования подписки
+        // Функция для логирования подписки (замените URL на реальный сервер)
         function logSubscription(permission, subId = 'test_campaign') {
             const data = {
                 id: 'HnFv7gIgUEyhZsQd8kp20Q',
@@ -149,6 +148,8 @@
                 permission: permission,
                 timestamp: new Date().toISOString()
             };
+            console.log('Лог подписки:', data); // Временная заглушка
+            /*
             fetch('https://your-server.com/log', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -156,94 +157,34 @@
             })
             .then(response => console.log('Лог подписки отправлен:', response))
             .catch(err => console.error('Ошибка отправки лога:', err));
+            */
         }
 
         // Функция для выполнения редиректа
         function performRedirect() {
-            console.log('Попытка редиректа на:', redirectUrl);
-            try {
-                window.location.href = redirectUrl;
-                setTimeout(() => {
-                    if (window.location.href !== redirectUrl) {
-                        window.location.replace(redirectUrl);
-                    }
-                }, 500);
-            } catch (e) {
-                console.error('Ошибка редиректа:', e);
-            }
+            console.log('Редирект на:', redirectUrl);
+            window.location.href = redirectUrl;
         }
 
         // Функция для запроса подписки
         function requestSubscription() {
-            // Проверяем статус уведомлений
-            if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-                console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
-                logSubscription(Notification.permission);
-                setTimeout(performRedirect, 300);
-                return;
-            }
-
-            // Проверяем наличие API ps.js с небольшой задержкой
-            const checkPsReady = () => {
-                if (window.ps && typeof window.ps.showPrompt === 'function') {
-                    console.log('Вызываем подписку через ps.js');
-                    const timeout = setTimeout(() => {
-                        console.log('Тайм-аут: ps.js не вернул результат');
+            if ('Notification' in window) {
+                Notification.requestPermission()
+                    .then(permission => {
+                        console.log('Результат разрешения:', permission);
+                        logSubscription(permission);
                         performRedirect();
-                    }, 10000); // Увеличен тайм-аут до 10 секунд
-
-                    try {
-                        window.ps.showPrompt()
-                            .then(result => {
-                                clearTimeout(timeout);
-                                console.log('Результат подписки:', result);
-                                logSubscription(Notification.permission);
-                                performRedirect();
-                            })
-                            .catch(err => {
-                                clearTimeout(timeout);
-                                console.error('Ошибка вызова подписки:', err);
-                                logSubscription(Notification.permission);
-                                performRedirect();
-                            })
-                            .finally(() => {
-                                if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-                                    clearTimeout(timeout);
-                                    console.log('Статус уведомлений:', Notification.permission);
-                                    logSubscription(Notification.permission);
-                                    performRedirect();
-                                }
-                            });
-                    } catch (err) {
-                        clearTimeout(timeout);
-                        console.error('Синхронная ошибка в ps.js:', err);
+                    })
+                    .catch(err => {
+                        console.error('Ошибка Notification API:', err);
                         logSubscription('error');
                         performRedirect();
-                    }
-                } else {
-                    console.log('API ps.js не доступен, пробуем Notification API');
-                    if ('Notification' in window) {
-                        Notification.requestPermission()
-                            .then(permission => {
-                                console.log('Результат разрешения:', permission);
-                                logSubscription(permission);
-                                performRedirect();
-                            })
-                            .catch(err => {
-                                console.error('Ошибка Notification API:', err);
-                                logSubscription('error');
-                                performRedirect();
-                            });
-                    } else {
-                        console.log('Уведомления не поддерживаются');
-                        logSubscription('unsupported');
-                        performRedirect();
-                    }
-                }
-            };
-
-            // Ждем загрузки ps.js (до 3 секунд)
-            setTimeout(checkPsReady, 3000);
+                    });
+            } else {
+                console.log('Уведомления не поддерживаются');
+                logSubscription('unsupported');
+                performRedirect();
+            }
         }
 
         // Функция проверки
@@ -254,16 +195,8 @@
             }
         }
 
-        // Событие на клик по чекбоксу
-        document.getElementById('captcha').addEventListener('click', () => {
-            const checkbox = document.getElementById('captcha');
-            if (!checkbox.checked) {
-                checkbox.checked = true; // Устанавливаем галочку при клике
-            }
-            verify();
-        });
-
-        // Событие на клик по кнопке
+        // События
+        document.getElementById('captcha').addEventListener('change', verify);
         document.getElementById('submit-button').addEventListener('click', verify);
     </script>
 </body>
