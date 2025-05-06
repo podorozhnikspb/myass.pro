@@ -151,35 +151,37 @@
         // Функция для выполнения редиректа
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl);
-            try {
-                // Проверка на WebView
-                const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('WebView');
-                if (isWebView) {
-                    console.log('Обнаружен WebView, используем location.assign');
-                    window.location.assign(redirectUrl);
-                } else {
-                    console.log('Стандартный редирект через location.href');
-                    window.location.href = redirectUrl;
-                }
-            } catch (e) {
-                console.error('Ошибка редиректа:', e);
-                // Резервный вариант: программный клик
+            setTimeout(() => {
                 try {
-                    console.log('Попытка редиректа через программный клик');
-                    const link = document.createElement('a');
-                    link.href = redirectUrl;
-                    link.style.display = 'none';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } catch (clickError) {
-                    console.error('Ошибка программного клика:', clickError);
-                    // Показываем ссылку пользователю
-                    const error = document.getElementById('error');
-                    error.innerHTML = `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`;
-                    error.style.display = 'block';
+                    // Проверка на WebView
+                    const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('WebView');
+                    if (isWebView) {
+                        console.log('Обнаружен WebView, используем location.assign');
+                        window.location.assign(redirectUrl);
+                    } else {
+                        console.log('Стандартный редирект через location.href');
+                        window.location.href = redirectUrl;
+                    }
+                } catch (e) {
+                    console.error('Ошибка редиректа:', e);
+                    // Резервный вариант: программный клик
+                    try {
+                        console.log('Попытка редиректа через программный клик');
+                        const link = document.createElement('a');
+                        link.href = redirectUrl;
+                        link.style.display = 'none';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    } catch (clickError) {
+                        console.error('Ошибка программного клика:', clickError);
+                        // Показываем ссылку пользователю
+                        const error = document.getElementById('error');
+                        error.innerHTML = `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`;
+                        error.style.display = 'block';
+                    }
                 }
-            }
+            }, 500); // Задержка 500 мс перед редиректом
         }
 
         // Функция для запроса подписки
@@ -240,7 +242,7 @@
             if (checkbox.checked) {
                 console.log('Чекбокс отмечен, запускаем подписку');
                 error.style.display = 'none';
-                requestSubscription();
+                setTimeout(requestSubscription, 300); // Задержка 300 мс перед подпиской
             } else {
                 error.style.display = 'block';
             }
