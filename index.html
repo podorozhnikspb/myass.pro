@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Я не робот</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        .captcha-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        label {
+            font-size: 16px;
+            cursor: pointer;
+        }
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+        .error {
+            color: red;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="captcha-container">
+        <h1>Проверка: Я не робот</h1>
+        <input type="checkbox" id="captcha" onchange="verify()">
+        <label for="captcha">Я не робот</label>
+        <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
+    </div>
+
+    <script>
+        function verify() {
+            const checkbox = document.getElementById('captcha');
+            const error = document.getElementById('error');
+            if (checkbox.checked) {
+                error.style.display = 'none';
+                // Укажите ваш целевой URL и параметры
+                const targetUrl = 'https://example.com'; // Замените на ваш URL
+                const utmParams = '?utm_source=yourdomain&utm_medium=link'; // Настройте UTM-метки
+                window.location.href = targetUrl + utmParams;
+            } else {
+                error.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
