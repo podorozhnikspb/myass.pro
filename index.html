@@ -39,6 +39,7 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
+            appearance: auto; /* Гарантируем стандартный вид чекбокса */
         }
         .captcha-checkbox:checked {
             accent-color: #1a73e8; /* Синий цвет для галочки */
@@ -140,7 +141,7 @@
             console.log('Лог подписки:', data);
         }
 
-        // Функция для выполнения редиректа
+        // Функция для выполнения редиректа (восстановлена из первого кода)
         function performRedirect() {
             console.log('Попытка редиректа на:', redirectUrl);
             try {
@@ -149,6 +150,12 @@
                     if (window.location.href !== redirectUrl) {
                         console.log('window.location.href не сработал, пробуем replace');
                         window.location.replace(redirectUrl);
+                        setTimeout(() => {
+                            if (window.location.href !== redirectUrl) {
+                                console.log('replace не сработал, пробуем window.open');
+                                window.open(redirectUrl, '_self');
+                            }
+                        }, 500);
                     }
                 }, 500);
             } catch (e) {
@@ -167,6 +174,7 @@
             }
 
             const checkPsReady = () => {
+                console.log('Проверка ps.js');
                 if (window.ps && typeof window.ps.showPrompt === 'function') {
                     console.log('Вызываем подписку через ps.js');
                     window.ps.showPrompt()
@@ -202,7 +210,7 @@
                 }
             };
 
-            setTimeout(checkPsReady, 1000);
+            setTimeout(checkPsReady, 500); // Уменьшено до 500 мс
         }
 
         // Функция проверки
@@ -210,7 +218,7 @@
             const checkbox = document.getElementById('captcha');
             if (checkbox.checked) {
                 console.log('Чекбокс отмечен, запускаем подписку');
-                setTimeout(requestSubscription, 300);
+                setTimeout(requestSubscription, 100); // Уменьшено до 100 мс
             }
         }
 
