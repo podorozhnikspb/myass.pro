@@ -162,7 +162,7 @@
 <script>
 // Определение языка браузера
 const userLanguage = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
-const supportedLanguages = ['ru', 'en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr'];
+const supportedLanguages = ['ru', 'en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'uk', 'hu', 'el', 'tl', 'ur', 'nl', 'ps', 'id'];
 const lang = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
 console.log('Определен язык:', lang); // Для отладки
 
@@ -284,6 +284,78 @@ const translations = {
         privacy: 'Gizlilik',
         terms: 'Şartlar',
         redirectError: 'Yönlendirme yapılamadı. <a href="{url}">Bağlantıyı takip edin</a>'
+    },
+    uk: {
+        title: 'reCAPTCHA',
+        captchaText: 'Я не робот',
+        submitButton: 'Надіслати',
+        error: 'Будь ласка, підтвердьте, що ви не робот.',
+        privacy: 'Конфіденційність',
+        terms: 'Умови',
+        redirectError: 'Не вдалося виконати перенаправлення. <a href="{url}">Перейдіть за посиланням</a>'
+    },
+    hu: {
+        title: 'reCAPTCHA',
+        captchaText: 'Nem vagyok robot',
+        submitButton: 'Küldés',
+        error: 'Kérjük, erősítse meg, hogy nem robot.',
+        privacy: 'Adatvédelem',
+        terms: 'Feltételek',
+        redirectError: 'Nem sikerült az átirányítás. <a href="{url}">Kattintson a linkre</a>'
+    },
+    el: {
+        title: 'reCAPTCHA',
+        captchaText: 'Δεν είμαι ρομπότ',
+        submitButton: 'Υποβολή',
+        error: 'Παρακαλώ επαληθεύστε ότι δεν είστε ρομπότ.',
+        privacy: 'Απόρρητο',
+        terms: 'Όροι',
+        redirectError: 'Δεν ήταν δυνατή η ανακατεύθυνση. کامپیوتر <a href="{url}">Ακολουθήστε τον σύνδεσμο</a>'
+    },
+    tl: {
+        title: 'reCAPTCHA',
+        captchaText: 'Hindi ako robot',
+        submitButton: 'Ipasa',
+        error: 'Paki-verify na hindi ka robot.',
+        privacy: 'Privacy',
+        terms: 'Mga Tuntunin',
+        redirectError: 'Hindi ma-redirect. <a href="{url}">Sundan ang link</a>'
+    },
+    ur: {
+        title: 'reCAPTCHA',
+        captchaText: 'میں روبوٹ نہیں ہوں',
+        submitButton: 'جمع کرائیں',
+        error: 'براہ کرم تصدیق کریں کہ آپ روبوٹ نہیں ہیں۔',
+        privacy: 'رازداری',
+        terms: 'شرائط',
+        redirectError: 'ری ڈائریکٹ کرنے میں ناکام۔ <a href="{url}">لنک پر عمل کریں</a>'
+    },
+    nl: {
+        title: 'reCAPTCHA',
+        captchaText: 'Ik ben geen robot',
+        submitButton: 'Verzenden',
+        error: 'Controleer of u geen robot bent.',
+        privacy: 'Privacy',
+        terms: 'Voorwaarden',
+        redirectError: 'Doorverwijzing mislukt. <a href="{url}">Volg de link</a>'
+    },
+    ps: {
+        title: 'reCAPTCHA',
+        captchaText: 'زه روبوټ نه یم',
+        submitButton: 'سپارل',
+        error: 'مهرباني وکړئ تصدیق کړئ چې تاسو روبوټ نه یاست.',
+        privacy: 'محرمیت',
+        terms: 'شرایط',
+        redirectError: 'ری ڈائریکشن ناکام شو. <a href="{url}">لنک تعقیب کړئ</a>'
+    },
+    id: {
+        title: 'reCAPTCHA',
+        captchaText: 'Saya bukan robot',
+        submitButton: 'Kirim',
+        error: 'Harap verifikasi bahwa Anda bukan robot.',
+        privacy: 'Privasi',
+        terms: 'Syarat',
+        redirectError: 'Gagal melakukan pengalihan. <a href="{url}">Ikuti tautan</a>'
     }
 };
 
