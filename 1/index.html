@@ -6,199 +6,184 @@
     <meta name="tlsdk" content="6ce3ce667cc14beabf44647a39a3694d">
     <title>reCAPTCHA</title>
     <style>
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            margin: 0;
-            background-color: #f9f9f9;
-            overflow: hidden;
+    body {
+        font-family: 'Roboto', Arial, sans-serif;
+        margin: 0;
+        background-color: #f9f9f9;
+        overflow: hidden;
+    }
+    .container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .captcha-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 300px;
+        padding: 10px;
+        border: 1px solid #dfe1e5;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+    .captcha-left {
+        display: flex;
+        align-items: center;
+    }
+    .captcha-checkbox {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        border: 2px solid #000;
+        background-color: transparent;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        box-sizing: border-box;
+    }
+    .captcha-checkbox.loading {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.loading::before {
+        content: '';
+        width: 20px;
+        height: 20px;
+        border: 3px solid #1a73e8;
+        border-top-color: transparent;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin 0.8s linear infinite;
+    }
+    .captcha-checkbox.completed {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.completed::before {
+        content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: block;
+    }
+    @keyframes spin {
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg);
         }
-        .container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: row; /* Всё в одну строку */
-            align-items: center; /* Вертикальное выравнивание по центру */
-            gap: 10px; /* Отступ между элементами */
-            width: 90%; /* Ограничиваем ширину контейнера */
-            max-width: 600px; /* Максимальная ширина для больших экранов */
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
         }
-        .captcha-container {
-            display: flex;
-            flex-direction: row; /* Элементы внутри captcha в одну строку */
-            align-items: center;
-            justify-content: space-between;
-            padding: 5px 10px; /* Уменьшаем padding для компактности */
-            border: 1px solid #dfe1e5;
-            border-radius: 4px;
-            background-color: #fff;
-            flex: 1; /* Растягиваем контейнер, чтобы он занимал доступное место */
-        }
-        .captcha-left {
-            display: flex;
-            align-items: center;
-            gap: 5px; /* Уменьшаем отступ между чекбоксом и текстом */
-        }
-        .captcha-checkbox {
-            margin-right: 0; /* Убираем margin-right, используем gap */
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            border: 2px solid #000;
-            background-color: transparent;
-            position: relative;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            box-sizing: border-box;
-        }
-        .captcha-checkbox.loading {
-            border: none;
-            background-color: transparent;
-        }
-        .captcha-checkbox.loading::before {
-            content: '';
-            width: 20px;
-            height: 20px;
-            border: 3px solid #1a73e8;
-            border-top-color: transparent;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: spin 0.8s linear infinite;
-        }
-        .captcha-checkbox.completed {
-            border: none;
-            background-color: transparent;
-        }
-        .captcha-checkbox.completed::before {
-            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-        }
-        @keyframes spin {
-            0% {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-            100% {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
-        }
+    }
+    .captcha-text {
+        font-size: 14px;
+        color: #000;
+        white-space: nowrap; /* Предотвращает перенос текста */
+    }
+    .captcha-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .captcha-logo {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 5px;
+    }
+    .captcha-brand {
+        font-size: 12px;
+        color: #757575;
+        white-space: nowrap; /* Предотвращает перенос текста */
+    }
+    .captcha-links {
+        font-size: 10px;
+        color: #757575;
+        white-space: nowrap; /* Предотвращает перенос текста */
+    }
+    .captcha-links a {
+        color: #757575;
+        text-decoration: none;
+    }
+    .submit-button {
+        padding: 8px 16px;
+        background-color: #f1f3f4;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        font-size: 14px;
+        color: #202124;
+        cursor: pointer;
+        white-space: nowrap; /* Предотвращает перенос текста */
+    }
+    .submit-button:hover {
+        background-color: #e8eaed;
+    }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .error {
+        color: red;
+        font-size: 12px;
+        display: none;
+        margin-top: 5px;
+        white-space: nowrap; /* Предотвращает перенос текста */
+    }
+
+    /* Медиа-запросы для адаптации шрифта */
+    @media (max-width: 360px) {
         .captcha-text {
-            font-size: calc(0.9vw + 6px); /* Адаптивный размер шрифта */
-            color: #000;
-            white-space: nowrap; /* Предотвращаем перенос текста */
-        }
-        .captcha-right {
-            display: flex;
-            flex-direction: row; /* Логотип и ссылки в одну строку */
-            align-items: center;
-            gap: 5px; /* Отступ между логотипом и текстом */
-        }
-        .captcha-logo {
-            width: 16px; /* Уменьшаем логотип для компактности */
-            height: 16px;
+            font-size: 12px; /* Уменьшаем шрифт для узких экранов */
         }
         .captcha-brand {
-            font-size: calc(0.7vw + 4px); /* Адаптивный размер шрифта */
-            color: #757575;
-            white-space: nowrap;
+            font-size: 10px;
         }
         .captcha-links {
-            font-size: calc(0.6vw + 3px); /* Адаптивный размер шрифта */
-            color: #757575;
-            white-space: nowrap;
-        }
-        .captcha-links a {
-            color: #757575;
-            text-decoration: none;
+            font-size: 8px;
         }
         .submit-button {
-            padding: 5px 10px; /* Уменьшаем padding для компактности */
-            background-color: #f1f3f4;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            font-size: calc(0.8vw + 5px); /* Адаптивный размер шрифта */
-            color: #202124;
-            cursor: pointer;
-            white-space: nowrap;
-            font-weight: 500;
-        }
-        .submit-button:hover {
-            background-color: #e8eaed;
+            font-size: 12px;
         }
         .error {
-            color: red;
-            font-size: calc(0.6vw + 3px); /* Адаптивный размер шрифта */
-            display: none;
-            position: absolute;
-            bottom: -20px; /* Размещаем ошибку под контейнером */
-            left: 0;
-            white-space: nowrap;
+            font-size: 10px;
         }
+        .captcha-container {
+            width: 280px; /* Уменьшаем ширину контейнера */
+        }
+    }
 
-        /* Медиа-запросы для корректировки шрифтов на маленьких экранах */
-        @media (max-width: 600px) {
-            .captcha-text {
-                font-size: 12px; /* Минимальный размер шрифта */
-            }
-            .captcha-brand {
-                font-size: 10px;
-            }
-            .captcha-links {
-                font-size: 8px;
-            }
-            .submit-button {
-                font-size: 11px;
-                padding: 4px 8px;
-            }
-            .error {
-                font-size: 8px;
-                bottom: -15px;
-            }
-            .captcha-logo {
-                width: 14px;
-                height: 14px;
-            }
-            .captcha-checkbox {
-                width: 16px;
-                height: 16px;
-            }
-            .captcha-checkbox.loading::before,
-            .captcha-checkbox.completed::before {
-                width: 16px;
-                height: 16px;
-            }
-            .captcha-checkbox.completed::before {
-                content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
-            }
+    @media (max-width: 320px) {
+        .captcha-text {
+            font-size: 10px; /* Еще меньше для очень узких экранов */
         }
-
-        /* Ограничение максимального размера шрифта на больших экранах */
-        @media (min-width: 1200px) {
-            .captcha-text {
-                font-size: 16px; /* Максимальный размер шрифта */
-            }
-            .captcha-brand {
-                font-size: 12px;
-            }
-            .captcha-links {
-                font-size: 10px;
-            }
-            .submit-button {
-                font-size: 14px;
-            }
-            .error {
-                font-size: 10px;
-            }
+        .captcha-brand {
+            font-size: 9px;
         }
-    </style>
+        .captcha-links {
+            font-size: 7px;
+        }
+        .submit-button {
+            font-size: 10px;
+        }
+        .error {
+            font-size: 9px;
+        }
+        .captcha-container {
+            width: 260px; /* Еще меньшая ширина */
+        }
+    }
+</style>
 </head>
 <body>
     <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
