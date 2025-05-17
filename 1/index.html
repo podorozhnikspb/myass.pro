@@ -20,7 +20,7 @@
             transform: translate(-50%, -50%); /* Центрируем по обоим осям */
             display: flex;
             flex-direction: column;
-            align-items: center; /* Центрируем элементы */
+            align-items: flex-start; /* Выравнивание влево */
             gap: 10px;
             width: 100%; /* Адаптивная ширина */
             max-width: 400px; /* Ограничение максимальной ширины */
@@ -32,7 +32,7 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 300px; /* Максимальная ширина */
+            max-width: 320px; /* Расширенная ширина */
             min-width: 200px; /* Минимальная ширина */
             padding: 10px;
             border: 1px solid #dfe1e5;
@@ -150,7 +150,7 @@
         .button-container {
             display: flex;
             flex-direction: column;
-            align-items: center; /* Центрируем кнопку */
+            align-items: flex-start; /* Кнопка слева */
             width: 100%;
         }
         .error {
@@ -160,12 +160,12 @@
             margin-top: 5px;
             white-space: normal; /* Разрешаем перенос текста */
             overflow-wrap: break-word; /* Перенос длинных слов */
-            text-align: center; /* Центрируем текст ошибки */
+            text-align: left; /* Текст ошибки выравнивается влево */
         }
         /* Медиа-запросы для адаптации */
         @media (max-width: 360px) {
             .captcha-container {
-                max-width: 280px;
+                max-width: 300px; /* Уменьшаем для узких экранов */
                 min-width: 200px;
             }
             .captcha-text {
