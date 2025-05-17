@@ -32,7 +32,7 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 320px; /* Расширенная ширина */
+            max-width: 340px; /* Ещё расширенная ширина */
             min-width: 200px; /* Минимальная ширина */
             padding: 10px;
             border: 1px solid #dfe1e5;
@@ -143,6 +143,7 @@
             cursor: pointer;
             white-space: normal; /* Разрешаем перенос текста */
             overflow-wrap: break-word; /* Перенос длинных слов */
+            align-self: flex-start; /* Явное выравнивание влево */
         }
         .submit-button:hover {
             background-color: #e8eaed;
@@ -150,7 +151,7 @@
         .button-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-start; /* Кнопка слева */
+            align-items: flex-start; /* Кнопка и ошибка слева */
             width: 100%;
         }
         .error {
@@ -161,11 +162,12 @@
             white-space: normal; /* Разрешаем перенос текста */
             overflow-wrap: break-word; /* Перенос длинных слов */
             text-align: left; /* Текст ошибки выравнивается влево */
+            align-self: flex-start; /* Явное выравнивание влево */
         }
         /* Медиа-запросы для адаптации */
         @media (max-width: 360px) {
             .captcha-container {
-                max-width: 300px; /* Уменьшаем для узких экранов */
+                max-width: 320px; /* Уменьшаем для узких экранов */
                 min-width: 200px;
             }
             .captcha-text {
