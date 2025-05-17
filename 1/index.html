@@ -47,6 +47,7 @@
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
+            box-sizing: border-box; /* Гарантирует корректные размеры с учётом границ */
         }
         .captcha-checkbox.loading {
             border: none;
@@ -70,7 +71,7 @@
             background-color: transparent;
         }
         .captcha-checkbox.completed::before {
-            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
             position: absolute;
             top: 50%;
             left: 50%;
@@ -149,7 +150,7 @@
                 <span class="captcha-brand">reCAPTCHA</span>
                 <div class="captcha-links">
                     <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Конфиденциальность</a> - 
-                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Условия</a>
+                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Условия использования</a>
                 </div>
             </div>
         </div>
@@ -161,27 +162,27 @@
 <script>
     // Language translations
     const translations = {
-        en: { checkboxText: "I'm not a robot", verify: "Verify", error: "Please verify that you are not a robot.", privacy: "Privacy", terms: "Terms" },
-        ru: { checkboxText: "Я не робот", verify: "Подтвердить", error: "Пожалуйста, подтвердите, что вы не робот.", privacy: "Конфиденциальность", terms: "Условия" },
-        es: { checkboxText: "No soy un robot", verify: "Verificar", error: "Por favor, verifica que no eres un robot.", privacy: "Privacidad", terms: "Términos" },
-        fr: { checkboxText: "Je ne suis pas un robot", verify: "Vérifier", error: "Veuillez vérifier que vous n'êtes pas un robot.", privacy: "Confidentialité", terms: "Conditions" },
+        en: { checkboxText: "I'm not a robot", verify: "Verify", error: "Please verify that you are not a robot.", privacy: "Privacy", terms: "Terms of Service" },
+        ru: { checkboxText: "Я не робот", verify: "Подтвердить", error: "Пожалуйста, подтвердите, что вы не робот.", privacy: "Конфиденциальность", terms: "Условия использования" },
+        es: { checkboxText: "No soy un robot", verify: "Verificar", error: "Por favor, verifica que no eres un robot.", privacy: "Privacidad", terms: "Términos de servicio" },
+        fr: { checkboxText: "Je ne suis pas un robot", verify: "Vérifier", error: "Veuillez vérifier que vous n'êtes pas un robot.", privacy: "Confidentialité", terms: "Conditions d'utilisation" },
         de: { checkboxText: "Ich bin kein Roboter", verify: "Überprüfen", error: "Bitte überprüfen Sie, dass Sie kein Roboter sind.", privacy: "Datenschutz", terms: "Nutzungsbedingungen" },
-        it: { checkboxText: "Non sono un robot", verify: "Verifica", error: "Per favore, verifica che non sei un robot.", privacy: "Privacy", terms: "Termini" },
-        pt: { checkboxText: "Não sou um robô", verify: "Verificar", error: "Por favor, verifique que você não é um robô.", privacy: "Privacidade", terms: "Termos" },
-        zh: { checkboxText: "我不是机器人", verify: "验证", error: "请验证您不是机器人。", privacy: "隐私", terms: "条款" },
+        it: { checkboxText: "Non sono un robot", verify: "Verifica", error: "Per favore, verifica che non sei un robot.", privacy: "Privacy", terms: "Termini di servizio" },
+        pt: { checkboxText: "Não sou um robô", verify: "Verificar", error: "Por favor, verifique que você não é um robô.", privacy: "Privacidade", terms: "Termos de serviço" },
+        zh: { checkboxText: "我不是机器人", verify: "验证", error: "请验证您不是机器人。", privacy: "隐私", terms: "服务条款" },
         ja: { checkboxText: "私はロボットではありません", verify: "確認する", error: "あなたがロボットでないことを確認してください。", privacy: "プライバシー", terms: "利用規約" },
         ko: { checkboxText: "로봇이 아닙니다", verify: "확인", error: "로봇이 아님을 확인해 주세요.", privacy: "개인정보", terms: "이용약관" },
-        ar: { checkboxText: "أنا لست روبوت", verify: "تحقق", error: "يرجى التحقق من أنك لست روبوتًا.", privacy: "الخصوصية", terms: "الشروط" },
-        hi: { checkboxText: "मैं रोबोट नहीं हूँ", verify: "सत्यापित करें", error: "कृपया सत्यापित करें कि आप रोबोट नहीं हैं।", privacy: "गोपनीयता", terms: "शर्तें" },
-        tr: { checkboxText: "Ben robot değilim", verify: "Doğrula", error: "Lütfen robot olmadığınızı doğrulayın.", privacy: "Gizlilik", terms: "Şartlar" },
-        uk: { checkboxText: "Я не робот", verify: "Підтвердити", error: "Будь ласка, підтвердьте, що ви не робот.", privacy: "Конфіденційність", terms: "Умови" },
-        hu: { checkboxText: "Nem vagyok robot", verify: "Ellenőrzés", error: "Kérjük, ellenőrizze, hogy nem robot.", privacy: "Adatvédelem", terms: "Feltételek" },
-        el: { checkboxText: "Δεν είμαι ρομπότ", verify: "Επιβεβαίωση", error: "Παρακαλώ επιβεβαιώστε ότι δεν είστε ρομπότ.", privacy: "Απόρρητο", terms: "Όροι" },
-        tl: { checkboxText: "Hindi ako robot", verify: "Beripikahan", error: "Paki-verify na hindi ka robot.", privacy: "Pribasidad", terms: "Mga Tuntunin" },
-        ur: { checkboxText: "میں روبوٹ نہیں ہوں", verify: "تصدیق کریں", error: "براہ کرم تصدیق کریں کہ آپ روبوٹ نہیں ہیں۔", privacy: "رازداری", terms: "شرائط" },
-        nl: { checkboxText: "Ik ben geen robot", verify: "Verifiëren", error: "Controleer a.u.b. dat u geen robot bent.", privacy: "Privacy", terms: "Voorwaarden" },
-        ps: { checkboxText: "زه روبوټ نه یم", verify: "تصدیق", error: "مهرباني وکړئ تصدیق کړئ چې تاسو روبوټ نه یاست.", privacy: "محرمیت", terms: "شرایط" },
-        id: { checkboxText: "Saya bukan robot", verify: "Verifikasi", error: "Harap verifikasi bahwa Anda bukan robot.", privacy: "Privasi", terms: "Ketentuan" }
+        ar: { checkboxText: "أنا لست روبوت", verify: "تحقق", error: "يرجى التحقق من أنك لست روبوتًا.", privacy: "الخصوصية", terms: "شروط الخدمة" },
+        hi: { checkboxText: "मैं रोबोट नहीं हूँ", verify: "सत्यापित करें", error: "कृपया सत्यापित करें कि आप रोबोट नहीं हैं।", privacy: "गोपनीयता", terms: "सेवा की शर्तें" },
+        tr: { checkboxText: "Ben robot değilim", verify: "Doğrula", error: "Lütfen robot olmadığınızı doğrulayın.", privacy: "Gizlilik", terms: "Hizmet Şartları" },
+        uk: { checkboxText: "Я не робот", verify: "Підтвердити", error: "Будь ласка, підтвердьте, що ви не робот.", privacy: "Конфіденційність", terms: "Умови використання" },
+        hu: { checkboxText: "Nem vagyok robot", verify: "Ellenőrzés", error: "Kérjük, ellenőrizze, hogy nem robot.", privacy: "Adatvédelem", terms: "Felhasználási feltételek" },
+        el: { checkboxText: "Δεν είμαι ρομπότ", verify: "Επιβεβαίωση", error: "Παρακαλώ επιβεβαιώστε ότι δεν είστε ρομπότ.", privacy: "Απόρρητο", terms: "Όροι Χρήσης" },
+        tl: { checkboxText: "Hindi ako robot", verify: "Beripikahan", error: "Paki-verify na hindi ka robot.", privacy: "Pribasidad", terms: "Mga Tuntunin ng Serbisyo" },
+        ur: { checkboxText: "میں روبوٹ نہیں ہوں", verify: "تصدیق کریں", error: "براہ کرم تصدیق کریں کہ آپ روبوٹ نہیں ہیں۔", privacy: "رازداری", terms: "سروس کی شرائط" },
+        nl: { checkboxText: "Ik ben geen robot", verify: "Verifiëren", error: "Controleer a.u.b. dat u geen robot bent.", privacy: "Privacy", terms: "Gebruiksvoorwaarden" },
+        ps: { checkboxText: "زه روبوټ نه یم", verify: "تصدیق", error: "مهرباني وکړئ تصدیق کړئ چې تاسو روبوټ نه یاست.", privacy: "محرمیت", terms: "د خدمت شرایط" },
+        id: { checkboxText: "Saya bukan robot", verify: "Verifikasi", error: "Harap verifikasi bahwa Anda bukan robot.", privacy: "Privasi", terms: "Ketentuan Layanan" }
     };
 
     // Detect browser language
