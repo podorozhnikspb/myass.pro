@@ -79,7 +79,7 @@
     .captcha-checkbox.completed::before {
     content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
     position: absolute;
-    top: 55%; /* было 50% — чуть ниже */
+    top: 58%; /* было 50% — чуть ниже */
     left: 50%;
     transform: translate(-50%, -50%);
     display: block;
@@ -575,6 +575,34 @@ document.getElementById('submit-button').addEventListener('click', () => {
     console.log('Нажата кнопка Отправить');
     verify();
 });
+
+const checkbox = document.getElementById('captcha');
+const error = document.getElementById('error');
+
+checkbox.addEventListener('click', function () {
+    if (checkbox.classList.contains('completed')) return;
+
+    checkbox.classList.add('loading');
+    checkbox.disabled = true;
+
+    setTimeout(() => {
+        checkbox.classList.remove('loading');
+        checkbox.classList.add('completed');
+        checkbox.disabled = false;
+        error.style.display = 'none';
+    }, 2000);
+});
+
+document.getElementById('submit-button').addEventListener('click', function () {
+    if (!checkbox.classList.contains('completed')) {
+        error.style.display = 'block';
+    } else {
+        error.style.display = 'none';
+        // Реальная логика отправки
+        alert('Success!');
+    }
+});
+
 </script>
 </body>
 </html>
