@@ -7,9 +7,9 @@
     <title>reCAPTCHA</title>
     <style>
     body {
-        font-family: 'Roboto', Arial, sans-serif;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         margin: 0;
-        background-color: #f9f9f9;
+        background-color: #f5f5f5;
         overflow: hidden;
     }
     .container {
@@ -26,17 +26,12 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        width: 300px;
-        padding: 10px;
-        border: 1px solid #dfe1e5;
+        width: 304px;
+        padding: 12px;
+        border: 1px solid #dadce0;
         border-radius: 4px;
         background-color: #fff;
-    }
-    .captcha-container[lang="el"], 
-    .captcha-container[lang="ps"], 
-    .captcha-container[lang="ur"], 
-    .captcha-container[lang="tl"] {
-        width: 320px;
+        box-shadow: 0 1px 6px rgba(0, 0, 0, 0.1);
     }
     .captcha-left {
         display: flex;
@@ -44,11 +39,11 @@
     }
     .captcha-checkbox {
         margin-right: 10px;
-        width: 20px;
-        height: 20px;
+        width: 38px;
+        height: 38px;
         cursor: pointer;
-        border: 2px solid #000;
-        background-color: transparent;
+        border: 2px solid #dadce0;
+        background-color: #fff;
         position: relative;
         appearance: none;
         -webkit-appearance: none;
@@ -76,7 +71,7 @@
         background-color: transparent;
     }
     .captcha-checkbox.completed::before {
-        content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+        content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="#00cc00" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
         position: absolute;
         top: 50%;
         left: 50%;
@@ -92,15 +87,9 @@
         }
     }
     .captcha-text {
-        font-size: 13px;
-        color: #000;
+        font-size: 14px;
+        color: #202124;
         white-space: nowrap;
-    }
-    [lang="el"] .captcha-text, 
-    [lang="ps"] .captcha-text, 
-    [lang="ur"] .captcha-text, 
-    [lang="tl"] .captcha-text {
-        font-size: 12px;
     }
     .captcha-right {
         display: flex;
@@ -108,37 +97,37 @@
         align-items: flex-end;
     }
     .captcha-logo {
-        width: 20px;
-        height: 20px;
+        width: 32px;
+        height: 32px;
         margin-bottom: 5px;
     }
     .captcha-brand {
-        font-size: 11px;
-        color: #757575;
+        font-size: 14px;
+        color: #5f6368;
+        line-height: 1;
     }
     .captcha-links {
-        font-size: 9px;
-        color: #757575;
+        font-size: 10px;
+        color: #5f6368;
+        margin-top: 2px;
     }
     .captcha-links a {
-        color: #757575;
+        color: #5f6368;
         text-decoration: none;
+    }
+    .captcha-links a:hover {
+        text-decoration: underline;
     }
     .submit-button {
         padding: 8px 16px;
         background-color: #f1f3f4;
         border: 1px solid #dadce0;
         border-radius: 4px;
-        font-size: 13px;
+        font-size: 14px;
         color: #202124;
         cursor: pointer;
         white-space: nowrap;
-    }
-    [lang="el"] .submit-button, 
-    [lang="ps"] .submit-button, 
-    [lang="ur"] .submit-button, 
-    [lang="tl"] .submit-button {
-        font-size: 12px;
+        font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
     }
     .submit-button:hover {
         background-color: #e8eaed;
@@ -149,8 +138,8 @@
         align-items: flex-start;
     }
     .error {
-        color: red;
-        font-size: 11px;
+        color: #d93025;
+        font-size: 12px;
         display: none;
         margin-top: 5px;
         white-space: nowrap;
@@ -172,7 +161,7 @@
                 <span class="captcha-text">I am not a robot</span>
             </div>
             <div class="captcha-right">
-                <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
+                <img src="https://www.google.com/recaptcha/about/images/recaptcha-badge.png" class="captcha-logo" alt="reCAPTCHA">
                 <span class="captcha-brand">reCAPTCHA</span>
                 <div class="captcha-links">
                     <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Privacy</a> - 
@@ -216,6 +205,7 @@ const translations = {
     es: {
         title: 'reCAPTCHA',
         captchaText: 'No soy un robot',
+        reCaptcha: 'reCAPTCHA',
         submitButton: 'Enviar',
         error: 'Por favor, verifica que no eres un robot.',
         privacy: 'Privacidad',
