@@ -28,10 +28,14 @@ function getTagHTML(tag) {
 
 function renderNotes() {
   console.log(`Rendering notes, displaying: ${displayedNotes}`);
-  currentView = "list";
   const container = document.getElementById("notes-list");
   if (!container) {
     console.error("notes-list container not found");
+    return;
+  }
+  if (!window.notes || !Array.isArray(window.notes)) {
+    console.error("window.notes is not defined or not an array");
+    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены</p>`;
     return;
   }
   container.innerHTML = `<h2>Notes</h2>`;
@@ -88,6 +92,10 @@ function loadMoreNotes() {
 
 function renderFullNote(index) {
   console.log(`Rendering full note: index=${index}`);
+  if (!window.notes || index >= window.notes.length) {
+    console.error(`Invalid note index: ${index}`);
+    return;
+  }
   currentView = "full";
   const note = window.notes[index];
   const container = currentTag ? document.getElementById("tag-notes") : document.getElementById("notes-list");
@@ -112,7 +120,11 @@ function renderFullNote(index) {
       <button class="back-button" onclick="${currentTag ? `filterByTag('${currentTag}')` : "renderNotes()"}">← Назад</button>
     </div>
   `;
-  Prism.highlightAll();
+  if (typeof Prism !== "undefined") {
+    Prism.highlightAll();
+  } else {
+    console.error("Prism.js is not loaded");
+  }
 }
 
 function renderTagCloud() {
@@ -123,6 +135,10 @@ function renderTagCloud() {
   const notesContainer = document.getElementById("tag-notes");
   if (!container || !notesContainer) {
     console.error("tag-cloud or tag-notes container not found");
+    return;
+  }
+  if (!window.tagStyles) {
+    console.error("window.tagStyles is not defined");
     return;
   }
   container.innerHTML = "";
@@ -165,4 +181,85 @@ function filterByTag(tag) {
   console.log(`Filtering by tag: ${tag}`);
   currentView = "tag-notes";
   currentTag = tag;
-  displayedTag
+  displayedTagNotes = 5;
+  const container = document.getElementById("tag-notes");
+  const cloudContainer = document.getElementById("tag-cloud");
+  if (!container || !cloudContainer) {
+    console.error("tag-notes or tag-cloud container not found");
+    return;
+  }
+  cloudContainer.style.display = "none";
+  container.style.display = "block";
+  container.innerHTML = `<h2>#${tag}</h2>`;
+
+  const filteredNotes = window.notes.filter(note => note.tags.includes(tag));
+  console.log(`Found ${filteredNotes.length} notes for tag ${tag}`);
+  filteredNotes.slice(0, displayedTagNotes).forEach((note, index) => {
+    const div = document.createElement("div");
+    div.className = "note";
+    div.innerHTML = `
+      <div class="note-header">
+        <div class="note-title">${note.title}</div>
+        <div class="note-date">${note.date}</div>
+        <div class="note-tags">
+          ${note.tags.map(getTagHTML).join(" ")}
+        </div>
+      </div>
+    `;
+    div.onclick = () => renderFullNote(window.notes.indexOf(note));
+    container.appendChild(div);
+    if (index < displayedTagNotes - 1 && index < filteredNotes.length - 1) {
+      container.appendChild(document.createElement("hr"));
+    }
+  });
+}
+
+function loadMoreTagNotes() {
+  if (currentView !== "tag-notes" || !currentTag || displayedTagNotes >= window.notes.filter(note => note.tags.includes(currentTag)).length) {
+    console.log(`Cannot load more tag notes: view=${currentView}, tag=${currentTag}, displayed=${displayedTagNotes}`);
+    return;
+  }
+
+  console.log(`Loading more tag notes for ${currentTag}, from ${displayedTagNotes} to ${displayedTagNotes + notesPerLoad}`);
+  const container = document.getElementById("tag-notes");
+  const filteredNotes = window.notes.filter(note => note.tags.includes(currentTag));
+  const nextNotes = filteredNotes.slice(displayedTagNotes, displayedTagNotes + notesPerLoad);
+  nextNotes.forEach((note, index) => {
+    const div = document.createElement("div");
+    div.className = "note";
+    div.innerHTML = `
+      <div class="note-header">
+        <div class="note-title">${note.title}</div>
+        <div class="note-date">${note.date}</div>
+        <div class="note-tags">
+          ${note.tags.map(getTagHTML).join(" ")}
+        </div>
+      </div>
+    `;
+    div.onclick = () => renderFullNote(window.notes.indexOf(note));
+    container.appendChild(div);
+    if (index < nextNotes.length - 1 || displayedTagNotes + index < filteredNotes.length - 1) {
+      container.appendChild(document.createElement("hr"));
+    }
+  });
+  displayedTagNotes += nextNotes.length;
+}
+
+// Слушатель для прокрутки
+window.addEventListener("scroll", () => {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) { // Уменьшен порог
+    console.log(`Scroll detected, current view: ${currentView}`);
+    if (currentView === "list") loadMoreNotes();
+    else if (currentView === "tags") loadMoreTags();
+    else if (currentView === "tag-notes") loadMoreTagNotes();
+  }
+});
+
+// Инициализация при загрузке страницы
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("Page loaded, initializing notes");
+  if (!window.notes) {
+    console.error("window.notes is not defined on page load");
+  }
+  showSection("notes");
+});
