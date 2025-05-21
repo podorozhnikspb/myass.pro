@@ -12,15 +12,17 @@
         overflow: hidden;
     }
     .container {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-bottom: 40px; /* пространство под ошибку */
+    position: relative; /* для абсолютной позиции ошибки */
+}
     .captcha-container {
         display: flex;
         align-items: center;
@@ -156,20 +158,18 @@
         align-items: flex-start;
     }
     .error {
+    position: absolute;
+    bottom: -30px;
+    left: 0;
     color: red;
     font-size: 11px;
-    max-height: 0;
     opacity: 0;
-    overflow: hidden;
-    margin-top: 0;
+    transition: opacity 0.3s ease;
     white-space: nowrap;
-    transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
 }
 
 .error.show {
-    max-height: 50px; /* достаточно для текста */
     opacity: 1;
-    margin-top: 5px;
 }
 
     body[lang="ar"], body[lang="ur"] {
