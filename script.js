@@ -192,7 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
   showSection("notes");
 });
 
-// Перерисовка при ресайзе
 window.addEventListener("resize", () => {
   if (currentView === "list") renderNotes();
   else if (currentView === "tags") renderTagCloud();

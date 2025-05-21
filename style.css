@@ -30,12 +30,12 @@ h1 {
   font-size: min(max(2.2rem, 3.4vw), 3rem);
   width: 100%;
   max-width: 600px;
-  margin: 15px auto 15px; /* 15px сверху и снизу */
+  margin: 20px auto 20px; /* Увеличено с 15px до 20px */
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: font-size 0.3s ease, margin 0.3s ease;
+  transition: font-size 0.3s ease, margin 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
 }
 
 nav {
@@ -43,21 +43,26 @@ nav {
   justify-content: center;
   align-items: center;
   width: 100%;
-  position: sticky; /* Прилипает при прокрутке */
+  position: sticky;
   top: 0;
   background: #fdfdfd;
-  border-bottom: 1px solid #ccc; /* Тонкая полоска */
   z-index: 1000;
   padding: min(max(0.2rem, 0.4vw), 0.3rem) 0;
   margin-top: 0;
-  transition: padding 0.3s ease;
+  transition: padding 0.3s ease, box-shadow 0.3s ease, border-bottom 0.3s ease;
+}
+
+/* Белая полоска и тень при закреплении */
+nav.sticky {
+  border-bottom: 1px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav a {
   text-decoration: none;
-  margin: 0 min(max(0.5rem, 1vw), 0.6rem); /* Растянуты */
+  margin: 0 min(max(0.7rem, 1.4vw), 0.8rem); /* Растянуты шире */
   color: #d33;
-  font-size: min(max(1.2rem, 1.8vw), 1.5rem); /* Меньше */
+  font-size: min(max(1.2rem, 1.8vw), 1.5rem);
   font-weight: normal;
   transition: font-size 0.3s ease, margin 0.3s ease;
 }
@@ -74,10 +79,11 @@ nav a:hover {
 
 h2 {
   color: #222;
-  margin: min(max(0.4rem, 0.8vw), 0.5rem) 0 min(max(0.4rem, 0.8vw), 0.5rem) min(max(0.4rem, 0.8vw), 0.5rem);
+  margin: min(max(0.4rem, 0.8vw), 0.5rem) 0; /* Одинаковые отступы, без боковых */
   text-align: left;
   font-size: min(max(1.8rem, 2.4vw), 2.2rem);
   transition: font-size 0.3s ease, margin 0.3s ease;
+  width: 100%;
 }
 
 main {
@@ -243,7 +249,14 @@ hr {
   transition: font-size 0.3s ease, margin 0.3s ease;
 }
 
-/* Медиа-запросы для мобильных */
+/* Эффект уменьшения <h1> при прокрутке */
+@media (min-width: 769px) {
+  h1.scrolled {
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
+  }
+}
+
 @media (max-width: 768px) {
   body {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
@@ -254,7 +267,12 @@ hr {
   h1 {
     font-size: min(max(1.7rem, 3vw), 2.2rem);
     max-width: 95%;
-    margin: 15px auto 15px;
+    margin: 20px auto 20px; /* Увеличено с 15px до 20px */
+  }
+
+  h1.scrolled {
+    transform: scale(0.8) translateY(20px);
+    opacity: 0;
   }
 
   nav {
@@ -262,8 +280,8 @@ hr {
   }
 
   nav a {
-    font-size: min(max(1rem, 1.4vw), 1.2rem); /* Меньше */
-    margin: 0 min(max(0.4rem, 0.8vw), 0.5rem); /* Растянуты */
+    font-size: min(max(1rem, 1.4vw), 1.2rem);
+    margin: 0 min(max(0.5rem, 1vw), 0.6rem); /* Растянуты шире */
     font-weight: normal;
   }
 
@@ -298,7 +316,7 @@ hr {
 
   h2 {
     font-size: min(max(1.4rem, 2vw), 1.7rem);
-    margin: min(max(0.2rem, 0.4vw), 0.3rem) 0 min(max(0.2rem, 0.4vw), 0.3rem) min(max(0.2rem, 0.4vw), 0.3rem);
+    margin: min(max(0.2rem, 0.4vw), 0.3rem) 0;
   }
 
   .note {
@@ -336,7 +354,7 @@ hr {
     max-width: calc(50% - min(max(0.4rem, 0.8vw), 0.6rem));
   }
 
-  .note-content .tag {
+  .note-content . MadamContent .tag {
     font-size: min(max(0.7rem, 1vw), 0.8rem);
     padding: min(max(0.1rem, 0.2vw), 0.15rem) min(max(0.3rem, 0.6vw), 0.4rem);
     margin: min(max(0.05rem, 0.1vw), 0.1rem);
