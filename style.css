@@ -7,8 +7,7 @@ body {
   color: #111;
   width: min(max(92%, 88vw), 98%);
   max-width: 900px;
-  font-size: min(max(1rem, 1.8vw), 1.3rem);
-  min-height: 100vh;
+  font-size: min(max(1.1rem, 2vw), 1.5rem);
   box-sizing: border-box;
   transition: font-size 0.3s ease, padding 0.3s ease, width 0.3s ease;
   display: flex;
@@ -18,7 +17,7 @@ body {
 
 header {
   text-align: center;
-  margin-bottom: min(max(0.8rem, 1.4vw), 1rem);
+  margin-bottom: min(max(0.4rem, 0.8vw), 0.5rem);
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -28,10 +27,10 @@ header {
 
 h1 {
   color: #222;
-  font-size: min(max(1.8rem, 3vw), 2.4rem);
+  font-size: min(max(2rem, 3.2vw), 2.8rem);
   width: 100%;
   max-width: 600px;
-  margin: 0 auto 0.3em;
+  margin: 0 auto 0.2em;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -51,8 +50,8 @@ nav a {
   text-decoration: none;
   margin: 0 min(max(0.3rem, 0.6vw), 0.4rem);
   color: #d33;
-  font-size: min(max(1.1rem, 1.6vw), 1.3rem);
-  font-weight: bold;
+  font-size: min(max(1.2rem, 1.8vw), 1.5rem);
+  font-weight: normal; /* Без жирности */
   transition: font-size 0.3s ease, margin 0.3s ease;
 }
 
@@ -62,27 +61,26 @@ nav a:hover {
 
 .nav-divider {
   color: #aaa;
-  font-size: min(max(1.1rem, 1.6vw), 1.3rem);
+  font-size: min(max(1.2rem, 1.8vw), 1.5rem);
   transition: font-size 0.3s ease;
 }
 
 h2 {
   color: #222;
-  margin-bottom: min(max(0.6rem, 1.2vw), 0.8rem);
+  margin-bottom: min(max(0.4rem, 0.8vw), 0.5rem);
   text-align: center;
-  font-size: min(max(1.4rem, 2vw), 1.7rem);
+  font-size: min(max(1.6rem, 2.2vw), 2rem);
   transition: font-size 0.3s ease, margin-bottom 0.3s ease;
 }
 
-/* Центрирование и отступы */
+/* Контент к хедеру */
 main {
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 85vh;
+  align-items: flex-start; /* К верху */
   width: 100%;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  overflow: hidden;
+  margin-top: min(max(0.4rem, 0.8vw), 0.5rem);
+  transition: opacity 0.3s ease, transform 0.3s ease, margin-top 0.3s ease;
 }
 
 main section {
@@ -114,7 +112,7 @@ main section {
 
 #tag-cloud {
   width: 100%;
-  padding: 0; /* Без отступов */
+  padding: 0;
   box-sizing: border-box;
   transition: opacity 0.3s ease;
   display: flex;
@@ -127,7 +125,7 @@ main section {
   padding: min(max(0.3rem, 0.6vw), 0.4rem);
   margin-bottom: min(max(0.3rem, 0.6vw), 0.4rem);
   cursor: pointer;
-  font-size: min(max(0.95rem, 1.6vw), 1.15rem);
+  font-size: min(max(1rem, 1.8vw), 1.3rem);
   transition: opacity 0.3s ease, font-size 0.3s ease, padding 0.3s ease, transform 0.3s ease;
   width: 100%;
   transform: scale(1);
@@ -135,19 +133,19 @@ main section {
 
 .note-header {
   font-weight: bold;
-  font-size: min(max(1rem, 1.8vw), 1.2rem);
+  font-size: min(max(1.1rem, 2vw), 1.4rem);
   margin-bottom: min(max(0.2rem, 0.4vw), 0.3rem);
   transition: font-size 0.3s ease, margin-bottom 0.3s ease;
 }
 
 .note-title {
   margin-bottom: min(max(0.15rem, 0.3vw), 0.2rem);
-  font-size: min(max(1.05rem, 1.9vw), 1.25rem);
+  font-size: min(max(1.2rem, 2.1vw), 1.5rem);
   transition: font-size 0.3s ease;
 }
 
 .note-date {
-  font-size: min(max(0.8rem, 1.2vw), 0.9rem);
+  font-size: min(max(0.9rem, 1.4vw), 1.1rem);
   color: #555;
   margin-bottom: min(max(0.15rem, 0.3vw), 0.2rem);
   transition: font-size 0.3s ease, margin-bottom 0.3s ease;
@@ -161,7 +159,7 @@ main section {
   display: inline-block;
   padding: min(max(0.15rem, 0.3vw), 0.2rem) min(max(0.4rem, 0.8vw), 0.5rem);
   margin: min(max(0.05rem, 0.1vw), 0.1rem);
-  font-size: min(max(0.7rem, 1vw), 0.8rem); /* Чуть крупнее */
+  font-size: min(max(0.8rem, 1.2vw), 0.9rem);
   border-radius: 3px;
   cursor: pointer;
   box-sizing: border-box;
@@ -176,15 +174,15 @@ main section {
 #tag-cloud .tag {
   padding: min(max(0.4rem, 0.8vw), 0.5rem) min(max(0.8rem, 1.6vw), 1rem);
   margin: min(max(0.15rem, 0.3vw), 0.2rem);
-  font-size: min(max(1.1rem, 2vw), 1.3rem); /* Крупные */
-  flex: 1 1 30%; /* 3 тега на ПК */
+  font-size: min(max(1.2rem, 2.2vw), 1.5rem);
+  flex: 1 1 30%;
   max-width: 30%;
   transition: font-size 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
 .note-content .tag {
   padding: min(max(0.15rem, 0.3vw), 0.2rem) min(max(0.4rem, 0.8vw), 0.5rem);
-  font-size: min(max(0.7rem, 1vw), 0.8rem);
+  font-size: min(max(0.8rem, 1.2vw), 0.9rem);
   margin: min(max(0.05rem, 0.1vw), 0.1rem);
 }
 
@@ -195,7 +193,7 @@ main section {
   overflow-x: auto;
   margin: min(max(0.3rem, 0.6vw), 0.4rem) 0;
   text-align: left;
-  font-size: min(max(0.95rem, 1.6vw), 1.15rem);
+  font-size: min(max(1rem, 1.8vw), 1.3rem);
   transition: font-size 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
@@ -207,7 +205,7 @@ main section {
   cursor: pointer;
   font-family: monospace;
   margin-top: min(max(0.4rem, 0.8vw), 0.5rem);
-  font-size: min(max(0.95rem, 1.6vw), 1.15rem);
+  font-size: min(max(1rem, 1.8vw), 1.3rem);
   transition: font-size 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
@@ -223,7 +221,7 @@ hr {
 
 #contact p {
   margin: min(max(0.2rem, 0.4vw), 0.3rem) 0;
-  font-size: min(max(0.95rem, 1.6vw), 1.15rem);
+  font-size: min(max(1rem, 1.8vw), 1.3rem);
   transition: font-size 0.3s ease, margin 0.3s ease;
 }
 
@@ -232,25 +230,26 @@ hr {
   body {
     padding: min(max(0.2rem, 0.4vw), 0.3rem); /* 3.2px–4.8px */
     width: min(max(92%, 88vw), 98%);
-    font-size: min(max(0.9rem, 1.6vw), 1.1rem);
+    font-size: min(max(1rem, 1.8vw), 1.3rem);
   }
 
   h1 {
-    font-size: min(max(1.5rem, 2.8vw), 1.9rem);
+    font-size: min(max(1.7rem, 3vw), 2.2rem);
     max-width: 95%;
   }
 
   nav a {
-    font-size: min(max(1rem, 1.5vw), 1.2rem);
+    font-size: min(max(1.1rem, 1.6vw), 1.3rem);
     margin: 0 min(max(0.2rem, 0.4vw), 0.3rem);
+    font-weight: normal;
   }
 
   .nav-divider {
-    font-size: min(max(1rem, 1.5vw), 1.2rem);
+    font-size: min(max(1.1rem, 1.6vw), 1.3rem);
   }
 
   main {
-    min-height: 90vh;
+    margin-top: min(max(0.2rem, 0.4vw), 0.3rem);
   }
 
   main section {
@@ -269,47 +268,47 @@ hr {
   }
 
   h2 {
-    font-size: min(max(1.3rem, 1.8vw), 1.5rem);
-    margin-bottom: min(max(0.4rem, 0.8vw), 0.6rem);
+    font-size: min(max(1.4rem, 2vw), 1.7rem);
+    margin-bottom: min(max(0.3rem, 0.6vw), 0.4rem);
   }
 
   .note {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
     margin-bottom: min(max(0.2rem, 0.4vw), 0.3rem);
-    font-size: min(max(0.9rem, 1.5vw), 1.05rem);
+    font-size: min(max(0.9rem, 1.6vw), 1.1rem);
   }
 
   .note-header {
-    font-size: min(max(0.95rem, 1.6vw), 1.1rem);
+    font-size: min(max(1rem, 1.8vw), 1.2rem);
     margin-bottom: min(max(0.15rem, 0.3vw), 0.2rem);
   }
 
   .note-title {
-    font-size: min(max(1rem, 1.7vw), 1.15rem);
+    font-size: min(max(1.1rem, 1.9vw), 1.3rem);
     margin-bottom: min(max(0.1rem, 0.2vw), 0.15rem);
   }
 
   .note-date {
-    font-size: min(max(0.75rem, 1.1vw), 0.85rem);
+    font-size: min(max(0.8rem, 1.2vw), 0.9rem);
     margin-bottom: min(max(0.1rem, 0.2vw), 0.15rem);
   }
 
   .tag {
-    font-size: min(max(0.7rem, 0.9vw), 0.8rem);
+    font-size: min(max(0.7rem, 1vw), 0.8rem);
     padding: min(max(0.1rem, 0.2vw), 0.15rem) min(max(0.3rem, 0.6vw), 0.4rem);
     margin: min(max(0.05rem, 0.1vw), 0.1rem);
   }
 
   #tag-cloud .tag {
-    font-size: min(max(1rem, 1.8vw), 1.2rem);
+    font-size: min(max(1rem, 2vw), 1.3rem);
     padding: min(max(0.3rem, 0.6vw), 0.4rem) min(max(0.6rem, 1.2vw), 0.8rem);
     margin: min(max(0.1rem, 0.2vw), 0.15rem);
-    flex: 1 1 calc(50% - min(max(0.4rem, 0.8vw), 0.6rem)); /* 2 тега */
+    flex: 1 1 calc(50% - min(max(0.4rem, 0.8vw), 0.6rem));
     max-width: calc(50% - min(max(0.4rem, 0.8vw), 0.6rem));
   }
 
   .note-content .tag {
-    font-size: min(max(0.7rem, 0.9vw), 0.8rem);
+    font-size: min(max(0.7rem, 1vw), 0.8rem);
     padding: min(max(0.1rem, 0.2vw), 0.15rem) min(max(0.3rem, 0.6vw), 0.4rem);
     margin: min(max(0.05rem, 0.1vw), 0.1rem);
   }
@@ -317,7 +316,7 @@ hr {
   .note-content pre {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
     margin: min(max(0.2rem, 0.4vw), 0.3rem) 0;
-    font-size: min(max(0.9rem, 1.5vw), 1.05rem);
+    font-size: min(max(0.9rem, 1.6vw), 1.1rem);
   }
 
   hr {
@@ -326,12 +325,12 @@ hr {
 
   .back-button {
     padding: min(max(0.1rem, 0.2vw), 0.15rem) min(max(0.3rem, 0.6vw), 0.4rem);
-    font-size: min(max(0.9rem, 1.5vw), 1.05rem);
+    font-size: min(max(0.9rem, 1.6vw), 1.1rem);
     margin-top: min(max(0.3rem, 0.6vw), 0.4rem);
   }
 
   #contact p {
-    font-size: min(max(0.9rem, 1.5vw), 1.05rem);
+    font-size: min(max(0.9rem, 1.6vw), 1.1rem);
     margin: min(max(0.15rem, 0.3vw), 0.2rem) 0;
   }
 }
