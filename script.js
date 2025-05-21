@@ -1,5 +1,5 @@
 let currentView = "list";
-let displayedNotes = 10; // Изначально показываем 10 заметок
+let displayedNotes = 3; // Изначально показываем 10 заметок
 const notesPerLoad = 5; // Подгружаем по 5 заметок
 
 function showSection(id) {
