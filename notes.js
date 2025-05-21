@@ -1,3 +1,12 @@
+// Настраиваемые цвета тегов (фон + текст)
+window.tagStyles = {
+  "Python":       { bg: "#e0f7fa", color: "#000000" },
+  "Telegram API": { bg: "#ffe0f0", color: "#000000" },
+  "YouTube API":  { bg: "#fff3cd", color: "#000000" },
+  "Автоматизация":{ bg: "#e6ee9c", color: "#000000" }
+};
+
+// Статьи
 window.notes = [
   {
     title: "Автоматизация загрузки видео на YouTube",

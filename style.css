@@ -4,7 +4,7 @@ body {
   margin: 0 auto;
   padding: 2em;
   line-height: 1.6;
-  background: #fafafa;
+  background: #fdfdfd;
   color: #111;
 }
 
@@ -28,36 +28,29 @@ h1, h2 {
 }
 
 .note {
-  border-bottom: 1px solid #ddd;
-  padding: 1em 0;
+  margin-bottom: 1.5em;
 }
 
-.note-title {
+.note-header {
   font-weight: bold;
-  font-size: 1.2em;
-  margin-bottom: 0.2em;
-}
-
-.note-tags {
-  margin-top: 0.5em;
+  font-size: 1.1em;
 }
 
 .tag {
   display: inline-block;
-  background: #eee;
-  color: #333;
   padding: 0.2em 0.5em;
-  margin: 0 0.2em 0.2em 0;
-  font-size: 0.85em;
-  border-radius: 3px;
+  margin: 0.2em 0.2em 0 0;
+  font-size: 0.9em;
+  border-radius: 4px;
   cursor: pointer;
 }
 
 .tag:hover {
-  background: #d33;
-  color: #fff;
+  filter: brightness(90%);
 }
 
-#tag-filter {
-  margin-bottom: 1em;
+hr {
+  border: none;
+  border-top: 1px dashed #aaa;
+  margin-top: 1em;
 }
