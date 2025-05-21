@@ -1,5 +1,5 @@
 let currentView = "list";
-let displayedNotes = 3; // Изначально показываем 10 заметок
+let displayedNotes = 10; // Изначально показываем 10 заметок
 const notesPerLoad = 5; // Подгружаем по 5 заметок
 
 function showSection(id) {
@@ -34,10 +34,13 @@ function renderNotes() {
     `;
     div.onclick = () => renderFullNote(index);
     container.appendChild(div);
+    // Добавляем <hr>, кроме последней заметки
+    if (index < displayedNotes - 1 && index < window.notes.length - 1) {
+      container.appendChild(document.createElement("hr"));
+    }
   });
 }
 
-// Функция для подгрузки заметок
 function loadMoreNotes() {
   if (currentView !== "list" || displayedNotes >= window.notes.length) return;
 
@@ -57,6 +60,10 @@ function loadMoreNotes() {
     `;
     div.onclick = () => renderFullNote(displayedNotes + index);
     container.appendChild(div);
+    // Добавляем <hr>, кроме последней заметки
+    if (index < nextNotes.length - 1 || displayedNotes + index < window.notes.length - 1) {
+      container.appendChild(document.createElement("hr"));
+    }
   });
   displayedNotes += nextNotes.length;
 }
@@ -82,14 +89,12 @@ function renderFullNote(index) {
 
 // Слушатель для прокрутки
 window.addEventListener("scroll", () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100) {
+  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 100 && currentView === "list") {
     loadMoreNotes();
   }
 });
 
-// Инициализация первых 10 заметок при загрузке страницы
+// Инициализация при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
-  if (document.getElementById("notes").style.display === "block") {
-    renderNotes();
-  }
+  showSection("notes");
 });
