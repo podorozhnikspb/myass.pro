@@ -294,7 +294,7 @@ except ZeroDivisionError:
 else:
     print("Всё прошло успешно")
 finally:
-    print("Выполняется всегда")
+    print("Всё завершено")
 \`\`\`
 `
   },
@@ -320,4 +320,4 @@ class MySpider(scrapy.Spider):
 `
   }
   // --- Конец заметок ---
-];
+]; // Добавлена точка с запятой
