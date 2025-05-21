@@ -172,3 +172,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (typeof Prism === "undefined") console.error("Prism.js is not loaded. Check CDN, internet, or adblockers.");
   showSection("notes");
 });
+
+// Обновление при ресайзе
+window.addEventListener("resize", () => {
+  if (currentView === "list") renderNotes();
+  else if (currentView === "tags") renderTagCloud();
+  else if (currentView === "tag-notes") filterByTag(currentTag);
+});
