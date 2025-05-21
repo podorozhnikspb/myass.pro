@@ -1,8 +1,7 @@
 body {
   font-family: monospace;
   margin: 0 auto;
-  padding: min(max(0.4rem, 0.8vw), 0.5rem); /* 6.4px–8px */
-  padding-top: min(max(2.5rem, 5vw), 3rem); /* Сдвиг из-за фиксированного меню */
+  padding: min(max(0.4rem, 0.8vw), 0.5rem);
   line-height: 1.6;
   background: #fdfdfd;
   color: #111;
@@ -18,11 +17,11 @@ body {
 
 header {
   text-align: center;
-  margin-bottom: min(max(1rem, 2vw), 1.2rem); /* Опускаем ниже */
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
   transition: margin-bottom 0.3s ease;
 }
 
@@ -31,12 +30,12 @@ h1 {
   font-size: min(max(2.2rem, 3.4vw), 3rem);
   width: 100%;
   max-width: 600px;
-  margin: 0 auto 0.2em;
+  margin: 15px auto 15px; /* 15px сверху и снизу */
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  transition: font-size 0.3s ease;
+  transition: font-size 0.3s ease, margin 0.3s ease;
 }
 
 nav {
@@ -44,20 +43,21 @@ nav {
   justify-content: center;
   align-items: center;
   width: 100%;
-  position: fixed; /* Закрепляем */
+  position: sticky; /* Прилипает при прокрутке */
   top: 0;
-  background: #fdfdfd; /* Фон, чтобы не просвечивал */
+  background: #fdfdfd;
   border-bottom: 1px solid #ccc; /* Тонкая полоска */
-  z-index: 1000; /* Поверх контента */
+  z-index: 1000;
   padding: min(max(0.2rem, 0.4vw), 0.3rem) 0;
+  margin-top: 0;
   transition: padding 0.3s ease;
 }
 
 nav a {
   text-decoration: none;
-  margin: 0 min(max(0.3rem, 0.6vw), 0.4rem);
+  margin: 0 min(max(0.5rem, 1vw), 0.6rem); /* Растянуты */
   color: #d33;
-  font-size: min(max(1.3rem, 2vw), 1.6rem);
+  font-size: min(max(1.2rem, 1.8vw), 1.5rem); /* Меньше */
   font-weight: normal;
   transition: font-size 0.3s ease, margin 0.3s ease;
 }
@@ -68,7 +68,7 @@ nav a:hover {
 
 .nav-divider {
   color: #aaa;
-  font-size: min(max(1.3rem, 2vw), 1.6rem);
+  font-size: min(max(1.2rem, 1.8vw), 1.5rem);
   transition: font-size 0.3s ease;
 }
 
@@ -247,18 +247,14 @@ hr {
 @media (max-width: 768px) {
   body {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
-    padding-top: min(max(2rem, 4vw), 2.5rem); /* Сдвиг из-за меню */
     width: min(max(92%, 88vw), 98%);
     font-size: min(max(1rem, 1.8vw), 1.3rem);
-  }
-
-  header {
-    margin-bottom: min(max(0.6rem, 1.2vw), 0.8rem); /* Опускаем ниже */
   }
 
   h1 {
     font-size: min(max(1.7rem, 3vw), 2.2rem);
     max-width: 95%;
+    margin: 15px auto 15px;
   }
 
   nav {
@@ -266,13 +262,13 @@ hr {
   }
 
   nav a {
-    font-size: min(max(1.1rem, 1.6vw), 1.3rem);
-    margin: 0 min(max(0.2rem, 0.4vw), 0.3rem);
+    font-size: min(max(1rem, 1.4vw), 1.2rem); /* Меньше */
+    margin: 0 min(max(0.4rem, 0.8vw), 0.5rem); /* Растянуты */
     font-weight: normal;
   }
 
   .nav-divider {
-    font-size: min(max(1.1rem, 1.6vw), 1.3rem);
+    font-size: min(max(1rem, 1.4vw), 1.2rem);
   }
 
   main {
