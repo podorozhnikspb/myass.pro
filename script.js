@@ -1,23 +1,55 @@
-// Настраиваемые цвета тегов (фон + текст)
-window.tagStyles = {
-  "Python":       { bg: "#e0f7fa", color: "#000000" },
-  "Telegram API": { bg: "#ffe0f0", color: "#000000" },
-  "YouTube API":  { bg: "#fff3cd", color: "#000000" },
-  "Автоматизация":{ bg: "#e6ee9c", color: "#000000" }
-};
 
-// Статьи
-window.notes = [
-  {
-    title: "Автоматизация загрузки видео на YouTube",
-    date: "2025-05-18",
-    tags: ["Python", "YouTube API", "Автоматизация"],
-    content: `# Скрипт для авто-загрузки видео\n\nПример кода:\n\nfor channel in channels:\n    upload(video, channel)`
-  },
-  {
-    title: "Парсинг Telegram API",
-    date: "2025-05-20",
-    tags: ["Python", "Telegram API"],
-    content: `Используется библиотека Telethon:\n\nclient = TelegramClient(...)`
-  }
-];
+let currentView = "list";
+
+function showSection(id) {
+  document.querySelectorAll("main section").forEach(sec => {
+    sec.style.display = sec.id === id ? "block" : "none";
+  });
+  if (id === "notes") renderNotes();
+}
+
+function getTagHTML(tag) {
+  const style = window.tagStyles?.[tag] || { bg: "#ddd", color: "#000" };
+  return `<span class="tag" style="background:${style.bg};color:${style.color}">${tag}</span>`;
+}
+
+function renderNotes() {
+  currentView = "list";
+  const container = document.getElementById("notes-list");
+  container.innerHTML = "";
+
+  window.notes.forEach((note, index) => {
+    const div = document.createElement("div");
+    div.className = "note";
+    div.innerHTML = `
+      <div class="note-header">
+        <div class="note-title">${note.title}</div>
+        <div class="note-date">${note.date}</div>
+        <div class="note-tags">
+          ${note.tags.map(getTagHTML).join(" ")}
+        </div>
+      </div>
+    `;
+    div.onclick = () => renderFullNote(index);
+    container.appendChild(div);
+  });
+}
+
+function renderFullNote(index) {
+  currentView = "full";
+  const note = window.notes[index];
+  const container = document.getElementById("notes-list");
+  container.innerHTML = `
+    <div class="note">
+      <div class="note-header">
+        <div class="note-title">${note.title}</div>
+        <div class="note-date">${note.date}</div>
+        <div class="note-tags">
+          ${note.tags.map(getTagHTML).join(" ")}
+        </div>
+      </div>
+      <div class="note-content"><pre>${note.content}</pre></div>
+      <button onclick="renderNotes()">← Назад</button>
+    </div>
+  `;
+}
