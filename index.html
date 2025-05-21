@@ -54,9 +54,15 @@
             -moz-appearance: none;
         }
         .captcha-checkbox.loading {
-            border: none;
+            border: 2px solid transparent; /* не убираем вовсе */
             background-color: transparent;
-        }
+        }  
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        } 
         .captcha-checkbox.loading::before {
             content: '';
             width: 20px;
@@ -75,13 +81,19 @@
             background-color: transparent;
         }
         .captcha-checkbox.completed::before {
-            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
-            position: absolute;
-            top: 65%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-        }
+    content: '';
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 20px;
+    height: 20px;
+    opacity: 0;
+    animation: fadeIn 0.4s forwards;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
         @keyframes spin {
             0% { transform: translate(-50%, -50%) rotate(0deg); }
             100% { transform: translate(-50%, -50%) rotate(360deg); }
