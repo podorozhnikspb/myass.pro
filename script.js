@@ -22,9 +22,13 @@ function getTagHTML(tag) {
 
 function renderNotes() {
   const container = document.getElementById("notes-list");
-  if (!container) return;
+  if (!container) {
+    console.error("notes-list container not found");
+    return;
+  }
   if (!window.notes || !Array.isArray(window.notes)) {
-    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены</p>`;
+    console.error("window.notes is not defined or not an array. Check if notes.js is loaded correctly.");
+    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены. Проверьте путь к notes.js.</p>`;
     return;
   }
   container.innerHTML = `<h2>Notes</h2>`;
@@ -73,6 +77,7 @@ function renderFullNote(index) {
     </div>
   `;
   if (typeof Prism !== "undefined") Prism.highlightAll();
+  else console.error("Prism.js is not loaded. Check CDN and internet connection.");
 }
 
 function renderTagCloud() {
@@ -80,9 +85,13 @@ function renderTagCloud() {
   currentTag = null;
   const container = document.getElementById("tag-cloud");
   const notesContainer = document.getElementById("tag-notes");
-  if (!container || !notesContainer) return;
+  if (!container || !notesContainer) {
+    console.error("tag-cloud or tag-notes container not found");
+    return;
+  }
   if (!window.tagStyles) {
-    container.innerHTML = `<p>Ошибка: теги не загружены</p>`;
+    console.error("window.tagStyles is not defined. Check if notes.js is loaded correctly.");
+    container.innerHTML = `<p>Ошибка: теги не загружены. Проверьте путь к notes.js.</p>`;
     return;
   }
   container.innerHTML = "";
@@ -105,8 +114,12 @@ function filterByTag(tag) {
   currentTag = tag;
   const container = document.getElementById("tag-notes");
   const cloudContainer = document.getElementById("tag-cloud");
-  if (!container || !cloudContainer) return;
+  if (!container || !cloudContainer) {
+    console.error("tag-notes or tag-cloud container not found");
+    return;
+  }
   if (!window.notes) {
+    console.error("window.notes is not defined");
     container.innerHTML = `<h2>#${tag}</h2><p>Ошибка: заметки не загружены</p>`;
     return;
   }
@@ -140,5 +153,8 @@ function filterByTag(tag) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+  if (!window.notes) console.error("window.notes is not defined on page load. Ensure notes.js is loaded before script.js.");
+  if (!window.tagStyles) console.error("window.tagStyles is not defined on page load.");
+  if (typeof Prism === "undefined") console.error("Prism.js is not loaded. Check CDN and internet connection.");
   showSection("notes");
 });

@@ -308,3 +308,16 @@ finally:
 > «Scrapy — это твой швейцарский нож для веба.»
 
 \`\`\`python
+import scrapy
+
+class MySpider(scrapy.Spider):
+    name = "example"
+    start_urls = ["https://example.com"]
+
+    def parse(self, response):
+        yield {"title": response.css("h1::text").get()}
+\`\`\`
+`
+  }
+  // --- Конец заметок ---
+];
