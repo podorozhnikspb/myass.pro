@@ -1,4 +1,3 @@
-
 window.tagStyles = {
   "Python":       { bg: "#e0f7fa", color: "#000000" },
   "YouTube API":  { bg: "#fff3cd", color: "#000000" },
@@ -6,7 +5,10 @@ window.tagStyles = {
   "Автоматизация":{ bg: "#e6ee9c", color: "#000000" },
   "Парсинг":      { bg: "#d1c4e9", color: "#000000" },
   "Скрипты":      { bg: "#f8bbd0", color: "#000000" },
-  "Cron":         { bg: "#c8e6c9", color: "#000000" }
+  "Cron":         { bg: "#c8e6c9", color: "#000000" },
+  "API":          { bg: "#b3e5fc", color: "#000000" }, // Новый тег
+  "Базы данных":  { bg: "#ffccbc", color: "#000000" }, // Новый тег
+  "Сети":         { bg: "#dcedc8", color: "#000000" }  // Новый тег
 };
 
 window.notes = [
@@ -100,6 +102,85 @@ import os
 
 load_dotenv()
 key = os.getenv("API_KEY")
+`
+  },
+  {
+    title: "Оптимизация запросов к API",
+    date: "2025-05-24",
+    tags: ["Python", "API", "Автоматизация"],
+    content: `Для оптимизации запросов к API используйте кэширование.
+
+Пример с библиотекой requests:
+
+import requests
+from functools import lru_cache
+
+@lru_cache(maxsize=128)
+def get_data(url):
+    return requests.get(url).json()
+`
+  },
+  {
+    title: "Работа с SQLite для хранения данных",
+    date: "2025-05-25",
+    tags: ["Python", "Базы данных"],
+    content: `SQLite — легковесная база данных для небольших проектов.
+
+Пример:
+
+import sqlite3
+
+conn = sqlite3.connect("data.db")
+cursor = conn.cursor()
+cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER, name TEXT)")
+conn.commit()
+conn.close()
+`
+  },
+  {
+    title: "Мониторинг сетевых запросов",
+    date: "2025-05-26",
+    tags: ["Python", "Сети", "Автоматизация"],
+    content: `Для мониторинга сети можно использовать psutil.
+
+Пример:
+
+import psutil
+
+for conn in psutil.net_connections():
+    print(conn.laddr, conn.raddr)
+`
+  },
+  {
+    title: "Парсинг веб-страниц с BeautifulSoup",
+    date: "2025-05-27",
+    tags: ["Python", "Парсинг"],
+    content: `BeautifulSoup упрощает парсинг HTML.
+
+Пример:
+
+from bs4 import BeautifulSoup
+import requests
+
+page = requests.get("https://example.com")
+soup = BeautifulSoup(page.content, "html.parser")
+print(soup.find_all("h1"))
+`
+  },
+  {
+    title: "Автоматизация отправки сообщений в Telegram",
+    date: "2025-05-28",
+    tags: ["Python", "Telegram API", "Автоматизация"],
+    content: `Отправка сообщений через Telegram API.
+
+Пример:
+
+import requests
+
+def send_message(token, chat_id, text):
+    url = f"https://api.telegram.org/bot{token}/sendMessage"
+    payload = {"chat_id": chat_id, "text": text}
+    requests.post(url, json=payload)
 `
   }
 ];
