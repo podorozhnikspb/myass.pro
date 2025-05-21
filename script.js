@@ -33,8 +33,8 @@ function renderNotes() {
     return;
   }
   if (!window.notes || !Array.isArray(window.notes)) {
-    console.error("window.notes is not defined or not an array. Check if notes.js exists and is loaded before script.js.");
-    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены. Убедитесь, что notes.js в той же папке и имеет правильное имя.</p>`;
+    console.error("window.notes is not defined or not an array. Check if notes.js exists, has correct name, and is loaded before script.js.");
+    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены. Убедитесь, что notes.js в той же папке и без синтаксических ошибок.</p>`;
     return;
   }
   container.style.opacity = "0";
@@ -87,7 +87,7 @@ function renderFullNote(index) {
   `;
   setTimeout(() => { container.style.opacity = "1"; }, 10);
   if (typeof Prism !== "undefined") Prism.highlightAll();
-  else console.error("Prism.js is not loaded. Check CDN and internet connection.");
+  else console.error("Prism.js is not loaded. Check CDN, internet, or adblockers.");
 }
 
 function renderTagCloud() {
@@ -167,8 +167,8 @@ function filterByTag(tag) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (!window.notes) console.error("window.notes is not defined. Ensure notes.js is loaded with correct path and no syntax errors.");
-  if (!window.tagStyles) console.error("window.tagStyles is not defined. Check notes.js.");
-  if (typeof Prism === "undefined") console.error("Prism.js is not loaded. Check CDN and internet connection.");
+  if (!window.notes) console.error("window.notes is not defined. Ensure notes.js is loaded, check path, name, and syntax.");
+  if (!window.tagStyles) console.error("window.tagStyles is not defined. Verify notes.js.");
+  if (typeof Prism === "undefined") console.error("Prism.js is not loaded. Check CDN, internet, or adblockers.");
   showSection("notes");
 });
