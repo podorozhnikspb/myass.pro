@@ -4,15 +4,14 @@ let currentTag = null;
 function showSection(id) {
   const sections = document.querySelectorAll("main section");
   sections.forEach(sec => {
-    sec.style.transition = "opacity 0.3s ease, transform 0.3s ease";
+    sec.style.transition = "opacity 0.2s ease";
     sec.style.opacity = "0";
-    sec.style.transform = "scale(0.98)";
     sec.style.display = sec.id === id ? "block" : "none";
     if (sec.id === id) {
+      sec.style.willChange = "opacity";
       setTimeout(() => {
         sec.style.opacity = "1";
-        sec.style.transform = "scale(1)";
-      }, 10);
+      }, 0);
     }
   });
   if (id === "notes") {
@@ -38,16 +37,16 @@ function renderNotes() {
   }
   if (!window.notes || !Array.isArray(window.notes)) {
     console.error("window.notes is not defined or not an array. Check if notes.js exists, has correct name, and is loaded before script.js.");
-    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены. Убедитесь, что notes.js в той же папке и без синтаксических ошибок.</p>`;
+    container.innerHTML = `<h2>Notes</h2><hr><p>Ошибка: заметки не загружены. Убедитесь, что notes.js в той же папке и без синтаксических ошибок.</p>`;
     return;
   }
+  container.style.transition = "opacity 0.2s ease";
   container.style.opacity = "0";
-  container.style.transform = "scale(0.98)";
-  container.innerHTML = `<h2>Notes</h2>`;
+  container.style.willChange = "opacity";
+  container.innerHTML = `<h2>Notes</h2><hr>`;
   setTimeout(() => {
     container.style.opacity = "1";
-    container.style.transform = "scale(1)";
-  }, 10);
+  }, 0);
 
   window.notes.forEach((note, index) => {
     const div = document.createElement("div");
@@ -79,8 +78,9 @@ function renderFullNote(index) {
   if (note.content.includes("```python")) language = "python";
   else if (note.content.includes("```bash")) language = "bash";
   else if (note.content.includes("```dockerfile")) language = "dockerfile";
+  container.style.transition = "opacity 0.2s ease";
   container.style.opacity = "0";
-  container.style.transform = "scale(0.98)";
+  container.style.willChange = "opacity";
   container.innerHTML = `
     <div class="note">
       <div class="note-header">
@@ -96,8 +96,7 @@ function renderFullNote(index) {
   `;
   setTimeout(() => {
     container.style.opacity = "1";
-    container.style.transform = "scale(1)";
-  }, 10);
+  }, 0);
   if (typeof Prism !== "undefined") Prism.highlightAll();
   else console.error("Prism.js is not loaded. Check CDN, internet, or adblockers.");
 }
@@ -116,15 +115,15 @@ function renderTagCloud() {
     container.innerHTML = `<p>Ошибка: теги не загружены. Убедитесь, что notes.js в той же папке.</p>`;
     return;
   }
+  container.style.transition = "opacity 0.2s ease";
   container.style.opacity = "0";
-  container.style.transform = "scale(0.98)";
+  container.style.willChange = "opacity";
   container.innerHTML = "";
   notesContainer.style.display = "none";
   container.style.display = "block";
   setTimeout(() => {
     container.style.opacity = "1";
-    container.style.transform = "scale(1)";
-  }, 10);
+  }, 0);
 
   Object.keys(window.tagStyles).forEach(tag => {
     const span = document.createElement("span");
@@ -148,14 +147,15 @@ function filterByTag(tag) {
   }
   if (!window.notes) {
     console.error("window.notes is not defined");
-    container.innerHTML = `<h2>#${tag}</h2><p>Ошибка: заметки не загружены</p>`;
+    container.innerHTML = `<h2>#${tag}</h2><hr><p>Ошибка: заметки не загружены</p>`;
     return;
   }
   cloudContainer.style.display = "none";
   container.style.display = "block";
+  container.style.transition = "opacity 0.2s ease";
   container.style.opacity = "0";
-  container.style.transform = "scale(0.98)";
-  container.innerHTML = `<h2>#${tag}</h2>`;
+  container.style.willChange = "opacity";
+  container.innerHTML = `<h2>#${tag}</h2><hr>`;
 
   const filteredNotes = window.notes.filter(note => note.tags.includes(tag));
   if (filteredNotes.length === 0) {
@@ -182,8 +182,7 @@ function filterByTag(tag) {
   }
   setTimeout(() => {
     container.style.opacity = "1";
-    container.style.transform = "scale(1)";
-  }, 10);
+  }, 0);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
