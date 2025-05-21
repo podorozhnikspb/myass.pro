@@ -233,4 +233,91 @@ import logging
 
 logging.basicConfig(level=logging.INFO, filename="app.log")
 logging.info("Программа запущена")
-logging.error("Ошибка обнаруж
+logging.error("Ошибка обнаружена")
+\`\`\`
+`
+  },
+  // --- Заметка 12 ---
+  {
+    title: "Асинхронные запросы с aiohttp",
+    date: "2025-05-30",
+    tags: ["Python", "Асинхронность", "API"],
+    content: `Асинхронные запросы ускоряют работу с API.
+
+> «Время ожидания — враг производительности.»
+
+\`\`\`python
+import aiohttp
+import asyncio
+
+async def fetch(url):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url) as response:
+            return await response.json()
+
+asyncio.run(fetch("https://api.example.com"))
+\`\`\`
+`
+  },
+  // --- Заметка 13 ---
+  {
+    title: "Контейнеризация с Docker",
+    date: "2025-05-31",
+    tags: ["Python", "Docker"],
+    content: `Docker упрощает развертывание приложений.
+
+> «Контейнеры — это твой билет в стабильность.»
+
+\`\`\`dockerfile
+FROM python:3.9
+WORKDIR /app
+COPY . .
+RUN pip install -r requirements.txt
+CMD ["python", "app.py"]
+\`\`\`
+`
+  },
+  // --- Заметка 14 ---
+  {
+    title: "Обработка ошибок в Python",
+    date: "2025-06-01",
+    tags: ["Python", "Скрипты"],
+    content: `Обработка ошибок делает код надёжнее.
+
+> «Ошибки неизбежны, но их можно поймать.»
+
+\`\`\`python
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("Деление на ноль!")
+else:
+    print("Всё прошло успешно")
+finally:
+    print("Выполняется всегда")
+\`\`\`
+`
+  },
+  // --- Заметка 15 ---
+  {
+    title: "Парсинг с фреймворком Scrapy",
+    date: "2025-06-02",
+    tags: ["Python", "Парсинг"],
+    content: `Scrapy — мощный инструмент для веб-парсинга.
+
+> «Scrapy — это твой швейцарский нож для веба.»
+
+\`\`\`python
+import scrapy
+
+class MySpider(scrapy.Spider):
+    name = "example"
+    start_urls = ["https://example.com"]
+
+    def parse(self, response):
+        yield {"title": response.css("h1::text").get()}
+\`\`\`
+`
+  }
+  // --- Конец заметок ---
+];
