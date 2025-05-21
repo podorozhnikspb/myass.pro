@@ -5,13 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>M A X I M A 1 I Z M</title>
   <link rel="stylesheet" href="style.css" />
+  <!-- Подключаем Prism.js для подсветки синтаксиса -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
 </head>
 <body>
   <header>
     <h1>M A X I M A 1 I Z M</h1>
     <nav>
       <a href="#about" onclick="showSection('about')">about</a> |
-      <a href="#notes" onclick="showSection('notes')">note</a> |
+      <a href="#tags" onclick="showSection('tags')">tag</a> |
       <a href="#contact" onclick="showSection('contact')">contact</a>
     </nav>
   </header>
@@ -24,8 +26,13 @@
 
     <section id="notes">
       <h2>Notes</h2>
-      <div id="tag-filter"></div>
       <div id="notes-list"></div>
+    </section>
+
+    <section id="tags" style="display: none;">
+      <h2>Tags</h2>
+      <div id="tag-cloud"></div>
+      <div id="tag-notes" style="display: none;"></div>
     </section>
 
     <section id="contact" style="display: none;">
@@ -36,6 +43,10 @@
     </section>
   </main>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
   <script src="notes.js"></script>
   <script src="script.js"></script>
 </body>
