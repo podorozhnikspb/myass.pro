@@ -2,6 +2,7 @@ body {
   font-family: monospace;
   margin: 0 auto;
   padding: min(max(0.4rem, 0.8vw), 0.5rem); /* 6.4px–8px */
+  padding-top: min(max(2.5rem, 5vw), 3rem); /* Сдвиг из-за фиксированного меню */
   line-height: 1.6;
   background: #fdfdfd;
   color: #111;
@@ -17,7 +18,7 @@ body {
 
 header {
   text-align: center;
-  margin-bottom: min(max(0.4rem, 0.8vw), 0.5rem);
+  margin-bottom: min(max(1rem, 2vw), 1.2rem); /* Опускаем ниже */
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -43,6 +44,13 @@ nav {
   justify-content: center;
   align-items: center;
   width: 100%;
+  position: fixed; /* Закрепляем */
+  top: 0;
+  background: #fdfdfd; /* Фон, чтобы не просвечивал */
+  border-bottom: 1px solid #ccc; /* Тонкая полоска */
+  z-index: 1000; /* Поверх контента */
+  padding: min(max(0.2rem, 0.4vw), 0.3rem) 0;
+  transition: padding 0.3s ease;
 }
 
 nav a {
@@ -66,13 +74,12 @@ nav a:hover {
 
 h2 {
   color: #222;
-  margin-bottom: min(max(0.4rem, 0.8vw), 0.5rem);
-  text-align: left; /* Слева */
+  margin: min(max(0.4rem, 0.8vw), 0.5rem) 0 min(max(0.4rem, 0.8vw), 0.5rem) min(max(0.4rem, 0.8vw), 0.5rem);
+  text-align: left;
   font-size: min(max(1.8rem, 2.4vw), 2.2rem);
-  transition: font-size 0.3s ease, margin-bottom 0.3s ease;
+  transition: font-size 0.3s ease, margin 0.3s ease;
 }
 
-/* Контент к хедеру */
 main {
   display: flex;
   justify-content: center;
@@ -93,21 +100,20 @@ main section {
   align-items: center;
 }
 
-/* Текст в заметках по левому краю */
 #about, #notes, #tags, #contact {
   text-align: left;
   width: 100%;
 }
 
 #notes-list {
-  width: 100%;
+  width: min(max(80%, 75vw), 85%);
   padding: min(max(0.4rem, 0.8vw), 0.5rem);
   box-sizing: border-box;
-  transition: opacity 0.3s ease, padding 0.3s ease;
+  transition: opacity 0.3s ease, padding 0.3s ease, width 0.3s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: min(max(-2%, -1vw), -1%); /* Смещение ближе к центру */
+  margin: 0 auto;
 }
 
 #tag-notes {
@@ -117,12 +123,12 @@ main section {
   transition: opacity 0.3s ease, padding 0.3s ease;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Слева */
+  align-items: flex-start;
 }
 
 #tag-cloud {
   width: 100%;
-  padding-top: 0; /* На уровне <h2> */
+  padding-top: 0;
   box-sizing: border-box;
   transition: opacity 0.3s ease;
   display: flex;
@@ -138,6 +144,7 @@ main section {
   font-size: min(max(1.1rem, 2vw), 1.4rem);
   transition: opacity 0.3s ease, font-size 0.3s ease, padding 0.3s ease;
   width: 100%;
+  text-align: left;
 }
 
 .note-header {
@@ -145,6 +152,7 @@ main section {
   font-size: min(max(1.2rem, 2.2vw), 1.5rem);
   margin-bottom: min(max(0.2rem, 0.4vw), 0.3rem);
   transition: font-size 0.3s ease, margin-bottom 0.3s ease;
+  text-align: left;
 }
 
 .note-title {
@@ -202,7 +210,7 @@ main section {
   overflow-x: auto;
   margin: min(max(0.3rem, 0.6vw), 0.4rem) 0;
   text-align: left;
-  font-size: min(max(1rem, 1.8vw), 1.2rem); /* Меньше */
+  font-size: min(max(1rem, 1.8vw), 1.2rem);
   transition: font-size 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
@@ -238,14 +246,23 @@ hr {
 /* Медиа-запросы для мобильных */
 @media (max-width: 768px) {
   body {
-    padding: min(max(0.2rem, 0.4vw), 0.3rem); /* 3.2px–4.8px */
+    padding: min(max(0.2rem, 0.4vw), 0.3rem);
+    padding-top: min(max(2rem, 4vw), 2.5rem); /* Сдвиг из-за меню */
     width: min(max(92%, 88vw), 98%);
     font-size: min(max(1rem, 1.8vw), 1.3rem);
+  }
+
+  header {
+    margin-bottom: min(max(0.6rem, 1.2vw), 0.8rem); /* Опускаем ниже */
   }
 
   h1 {
     font-size: min(max(1.7rem, 3vw), 2.2rem);
     max-width: 95%;
+  }
+
+  nav {
+    padding: min(max(0.15rem, 0.3vw), 0.2rem) 0;
   }
 
   nav a {
@@ -269,8 +286,9 @@ hr {
   }
 
   #notes-list {
+    width: min(max(85%, 80vw), 90%);
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
-    margin-left: min(max(-2%, -1vw), -1%);
+    margin: 0 auto;
   }
 
   #tag-notes {
@@ -284,8 +302,7 @@ hr {
 
   h2 {
     font-size: min(max(1.4rem, 2vw), 1.7rem);
-    margin-bottom: min(max(0.3rem, 0.6vw), 0.4rem);
-    text-align: left;
+    margin: min(max(0.2rem, 0.4vw), 0.3rem) 0 min(max(0.2rem, 0.4vw), 0.3rem) min(max(0.2rem, 0.4vw), 0.3rem);
   }
 
   .note {
@@ -332,7 +349,7 @@ hr {
   .note-content pre {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
     margin: min(max(0.2rem, 0.4vw), 0.3rem) 0;
-    font-size: min(max(0.8rem, 1.4vw), 1rem); /* Меньше */
+    font-size: min(max(0.8rem, 1.4vw), 1rem);
   }
 
   hr {
