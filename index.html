@@ -189,25 +189,29 @@
 </head>
 <body>
     <div class="container">
-        <div class="captcha-container">
-            <div class="captcha-left">
-                <input type="checkbox" id="captcha" class="captcha-checkbox">
-                <span class="captcha-text">I am not a robot</span>
-            </div>
-            <div class="captcha-right">
-                <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
-                <span class="captcha-brand">reCAPTCHA</span>
-                <div class="captcha-links">
-                    <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Privacy</a> - 
-                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Terms</a>
-                </div>
-            </div>
+  <div class="inner">
+    <div class="captcha-container">
+      <!-- левая часть с чекбоксом и текстом -->
+      <div class="captcha-left">
+        <input type="checkbox" class="captcha-checkbox" />
+        <span class="captcha-text">I'm not a robot</span>
+      </div>
+      <!-- правая часть с логотипом и ссылками -->
+      <div class="captcha-right">
+        <img class="captcha-logo" src="logo.png" alt="Logo" />
+        <div class="captcha-brand">reCAPTCHA</div>
+        <div class="captcha-links">
+          <a href="#">Privacy</a> • <a href="#">Terms</a>
         </div>
-        <div class="button-container">
-            <button class="submit-button" id="submit-button">Submit</button>
-            <div class="error" id="error">Please verify that you are not a robot.</div>
-        </div>
+      </div>
     </div>
+    <div class="button-container">
+      <button class="submit-button">Submit</button>
+      <div class="error">Please check the box</div>
+    </div>
+  </div>
+</div>
+
 
     <script>
         // Определение языка браузера
