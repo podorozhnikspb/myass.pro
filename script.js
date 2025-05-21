@@ -4,11 +4,15 @@ let currentTag = null;
 function showSection(id) {
   const sections = document.querySelectorAll("main section");
   sections.forEach(sec => {
-    sec.style.transition = "opacity 0.3s ease";
+    sec.style.transition = "opacity 0.3s ease, transform 0.3s ease";
     sec.style.opacity = "0";
+    sec.style.transform = "scale(0.98)";
     sec.style.display = sec.id === id ? "block" : "none";
     if (sec.id === id) {
-      setTimeout(() => { sec.style.opacity = "1"; }, 10);
+      setTimeout(() => {
+        sec.style.opacity = "1";
+        sec.style.transform = "scale(1)";
+      }, 10);
     }
   });
   if (id === "notes") {
@@ -38,8 +42,12 @@ function renderNotes() {
     return;
   }
   container.style.opacity = "0";
+  container.style.transform = "scale(0.98)";
   container.innerHTML = `<h2>Notes</h2>`;
-  setTimeout(() => { container.style.opacity = "1"; }, 10);
+  setTimeout(() => {
+    container.style.opacity = "1";
+    container.style.transform = "scale(1)";
+  }, 10);
 
   window.notes.forEach((note, index) => {
     const div = document.createElement("div");
@@ -72,6 +80,7 @@ function renderFullNote(index) {
   else if (note.content.includes("```bash")) language = "bash";
   else if (note.content.includes("```dockerfile")) language = "dockerfile";
   container.style.opacity = "0";
+  container.style.transform = "scale(0.98)";
   container.innerHTML = `
     <div class="note">
       <div class="note-header">
@@ -85,7 +94,10 @@ function renderFullNote(index) {
       <button class="back-button" onclick="${currentTag ? `filterByTag('${currentTag}')` : "renderNotes()"}">← Назад</button>
     </div>
   `;
-  setTimeout(() => { container.style.opacity = "1"; }, 10);
+  setTimeout(() => {
+    container.style.opacity = "1";
+    container.style.transform = "scale(1)";
+  }, 10);
   if (typeof Prism !== "undefined") Prism.highlightAll();
   else console.error("Prism.js is not loaded. Check CDN, internet, or adblockers.");
 }
@@ -105,10 +117,14 @@ function renderTagCloud() {
     return;
   }
   container.style.opacity = "0";
+  container.style.transform = "scale(0.98)";
   container.innerHTML = "";
   notesContainer.style.display = "none";
   container.style.display = "block";
-  setTimeout(() => { container.style.opacity = "1"; }, 10);
+  setTimeout(() => {
+    container.style.opacity = "1";
+    container.style.transform = "scale(1)";
+  }, 10);
 
   Object.keys(window.tagStyles).forEach(tag => {
     const span = document.createElement("span");
@@ -138,6 +154,7 @@ function filterByTag(tag) {
   cloudContainer.style.display = "none";
   container.style.display = "block";
   container.style.opacity = "0";
+  container.style.transform = "scale(0.98)";
   container.innerHTML = `<h2>#${tag}</h2>`;
 
   const filteredNotes = window.notes.filter(note => note.tags.includes(tag));
@@ -163,7 +180,10 @@ function filterByTag(tag) {
       }
     });
   }
-  setTimeout(() => { container.style.opacity = "1"; }, 10);
+  setTimeout(() => {
+    container.style.opacity = "1";
+    container.style.transform = "scale(1)";
+  }, 10);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -173,9 +193,10 @@ document.addEventListener("DOMContentLoaded", () => {
   showSection("notes");
 });
 
-// Обновление при ресайзе
+// Перерисовка при ресайзе
 window.addEventListener("resize", () => {
   if (currentView === "list") renderNotes();
   else if (currentView === "tags") renderTagCloud();
   else if (currentView === "tag-notes") filterByTag(currentTag);
+  else if (currentView === "full") renderFullNote(window.notes.findIndex(note => note.title === document.querySelector(".note-title")?.textContent));
 });
