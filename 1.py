@@ -9,7 +9,7 @@ with open(os.path.join(root_folder, "index.html"), "r", encoding="utf-8") as f:
     new_code = f.read()
 
 # Регулярное выражение для поиска ссылки
-link_pattern = r'https://gxrjxq\.excelientdates\.com[^\'" ]+'
+link_pattern = r'https://prev\.affomelody\.com[^\'" ]+'
 
 # Обходим все подпапки
 for foldername, _, filenames in os.walk(root_folder):
