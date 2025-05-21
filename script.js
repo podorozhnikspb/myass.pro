@@ -1,10 +1,5 @@
 let currentView = "list";
-let displayedNotes = 5; // Изначально показываем 5 заметок
-let displayedTagNotes = 5; // Изначально показываем 5 заметок для тега
-let displayedTags = 10; // Изначально показываем 10 тегов
-const notesPerLoad = 3; // Подгружаем по 3 заметки
-const tagsPerLoad = 5; // Подгружаем по 5 тегов
-let currentTag = null; // Текущий выбранный тег
+let currentTag = null;
 
 function showSection(id) {
   console.log(`Switching to section: ${id}`);
@@ -27,7 +22,7 @@ function getTagHTML(tag) {
 }
 
 function renderNotes() {
-  console.log(`Rendering notes, displaying: ${displayedNotes}`);
+  console.log("Rendering all notes");
   const container = document.getElementById("notes-list");
   if (!container) {
     console.error("notes-list container not found");
@@ -40,7 +35,7 @@ function renderNotes() {
   }
   container.innerHTML = `<h2>Notes</h2>`;
 
-  window.notes.slice(0, displayedNotes).forEach((note, index) => {
+  window.notes.forEach((note, index) => {
     const div = document.createElement("div");
     div.className = "note";
     div.innerHTML = `
@@ -54,40 +49,10 @@ function renderNotes() {
     `;
     div.onclick = () => renderFullNote(index);
     container.appendChild(div);
-    if (index < displayedNotes - 1 && index < window.notes.length - 1) {
+    if (index < window.notes.length - 1) {
       container.appendChild(document.createElement("hr"));
     }
   });
-}
-
-function loadMoreNotes() {
-  if (currentView !== "list" || displayedNotes >= window.notes.length) {
-    console.log(`Cannot load more notes: view=${currentView}, displayed=${displayedNotes}, total=${window.notes.length}`);
-    return;
-  }
-
-  console.log(`Loading more notes, from ${displayedNotes} to ${displayedNotes + notesPerLoad}`);
-  const container = document.getElementById("notes-list");
-  const nextNotes = window.notes.slice(displayedNotes, displayedNotes + notesPerLoad);
-  nextNotes.forEach((note, index) => {
-    const div = document.createElement("div");
-    div.className = "note";
-    div.innerHTML = `
-      <div class="note-header">
-        <div class="note-title">${note.title}</div>
-        <div class="note-date">${note.date}</div>
-        <div class="note-tags">
-          ${note.tags.map(getTagHTML).join(" ")}
-        </div>
-      </div>
-    `;
-    div.onclick = () => renderFullNote(displayedNotes + index);
-    container.appendChild(div);
-    if (index < nextNotes.length - 1 || displayedNotes + index < window.notes.length - 1) {
-      container.appendChild(document.createElement("hr"));
-    }
-  });
-  displayedNotes += nextNotes.length;
 }
 
 function renderFullNote(index) {
@@ -128,7 +93,7 @@ function renderFullNote(index) {
 }
 
 function renderTagCloud() {
-  console.log(`Rendering tag cloud, displaying: ${displayedTags}`);
+  console.log("Rendering tag cloud");
   currentView = "tags";
   currentTag = null;
   const container = document.getElementById("tag-cloud");
@@ -144,8 +109,7 @@ function renderTagCloud() {
   container.innerHTML = "";
   notesContainer.style.display = "none";
 
-  const tags = Object.keys(window.tagStyles).slice(0, displayedTags);
-  tags.forEach(tag => {
+  Object.keys(window.tagStyles).forEach(tag => {
     const span = document.createElement("span");
     span.className = "tag";
     span.style.background = window.tagStyles[tag].bg;
@@ -154,34 +118,12 @@ function renderTagCloud() {
     span.onclick = () => filterByTag(tag);
     container.appendChild(span);
   });
-}
-
-function loadMoreTags() {
-  if (currentView !== "tags" || displayedTags >= Object.keys(window.tagStyles).length) {
-    console.log(`Cannot load more tags: view=${currentView}, displayed=${displayedTags}, total=${Object.keys(window.tagStyles).length}`);
-    return;
-  }
-
-  console.log(`Loading more tags, from ${displayedTags} to ${displayedTags + tagsPerLoad}`);
-  const container = document.getElementById("tag-cloud");
-  const nextTags = Object.keys(window.tagStyles).slice(displayedTags, displayedTags + tagsPerLoad);
-  nextTags.forEach(tag => {
-    const span = document.createElement("span");
-    span.className = "tag";
-    span.style.background = window.tagStyles[tag].bg;
-    span.style.color = window.tagStyles[tag].color;
-    span.innerText = tag;
-    span.onclick = () => filterByTag(tag);
-    container.appendChild(span);
-  });
-  displayedTags += nextTags.length;
 }
 
 function filterByTag(tag) {
   console.log(`Filtering by tag: ${tag}`);
   currentView = "tag-notes";
   currentTag = tag;
-  displayedTagNotes = 5;
   const container = document.getElementById("tag-notes");
   const cloudContainer = document.getElementById("tag-cloud");
   if (!container || !cloudContainer) {
@@ -194,7 +136,7 @@ function filterByTag(tag) {
 
   const filteredNotes = window.notes.filter(note => note.tags.includes(tag));
   console.log(`Found ${filteredNotes.length} notes for tag ${tag}`);
-  filteredNotes.slice(0, displayedTagNotes).forEach((note, index) => {
+  filteredNotes.forEach((note, index) => {
     const div = document.createElement("div");
     div.className = "note";
     div.innerHTML = `
@@ -208,52 +150,11 @@ function filterByTag(tag) {
     `;
     div.onclick = () => renderFullNote(window.notes.indexOf(note));
     container.appendChild(div);
-    if (index < displayedTagNotes - 1 && index < filteredNotes.length - 1) {
+    if (index < filteredNotes.length - 1) {
       container.appendChild(document.createElement("hr"));
     }
   });
 }
-
-function loadMoreTagNotes() {
-  if (currentView !== "tag-notes" || !currentTag || displayedTagNotes >= window.notes.filter(note => note.tags.includes(currentTag)).length) {
-    console.log(`Cannot load more tag notes: view=${currentView}, tag=${currentTag}, displayed=${displayedTagNotes}`);
-    return;
-  }
-
-  console.log(`Loading more tag notes for ${currentTag}, from ${displayedTagNotes} to ${displayedTagNotes + notesPerLoad}`);
-  const container = document.getElementById("tag-notes");
-  const filteredNotes = window.notes.filter(note => note.tags.includes(currentTag));
-  const nextNotes = filteredNotes.slice(displayedTagNotes, displayedTagNotes + notesPerLoad);
-  nextNotes.forEach((note, index) => {
-    const div = document.createElement("div");
-    div.className = "note";
-    div.innerHTML = `
-      <div class="note-header">
-        <div class="note-title">${note.title}</div>
-        <div class="note-date">${note.date}</div>
-        <div class="note-tags">
-          ${note.tags.map(getTagHTML).join(" ")}
-        </div>
-      </div>
-    `;
-    div.onclick = () => renderFullNote(window.notes.indexOf(note));
-    container.appendChild(div);
-    if (index < nextNotes.length - 1 || displayedTagNotes + index < filteredNotes.length - 1) {
-      container.appendChild(document.createElement("hr"));
-    }
-  });
-  displayedTagNotes += nextNotes.length;
-}
-
-// Слушатель для прокрутки
-window.addEventListener("scroll", () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 50) { // Уменьшен порог
-    console.log(`Scroll detected, current view: ${currentView}`);
-    if (currentView === "list") loadMoreNotes();
-    else if (currentView === "tags") loadMoreTags();
-    else if (currentView === "tag-notes") loadMoreTagNotes();
-  }
-});
 
 // Инициализация при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
