@@ -80,6 +80,11 @@ function renderFullNote(index) {
   currentView = "full";
   const note = window.notes[index];
   const container = currentTag ? document.getElementById("tag-notes") : document.getElementById("notes-list");
+  // Определяем язык для Prism.js
+  let language = "text";
+  if (note.content.includes("```python")) language = "python";
+  else if (note.content.includes("```bash")) language = "bash";
+  else if (note.content.includes("```dockerfile")) language = "dockerfile";
   container.innerHTML = `
     <div class="note">
       <div class="note-header">
@@ -89,7 +94,7 @@ function renderFullNote(index) {
           ${note.tags.map(getTagHTML).join(" ")}
         </div>
       </div>
-      <div class="note-content"><pre><code class="language-${note.content.includes("```python") ? "python" : note.content.includes("```bash") ? "bash" : note.content.includes("```dockerfile") ? "dockerfile" : "text"}">${note.content}</code></pre></div>
+      <div class="note-content"><pre><code class="language-${language}">${note.content}</code></pre></div>
       <button class="back-button" onclick="${currentTag ? `filterByTag('${currentTag}')` : "renderNotes()"}">← Назад</button>
     </div>
   `;

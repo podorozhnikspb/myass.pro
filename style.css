@@ -28,7 +28,6 @@ h1, h2 {
   margin-bottom: 1em;
 }
 
-/* Центрирование секций */
 main section {
   display: flex;
   flex-direction: column;
@@ -45,7 +44,6 @@ main section {
   width: 100%;
 }
 
-/* Стили для заметок */
 .note {
   padding: 1.2em;
   margin-bottom: 1em;
@@ -85,7 +83,6 @@ main section {
   filter: brightness(90%);
 }
 
-/* Облако тегов */
 #tag-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -93,7 +90,6 @@ main section {
   justify-content: flex-start;
 }
 
-/* Стили для кода */
 .note-content pre {
   background: #f5f5f5;
   padding: 1.2em;
@@ -122,7 +118,6 @@ hr {
   margin: 1.2em 0;
 }
 
-/* Для контактной информации */
 #contact p {
   margin: 0.5em 0;
 }
