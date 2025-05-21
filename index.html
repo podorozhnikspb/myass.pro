@@ -12,17 +12,24 @@
         overflow: hidden;
     }
     .container {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding-bottom: 40px; /* пространство под ошибку */
-    position: relative; /* для абсолютной позиции ошибки */
-}
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* changed from flex-start */
+        gap: 10px;
+        padding-bottom: 40px; /* пространство под ошибку */
+        /* position: relative; удалено, чтобы не конфликтовало с fixed */
+    }
+    .inner {
+        position: relative; /* для абсолютного позиционирования ошибки */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 320px; /* подогнать под captcha-container */
+    }
     .captcha-container {
         display: flex;
         align-items: center;
@@ -133,6 +140,11 @@
         color: #757575;
         text-decoration: none;
     }
+    .button-container {
+        display: flex;
+        justify-content: flex-end; /* кнопка справа */
+        width: 100%;
+    }
     .submit-button {
         padding: 8px 16px;
         background-color: #f1f3f4;
@@ -152,26 +164,19 @@
     .submit-button:hover {
         background-color: #e8eaed;
     }
-    .button-container {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-    }
     .error {
-    position: absolute;
-    bottom: -30px;
-    left: 0;
-    color: red;
-    font-size: 11px;
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    white-space: nowrap;
-}
-
-.error.show {
-    opacity: 1;
-}
-
+        position: absolute;
+        bottom: -30px;
+        left: 0;
+        color: red;
+        font-size: 11px;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        white-space: nowrap;
+    }
+    .error.show {
+        opacity: 1;
+    }
     body[lang="ar"], body[lang="ur"] {
         direction: rtl;
         text-align: right;
