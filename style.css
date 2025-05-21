@@ -67,7 +67,7 @@ nav a:hover {
 h2 {
   color: #222;
   margin-bottom: min(max(0.4rem, 0.8vw), 0.5rem);
-  text-align: center;
+  text-align: left; /* Слева */
   font-size: min(max(1.8rem, 2.4vw), 2.2rem);
   transition: font-size 0.3s ease, margin-bottom 0.3s ease;
 }
@@ -99,7 +99,7 @@ main section {
   width: 100%;
 }
 
-#notes-list, #tag-notes {
+#notes-list {
   width: 100%;
   padding: min(max(0.4rem, 0.8vw), 0.5rem);
   box-sizing: border-box;
@@ -107,17 +107,28 @@ main section {
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-left: min(max(-2%, -1vw), -1%); /* Смещение ближе к центру */
+}
+
+#tag-notes {
+  width: 100%;
+  padding: min(max(0.4rem, 0.8vw), 0.5rem);
+  box-sizing: border-box;
+  transition: opacity 0.3s ease, padding 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Слева */
 }
 
 #tag-cloud {
   width: 100%;
-  padding-top: min(max(0.4rem, 0.8vw), 0.5rem); /* Как у <h2> */
+  padding-top: 0; /* На уровне <h2> */
   box-sizing: border-box;
   transition: opacity 0.3s ease;
   display: flex;
   flex-wrap: wrap;
   gap: min(max(0.4rem, 0.8vw), 0.6rem);
-  justify-content: flex-start; /* Слева */
+  justify-content: flex-start;
 }
 
 .note {
@@ -191,7 +202,7 @@ main section {
   overflow-x: auto;
   margin: min(max(0.3rem, 0.6vw), 0.4rem) 0;
   text-align: left;
-  font-size: min(max(1.1rem, 2vw), 1.4rem);
+  font-size: min(max(1rem, 1.8vw), 1.2rem); /* Меньше */
   transition: font-size 0.3s ease, padding 0.3s ease, margin 0.3s ease;
 }
 
@@ -257,18 +268,24 @@ hr {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
   }
 
-  #notes-list, #tag-notes {
+  #notes-list {
+    padding: min(max(0.2rem, 0.4vw), 0.3rem);
+    margin-left: min(max(-2%, -1vw), -1%);
+  }
+
+  #tag-notes {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
   }
 
   #tag-cloud {
-    padding-top: min(max(0.2rem, 0.4vw), 0.3rem);
+    padding-top: 0;
     gap: min(max(0.3rem, 0.6vw), 0.4rem);
   }
 
   h2 {
     font-size: min(max(1.4rem, 2vw), 1.7rem);
     margin-bottom: min(max(0.3rem, 0.6vw), 0.4rem);
+    text-align: left;
   }
 
   .note {
@@ -315,7 +332,7 @@ hr {
   .note-content pre {
     padding: min(max(0.2rem, 0.4vw), 0.3rem);
     margin: min(max(0.2rem, 0.4vw), 0.3rem) 0;
-    font-size: min(max(0.9rem, 1.6vw), 1.1rem);
+    font-size: min(max(0.8rem, 1.4vw), 1rem); /* Меньше */
   }
 
   hr {
