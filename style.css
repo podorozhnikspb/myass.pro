@@ -30,7 +30,7 @@ h1 {
   font-size: min(max(2.2rem, 3.4vw), 3rem);
   width: 100%;
   max-width: 600px;
-  margin: 25px auto 25px; /* Увеличено с 20px до 25px для ПК */
+  margin: 25px auto 25px; /* ПК: 25px, уточнить */
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -39,7 +39,7 @@ h1 {
 }
 
 h1.scrolled {
-  transform: scale(0.8) translateY(50px); /* Плавный уход вниз */
+  transform: scale(0.8) translateY(50px);
   opacity: 0;
 }
 
@@ -58,8 +58,8 @@ nav {
 }
 
 nav.sticky {
-  border-bottom: 1px solid #fff; /* Тонкая белая полоска */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Лёгкая тень */
+  border-bottom: 1px solid #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 nav a {
@@ -83,7 +83,7 @@ nav a:hover {
 
 h2 {
   color: #222;
-  margin: min(max(0.4rem, 0.8vw), 0.5rem) 0; /* Одинаковые отступы */
+  margin: min(max(0.4rem, 0.8vw), 0.5rem) 0; /* Как в #about и #contact */
   text-align: left;
   font-size: min(max(1.8rem, 2.4vw), 2.2rem);
   transition: font-size 0.3s ease, margin 0.3s ease;
@@ -138,7 +138,7 @@ main section {
 
 #tag-cloud {
   width: 100%;
-  padding-top: 0; /* На уровне <h2> */
+  padding-top: 0;
   box-sizing: border-box;
   transition: opacity 0.3s ease;
   display: flex;
@@ -176,6 +176,20 @@ main section {
   color: #555;
   margin-bottom: min(max(0.15rem, 0.3vw), 0.2rem);
   transition: font-size 0.3s ease, margin-bottom 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: min(max(0.2rem, 0.4vw), 0.3rem);
+}
+
+.note-views {
+  display: flex;
+  align-items: center;
+  gap: min(max(0.2rem, 0.4vw), 0.3rem);
+  color: #555;
+}
+
+.eye-icon {
+  vertical-align: middle;
 }
 
 .note-tags {
@@ -261,9 +275,9 @@ hr {
   }
 
   h1 {
-    font-size: min(max(1.7rem, 3vw), 2.2rem);
+    font-size: min(max(1.7rem, 3vw), 2rem); /* Уменьшено, чтобы не переносился */
     max-width: 95%;
-    margin: 15px auto 15px; /* Уменьшено для мобильных */
+    margin: 10px auto 10px; /* Мобильные: 10px */
   }
 
   h1.scrolled {
@@ -312,7 +326,7 @@ hr {
 
   h2 {
     font-size: min(max(1.4rem, 2vw), 1.7rem);
-    margin: min(max(0.2rem, 0.4vw), 0.3rem) 0; /* Одинаковые отступы */
+    margin: 10px 0; /* Мобильные: 10px, как в #about и #contact */
   }
 
   .note {
@@ -334,6 +348,16 @@ hr {
   .note-date {
     font-size: min(max(0.8rem, 1.2vw), 0.9rem);
     margin-bottom: min(max(0.1rem, 0.2vw), 0.15rem);
+    gap: min(max(0.15rem, 0.3vw), 0.2rem);
+  }
+
+  .note-views {
+    gap: min(max(0.15rem, 0.3vw), 0.2rem);
+  }
+
+  .eye-icon {
+    width: 14px;
+    height: 14px;
   }
 
   .tag {

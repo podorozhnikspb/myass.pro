@@ -1,6 +1,21 @@
 let currentView = "list";
 let currentTag = null;
 
+// Обновление просмотров
+function updateViews() {
+  if (!window.notes) return;
+  const lastUpdate = localStorage.getItem("lastViewUpdate");
+  const today = new Date().toDateString();
+  if (lastUpdate !== today) {
+    window.notes.forEach(note => {
+      const increase = Math.floor(Math.random() * 401) + 100; // 100–500
+      note.views = (note.views || 0) + increase;
+    });
+    localStorage.setItem("lastViewUpdate", today);
+    localStorage.setItem("notesViews", JSON.stringify(window.notes.map(n => n.views)));
+  }
+}
+
 function showSection(id) {
   const sections = document.querySelectorAll("main section");
   sections.forEach(sec => {
@@ -36,10 +51,11 @@ function renderNotes() {
     return;
   }
   if (!window.notes || !Array.isArray(window.notes)) {
-    console.error("window.notes is not defined or not an array. Check if notes.js exists, has correct name, and is loaded before script.js.");
-    container.innerHTML = `<h2>Notes</h2><hr><p>Ошибка: заметки не загружены. Убедитесь, что notes.js в той же папке и без синтаксических ошибок.</p>`;
+    console.error("window.notes is not defined or not an array.");
+    container.innerHTML = `<h2>Notes</h2><hr><p>Ошибка: заметки не загружены.</p>`;
     return;
   }
+  updateViews(); // Обновляем просмотры
   container.style.transition = "opacity 0.2s ease";
   container.style.opacity = "0";
   container.style.willChange = "opacity";
@@ -54,7 +70,16 @@ function renderNotes() {
     div.innerHTML = `
       <div class="note-header">
         <div class="note-title">${note.title}</div>
-        <div class="note-date">${note.date}</div>
+        <div class="note-date">
+          ${note.date}
+          <span class="note-views">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            ${note.views || 0}
+          </span>
+        </div>
         <div class="note-tags">
           ${note.tags.map(getTagHTML).join(" ")}
         </div>
@@ -85,7 +110,16 @@ function renderFullNote(index) {
     <div class="note">
       <div class="note-header">
         <div class="note-title">${note.title}</div>
-        <div class="note-date">${note.date}</div>
+        <div class="note-date">
+          ${note.date}
+          <span class="note-views">
+            <svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+              <circle cx="12" cy="12" r="3"/>
+            </svg>
+            ${note.views || 0}
+          </span>
+        </div>
         <div class="note-tags">
           ${note.tags.map(getTagHTML).join(" ")}
         </div>
@@ -98,7 +132,6 @@ function renderFullNote(index) {
     container.style.opacity = "1";
   }, 0);
   if (typeof Prism !== "undefined") Prism.highlightAll();
-  else console.error("Prism.js is not loaded. Check CDN, internet, or adblockers.");
 }
 
 function renderTagCloud() {
@@ -111,8 +144,8 @@ function renderTagCloud() {
     return;
   }
   if (!window.tagStyles) {
-    console.error("window.tagStyles is not defined. Check if notes.js exists and is loaded correctly.");
-    container.innerHTML = `<p>Ошибка: теги не загружены. Убедитесь, что notes.js в той же папке.</p>`;
+    console.error("window.tagStyles is not defined.");
+    container.innerHTML = `<p>Ошибка: теги не загружены.</p>`;
     return;
   }
   container.style.transition = "opacity 0.2s ease";
@@ -167,7 +200,16 @@ function filterByTag(tag) {
       div.innerHTML = `
         <div class="note-header">
           <div class="note-title">${note.title}</div>
-          <div class="note-date">${note.date}</div>
+          <div class="note-date">
+            ${note.date}
+            <span class="note-views">
+              <svg class="eye-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                <circle cx="12" cy="12" r="3"/>
+              </svg>
+              ${note.views || 0}
+            </span>
+          </div>
           <div class="note-tags">
             ${note.tags.map(getTagHTML).join(" ")}
           </div>
@@ -186,9 +228,17 @@ function filterByTag(tag) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  if (!window.notes) console.error("window.notes is not defined. Ensure notes.js is loaded, check path, name, and syntax.");
-  if (!window.tagStyles) console.error("window.tagStyles is not defined. Verify notes.js.");
-  if (typeof Prism === "undefined") console.error("Prism.js is not loaded. Check CDN, internet, or adblockers.");
+  if (!window.notes) console.error("window.notes is not defined.");
+  if (!window.tagStyles) console.error("window.tagStyles is not defined.");
+  if (typeof Prism === "undefined") console.error("Prism.js is not loaded.");
+  // Загружаем сохранённые просмотры
+  const savedViews = localStorage.getItem("notesViews");
+  if (savedViews && window.notes) {
+    const views = JSON.parse(savedViews);
+    window.notes.forEach((note, i) => {
+      note.views = views[i] || note.views || 0;
+    });
+  }
   showSection("notes");
 });
 
