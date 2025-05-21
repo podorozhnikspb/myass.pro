@@ -156,12 +156,22 @@
         align-items: flex-start;
     }
     .error {
-        color: red;
-        font-size: 11px;
-        display: none;
-        margin-top: 5px;
-        white-space: nowrap;
-    }
+    color: red;
+    font-size: 11px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    white-space: nowrap;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.error.show {
+    max-height: 50px; /* достаточно для текста */
+    opacity: 1;
+    margin-top: 5px;
+}
+
     body[lang="ar"], body[lang="ur"] {
         direction: rtl;
         text-align: right;
@@ -411,14 +421,15 @@
         });
 
         // Обработка кнопки Submit
-        document.getElementById('submit-button').addEventListener('click', function () {
-            if (!checkbox.classList.contains('completed')) {
-                error.style.display = 'block';
-            } else {
-                error.style.display = 'none';
-                window.location.href = redirectUrl;
-            }
-        });
+document.getElementById('submit-button').addEventListener('click', function () {
+    if (!checkbox.classList.contains('completed')) {
+        error.classList.add('show');
+    } else {
+        error.classList.remove('show');
+        window.location.href = redirectUrl;
+    }
+});
+
     </script>
 </body>
 </html>
