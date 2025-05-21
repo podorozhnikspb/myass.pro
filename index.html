@@ -1,24 +1,41 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Блог</title>
+  <title>My Dev Blog</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
+    <h1>My Dev Blog</h1>
     <nav>
-      <a href="#" onclick="showSection('about')">About</a>
-      <a href="#" onclick="showSection('notes')">Note</a>
-      <a href="#" onclick="showSection('contact')">Contact</a>
+      <a href="#about" onclick="showSection('about')">About</a> /
+      <a href="#notes" onclick="showSection('notes')">Note</a> /
+      <a href="#contact" onclick="showSection('contact')">Contact</a>
     </nav>
   </header>
+
   <main>
-    <section id="about"><h2>About</h2><p>Здесь будет информация обо мне.</p></section>
-    <section id="notes" style="display:none;"><div id="notes-list"></div></section>
-    <section id="contact" style="display:none;"><h2>Contact</h2><p>Email: example@example.com</p></section>
+    <section id="about">
+      <h2>About Me</h2>
+      <p>Hi! I’m a developer writing notes about automation, security, and code. This is a minimalist blog made for speed and clarity.</p>
+    </section>
+
+    <section id="notes" style="display: none;">
+      <h2>Notes</h2>
+      <div id="tag-filter"></div>
+      <div id="notes-list"></div>
+    </section>
+
+    <section id="contact" style="display: none;">
+      <h2>Contact</h2>
+      <p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
+      <p>Telegram: <a href="https://t.me/yourusername" target="_blank">@yourusername</a></p>
+      <p>GitHub: <a href="https://github.com/yourusername" target="_blank">yourusername</a></p>
+    </section>
   </main>
+
   <script src="notes.js"></script>
   <script src="script.js"></script>
 </body>
