@@ -2,7 +2,6 @@ let currentView = "list";
 let currentTag = null;
 
 function showSection(id) {
-  console.log(`Switching to section: ${id}`);
   document.querySelectorAll("main section").forEach(sec => {
     sec.style.display = sec.id === id ? "block" : "none";
   });
@@ -22,14 +21,9 @@ function getTagHTML(tag) {
 }
 
 function renderNotes() {
-  console.log("Rendering all notes");
   const container = document.getElementById("notes-list");
-  if (!container) {
-    console.error("notes-list container not found");
-    return;
-  }
+  if (!container) return;
   if (!window.notes || !Array.isArray(window.notes)) {
-    console.error("window.notes is not defined or not an array");
     container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены</p>`;
     return;
   }
@@ -56,18 +50,11 @@ function renderNotes() {
 }
 
 function renderFullNote(index) {
-  console.log(`Rendering full note: index=${index}`);
-  if (!window.notes || index >= window.notes.length) {
-    console.error(`Invalid note index: ${index}`);
-    return;
-  }
+  if (!window.notes || index >= window.notes.length) return;
   currentView = "full";
   const note = window.notes[index];
   const container = currentTag ? document.getElementById("tag-notes") : document.getElementById("notes-list");
-  if (!container) {
-    console.error("Container for full note not found");
-    return;
-  }
+  if (!container) return;
   let language = "text";
   if (note.content.includes("```python")) language = "python";
   else if (note.content.includes("```bash")) language = "bash";
@@ -85,29 +72,22 @@ function renderFullNote(index) {
       <button class="back-button" onclick="${currentTag ? `filterByTag('${currentTag}')` : "renderNotes()"}">← Назад</button>
     </div>
   `;
-  if (typeof Prism !== "undefined") {
-    Prism.highlightAll();
-  } else {
-    console.error("Prism.js is not loaded");
-  }
+  if (typeof Prism !== "undefined") Prism.highlightAll();
 }
 
 function renderTagCloud() {
-  console.log("Rendering tag cloud");
   currentView = "tags";
   currentTag = null;
   const container = document.getElementById("tag-cloud");
   const notesContainer = document.getElementById("tag-notes");
-  if (!container || !notesContainer) {
-    console.error("tag-cloud or tag-notes container not found");
-    return;
-  }
+  if (!container || !notesContainer) return;
   if (!window.tagStyles) {
-    console.error("window.tagStyles is not defined");
+    container.innerHTML = `<p>Ошибка: теги не загружены</p>`;
     return;
   }
   container.innerHTML = "";
   notesContainer.style.display = "none";
+  container.style.display = "block";
 
   Object.keys(window.tagStyles).forEach(tag => {
     const span = document.createElement("span");
@@ -121,13 +101,13 @@ function renderTagCloud() {
 }
 
 function filterByTag(tag) {
-  console.log(`Filtering by tag: ${tag}`);
   currentView = "tag-notes";
   currentTag = tag;
   const container = document.getElementById("tag-notes");
   const cloudContainer = document.getElementById("tag-cloud");
-  if (!container || !cloudContainer) {
-    console.error("tag-notes or tag-cloud container not found");
+  if (!container || !cloudContainer) return;
+  if (!window.notes) {
+    container.innerHTML = `<h2>#${tag}</h2><p>Ошибка: заметки не загружены</p>`;
     return;
   }
   cloudContainer.style.display = "none";
@@ -135,7 +115,10 @@ function filterByTag(tag) {
   container.innerHTML = `<h2>#${tag}</h2>`;
 
   const filteredNotes = window.notes.filter(note => note.tags.includes(tag));
-  console.log(`Found ${filteredNotes.length} notes for tag ${tag}`);
+  if (filteredNotes.length === 0) {
+    container.innerHTML += `<p>Заметок с тегом "${tag}" не найдено</p>`;
+    return;
+  }
   filteredNotes.forEach((note, index) => {
     const div = document.createElement("div");
     div.className = "note";
@@ -156,11 +139,6 @@ function filterByTag(tag) {
   });
 }
 
-// Инициализация при загрузке страницы
 document.addEventListener("DOMContentLoaded", () => {
-  console.log("Page loaded, initializing notes");
-  if (!window.notes) {
-    console.error("window.notes is not defined on page load");
-  }
   showSection("notes");
 });
