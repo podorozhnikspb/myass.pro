@@ -4,6 +4,7 @@ let currentTag = null;
 function showSection(id) {
   const sections = document.querySelectorAll("main section");
   sections.forEach(sec => {
+    sec.style.transition = "opacity 0.3s ease";
     sec.style.opacity = "0";
     sec.style.display = sec.id === id ? "block" : "none";
     if (sec.id === id) {
@@ -33,10 +34,12 @@ function renderNotes() {
   }
   if (!window.notes || !Array.isArray(window.notes)) {
     console.error("window.notes is not defined or not an array. Check if notes.js exists and is loaded before script.js.");
-    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены. Убедитесь, что notes.js находится в той же папке и имеет правильное имя.</p>`;
+    container.innerHTML = `<h2>Notes</h2><p>Ошибка: заметки не загружены. Убедитесь, что notes.js в той же папке и имеет правильное имя.</p>`;
     return;
   }
+  container.style.opacity = "0";
   container.innerHTML = `<h2>Notes</h2>`;
+  setTimeout(() => { container.style.opacity = "1"; }, 10);
 
   window.notes.forEach((note, index) => {
     const div = document.createElement("div");
@@ -98,7 +101,7 @@ function renderTagCloud() {
   }
   if (!window.tagStyles) {
     console.error("window.tagStyles is not defined. Check if notes.js exists and is loaded correctly.");
-    container.innerHTML = `<p>Ошибка: теги не загружены. Убедитесь, что notes.js находится в той же папке.</p>`;
+    container.innerHTML = `<p>Ошибка: теги не загружены. Убедитесь, что notes.js в той же папке.</p>`;
     return;
   }
   container.style.opacity = "0";

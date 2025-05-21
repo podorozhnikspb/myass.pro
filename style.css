@@ -1,14 +1,15 @@
 body {
   font-family: monospace;
   margin: 0 auto;
-  padding: 2.3125em; /* 2em + 5px ≈ 37px при 16px */
+  padding: 2.3125em; /* 37px при 16px */
   line-height: 1.6;
   background: #fdfdfd;
   color: #111;
   width: 90%;
   max-width: 900px;
-  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
   min-height: 100vh;
+  box-sizing: border-box;
 }
 
 header {
@@ -18,7 +19,7 @@ header {
 
 h1 {
   color: #222;
-  font-size: clamp(2rem, 2.2em + 1.2vw, 2.8rem);
+  font-size: clamp(2rem, 2em + 1vw, 2.6rem);
   min-width: 200px;
   max-width: 600px;
   margin: 0 auto 0.5em;
@@ -35,7 +36,7 @@ nav a {
   text-decoration: none;
   margin: 0 0.8em;
   color: #d33;
-  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  font-size: clamp(1.2rem, 1.8vw, 1.4rem);
   font-weight: bold;
 }
 
@@ -45,28 +46,29 @@ nav a:hover {
 
 .nav-divider {
   color: #aaa;
-  font-size: clamp(1.2rem, 2vw, 1.4rem);
+  font-size: clamp(1.2rem, 1.8vw, 1.4rem);
 }
 
 h2 {
   color: #222;
   margin-bottom: 1em;
   text-align: center;
-  font-size: clamp(1.6rem, 2.2vw, 1.8rem);
+  font-size: clamp(1.5rem, 2vw, 1.7rem);
 }
 
-/* Центрирование и единые отступы */
+/* Центрирование и отступы */
 main {
   display: flex;
   justify-content: center;
-  min-height: 60vh; /* Предотвращает дёргания */
+  min-height: 70vh; /* Увеличено для мобильных */
   transition: opacity 0.3s ease;
+  overflow: hidden;
 }
 
 main section {
   width: 100%;
   max-width: 800px;
-  padding: 2.3125em; /* Единый отступ +5px */
+  padding: 2.3125em;
   box-sizing: border-box;
   transition: opacity 0.3s ease;
 }
@@ -87,13 +89,13 @@ main section {
   padding: 1em;
   margin-bottom: 1em;
   cursor: pointer;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
   transition: opacity 0.3s ease;
 }
 
 .note-header {
   font-weight: bold;
-  font-size: clamp(1rem, 1.6vw, 1.1rem);
+  font-size: clamp(1rem, 1.5vw, 1.1rem);
   margin-bottom: 0.5em;
 }
 
@@ -102,7 +104,7 @@ main section {
 }
 
 .note-date {
-  font-size: clamp(0.8rem, 1.3vw, 0.9rem);
+  font-size: clamp(0.85rem, 1.2vw, 0.95rem);
   color: #555;
   margin-bottom: 0.4em;
 }
@@ -113,12 +115,12 @@ main section {
 
 .tag {
   display: inline-block;
-  padding: 0.5em 1em; /* Увеличенные отступы */
-  margin: 0.3em 0.6em 0.3em 0; /* Большие внешние отступы */
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  padding: 0.6em 1.2em; /* Увеличенные отступы */
+  margin: 0.4em 0.8em 0.4em 0; /* Ещё больше */
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
   border-radius: 4px;
   cursor: pointer;
-  flex: 1 1 30%; /* Максимум 3 тега на строке */
+  flex: 1 1 30%; /* 3 тега на ПК */
   max-width: 30%;
   box-sizing: border-box;
   text-align: center;
@@ -131,7 +133,7 @@ main section {
 #tag-cloud {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.8em; /* Увеличенный зазор */
+  gap: 1em; /* Ещё больше зазор */
   justify-content: flex-start;
   padding: 2.3125em;
 }
@@ -143,7 +145,7 @@ main section {
   overflow-x: auto;
   margin: 1em 0;
   text-align: left;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
 }
 
 .back-button {
@@ -154,7 +156,7 @@ main section {
   cursor: pointer;
   font-family: monospace;
   margin-top: 1em;
-  font-size: clamp(0.9rem, 1.5vw, 1rem);
+  font-size: clamp(0.95rem, 1.4vw, 1.05rem);
 }
 
 .back-button:hover {
@@ -169,74 +171,78 @@ hr {
 
 #contact p {
   margin: 0.5em 0;
-  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
 }
 
-/* Медиа-запросы для адаптивности */
+/* Медиа-запросы для мобильных */
 @media (max-width: 768px) {
   body {
-    padding: 1.3125em; /* 1em + 5px */
-    width: 95%;
+    padding: 1em; /* Уменьшено для мобильных */
+    width: 100%;
   }
 
   h1 {
-    font-size: clamp(1.8rem, 2em + 1vw, 2.4rem);
-    max-width: 90%;
+    font-size: clamp(1.8rem, 1.8em + 0.8vw, 2.2rem);
+    max-width: 95%;
   }
 
   nav a {
-    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
-    margin: 0 0.6em;
+    font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+    margin: 0 0.5em;
   }
 
   .nav-divider {
-    font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+    font-size: clamp(1.1rem, 1.6vw, 1.25rem);
+  }
+
+  main {
+    min-height: 80vh; /* Ещё больше для мобильных */
   }
 
   main section {
-    max-width: 100%;
-    padding: 1.3125em;
+    max-width: none;
+    padding: 1em;
   }
 
   #notes-list, #tag-cloud, #tag-notes {
-    padding: 1.3125em;
+    padding: 1em;
   }
 
   h2 {
-    font-size: clamp(1.4rem, 2vw, 1.6rem);
+    font-size: clamp(1.4rem, 1.8vw, 1.6rem);
   }
 
   .note {
     padding: 0.8em;
     margin-bottom: 0.8em;
-    font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+    font-size: clamp(0.9rem, 1.3vw, 1rem);
   }
 
   .note-header {
-    font-size: clamp(0.95rem, 1.5vw, 1rem);
+    font-size: clamp(0.95rem, 1.4vw, 1.05rem);
   }
 
   .note-date {
-    font-size: clamp(0.75rem, 1.2vw, 0.85rem);
+    font-size: clamp(0.8rem, 1.1vw, 0.9rem);
   }
 
   .tag {
-    font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-    padding: 0.4em 0.8em;
-    margin: 0.2em 0.4em 0.2em 0;
-    flex: 1 1 45%; /* 2–3 тега на строке на маленьких экранах */
-    max-width: 45%;
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
+    padding: 0.5em 1em;
+    margin: 0.3em 0.6em 0.3em 0;
+    flex: 1 1 calc(50% - 1em); /* 2 тега на строке */
+    max-width: calc(50% - 1em);
   }
 
   #tag-cloud {
-    gap: 0.6em;
-    padding: 1.3125em;
+    gap: 0.8em;
+    padding: 1em;
   }
 
   .note-content pre {
     padding: 0.8em;
     margin: 0.8em 0;
-    font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+    font-size: clamp(0.9rem, 1.3vw, 1rem);
   }
 
   hr {
@@ -245,10 +251,10 @@ hr {
 
   .back-button {
     padding: 0.4em 0.8em;
-    font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+    font-size: clamp(0.9rem, 1.3vw, 1rem);
   }
 
   #contact p {
-    font-size: clamp(0.9rem, 1.5vw, 1rem);
+    font-size: clamp(0.95rem, 1.4vw, 1.1rem);
   }
 }
