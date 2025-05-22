@@ -140,9 +140,6 @@
         color: #202124;
         cursor: pointer;
         white-space: nowrap;
-        text-decoration: none; /* Убираем подчеркивание для ссылки */
-        display: inline-block; /* Для корректного отображения как кнопка */
-        text-align: center;
     }
     [lang="el"] .submit-button, 
     [lang="ps"] .submit-button, 
@@ -159,20 +156,22 @@
         align-items: flex-start;
     }
     .error {
-        color: red;
-        font-size: 11px;
-        max-height: 0;
-        opacity: 0;
-        overflow: hidden;
-        margin-top: 0;
-        white-space: nowrap;
-        transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
-    }
-    .error.show {
-        max-height: 50px;
-        opacity: 1;
-        margin-top: 5px;
-    }
+    color: red;
+    font-size: 11px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin-top: 0;
+    white-space: nowrap;
+    transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+}
+
+.error.show {
+    max-height: 50px; /* достаточно для текста */
+    opacity: 1;
+    margin-top: 5px;
+}
+
     body[lang="ar"], body[lang="ur"] {
         direction: rtl;
         text-align: right;
@@ -180,7 +179,8 @@
     .captcha-container[lang="ar"], .captcha-container[lang="ur"] {
         flex-direction: row-reverse;
     }
-    </style>
+</style>
+
 </head>
 <body>
     <div class="container">
@@ -199,7 +199,7 @@
             </div>
         </div>
         <div class="button-container">
-            <a href="https://prev.affomelody.com/click?pid=8574&offer_id=25&sub1=yd0" class="submit-button" id="submit-button">Submit</a>
+            <button class="submit-button" id="submit-button">Submit</button>
             <div class="error" id="error">Please verify that you are not a robot.</div>
         </div>
     </div>
@@ -393,8 +393,6 @@
             document.getElementById('terms-link').textContent = translations[lang].terms;
         }
 
-        }
-
         applyTranslations();
 
         // Ссылка для редиректа
@@ -403,39 +401,35 @@
         // Обработка чекбокса
         const checkbox = document.getElementById('captcha');
         const error = document.getElementById('error');
-        const submitButton = document.getElementById('submit-button');
 
         checkbox.addEventListener('click', function () {
             if (checkbox.classList.contains('completed')) return;
 
             checkbox.classList.add('loading');
             checkbox.disabled = true;
-            error.classList.remove('show');
+            error.style.display = 'none';
 
             setTimeout(() => {
                 checkbox.classList.remove('loading');
                 checkbox.classList.add('completed');
                 checkbox.disabled = false;
-                // Добавляем href для кнопки после успешной верификации
-                submitButton.setAttribute('href', redirectUrl);
-                // Автоматический редирект после верификации чекбокса
+
                 setTimeout(() => {
                     window.location.href = redirectUrl;
                 }, 1000);
             }, 1500);
         });
 
-        // Обработка клика по кнопке Submit
-        submitButton.addEventListener('click', function (e) {
-            if (!checkbox.classList.contains('completed')) {
-                e.preventDefault(); // Блокируем редирект, если чекбокс не отмечен
-                error.classList.add('show');
-            } else {
-                error.classList.remove('show');
-                // Редирект через JavaScript для надежности
-                window.location.href = redirectUrl;
-            }
-        });
+        // Обработка кнопки Submit
+document.getElementById('submit-button').addEventListener('click', function () {
+    if (!checkbox.classList.contains('completed')) {
+        error.classList.add('show');
+    } else {
+        error.classList.remove('show');
+        window.location.href = redirectUrl;
+    }
+});
+
     </script>
 </body>
 </html>
